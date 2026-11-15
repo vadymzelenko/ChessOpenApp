@@ -1,0 +1,125 @@
+name: Build
+
+# On every push: run checks, publish the web build to GitHub Pages and
+# build Android APK (for sideloading) + AAB (for Google Play) into the
+# "preview" GitHub Release.
+on:
+  push:
+    branches: ['**']
+    paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  web:
+    needs: checks
+    # Only the default branch deploys the public site.
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Export static site
+        working-directory: apps/mobile
+        env:
+          EXPO_BASE_URL: /${{ github.event.repository.name }}
+          CI: '1'
+        run: npx expo export --platform web --output-dir dist
+      - name: Prepare for GitHub Pages
+        working-directory: apps/mobile/dist
+        run: |
+          # Files under _expo/ would be dropped by Jekyll.
+          touch .nojekyll
+          # Unknown paths fall back to the app's not-found route.
+          if [ -f '+not-found.html' ]; then cp '+not-found.html' 404.html; fi
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: apps/mobile/dist
+          publish_branch: gh-pages
+          force_orphan: true
+          enable_jekyll: false
+
+  android:
+    needs: checks
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci
+
+      - name: Generate native Android project
+        working-directory: apps/mobile
+        env:
+          ANDROID_VERSION_CODE: ${{ github.run_number }}
+          CI: '1'
+        run: npx expo prebuild --platform android --no-install --clean
+
+      - name: Build APK and AAB
+        working-directory: apps/mobile/android
+        # Release builds are signed with the debug key for now (fine for testing / sideloading).
+        # Play Store upload signing is added with module 31.
+        run: >
+          ./gradlew assembleRelease bundleRelease
+          -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+          --no-daemon
+
+      - name: Collect outputs
+        run: |
+          mkdir -p out
+          cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk out/chess-open-preview.apk
+          cp apps/mobile/android/app/build/outputs/bundle/release/app-release.aab out/chess-open-preview.aab
+          ls -la out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ github.run_number }}
+          path: out/
+          retention-days: 14
+
+      - name: Update "preview" release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete preview --yes --cleanup-tag || true
+          gh release create preview out/chess-open-preview.apk out/chess-open-preview.aab \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Preview build #${{ github.run_number }}" \
+            --notes "Автосборка из ${GITHUB_SHA::7}. APK — установить на телефон напрямую. AAB — для Google Play (пока подписан debug-ключом)."
