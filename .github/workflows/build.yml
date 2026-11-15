@@ -106,8 +106,8 @@ jobs:
       - name: Collect outputs
         run: |
           mkdir -p out
-          cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk out/chess-open-preview.apk
-          cp apps/mobile/android/app/build/outputs/bundle/release/app-release.aab out/chess-open-preview.aab
+          cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk out/chess-open.apk
+          cp apps/mobile/android/app/build/outputs/bundle/release/app-release.aab out/chess-open.aab
           ls -la out
 
       - uses: actions/upload-artifact@v4
@@ -116,17 +116,24 @@ jobs:
           path: out/
           retention-days: 14
 
-      - name: Update "preview" release
+      # One release per build (tags are never reused, so this also works with
+      # immutable releases). Stable link to the newest APK:
+      #   https://github.com/<owner>/<repo>/releases/latest/download/chess-open.apk
+      - name: Publish release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          NOTES="Сборка #${{ github.run_number }} из ${GITHUB_SHA::7}. APK — установить на телефон напрямую. AAB — для Google Play (пока подписан debug-ключом)."
-          # The release is updated in place (assets replaced), never re-created.
-          if gh release view preview >/dev/null 2>&1; then
-            gh release upload preview out/chess-open-preview.apk out/chess-open-preview.aab --clobber
-            gh release edit preview --title "Preview build #${{ github.run_number }}" --notes "$NOTES" --prerelease
-          else
-            gh release create preview out/chess-open-preview.apk out/chess-open-preview.aab \
-              --prerelease --target "$GITHUB_SHA" \
-              --title "Preview build #${{ github.run_number }}" --notes "$NOTES"
-          fi
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" out/chess-open.apk out/chess-open.aab \
+            --target "$GITHUB_SHA" \
+            --latest \
+            --title "Сборка #${{ github.run_number }}" \
+            --notes "Тестовая сборка из ${GITHUB_SHA::7}. **APK** — установить на телефон напрямую. **AAB** — для Google Play (пока подписан debug-ключом)."
+
+      - name: Keep only the 5 newest builds
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --limit 100 --json tagName,createdAt \
+            --jq '[.[] | select(.tagName | startswith("build-"))] | sort_by(.createdAt) | reverse | .[5:] | .[].tagName' |
+          while read -r tag; do gh release delete "$tag" --yes || true; done
