@@ -120,9 +120,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release delete preview --yes --cleanup-tag || true
-          gh release create preview out/chess-open-preview.apk out/chess-open-preview.aab \
-            --prerelease \
-            --target "$GITHUB_SHA" \
-            --title "Preview build #${{ github.run_number }}" \
-            --notes "Автосборка из ${GITHUB_SHA::7}. APK — установить на телефон напрямую. AAB — для Google Play (пока подписан debug-ключом)."
+          NOTES="Сборка #${{ github.run_number }} из ${GITHUB_SHA::7}. APK — установить на телефон напрямую. AAB — для Google Play (пока подписан debug-ключом)."
+          # The release is updated in place (assets replaced), never re-created.
+          if gh release view preview >/dev/null 2>&1; then
+            gh release upload preview out/chess-open-preview.apk out/chess-open-preview.aab --clobber
+            gh release edit preview --title "Preview build #${{ github.run_number }}" --notes "$NOTES" --prerelease
+          else
+            gh release create preview out/chess-open-preview.apk out/chess-open-preview.aab \
+              --prerelease --target "$GITHUB_SHA" \
+              --title "Preview build #${{ github.run_number }}" --notes "$NOTES"
+          fi
