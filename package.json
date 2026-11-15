@@ -21,7 +21,8 @@
     "pack:explorer": "tsx tools/pipeline/build-explorer.ts",
     "pack:evals": "tsx tools/pipeline/build-evals.ts",
     "pack:puzzles": "tsx tools/pipeline/build-puzzles.ts",
-    "pack:check-texts": "tsx tools/pipeline/check-texts.ts"
+    "pack:check-texts": "tsx tools/pipeline/check-texts.ts",
+    "pack:engine-check": "tsx tools/pipeline/engine-check.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",

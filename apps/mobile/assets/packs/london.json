@@ -1,0 +1,1000 @@
+{
+  "meta": {
+    "id": "london",
+    "format": 1,
+    "packVersion": 1,
+    "title": { "ru": "Лондонская система", "en": "London System" },
+    "description": {
+      "ru": "Универсальная система за белых против почти любого ответа на 1.d4: слон f4, пешки c3–d4–e3, понятные планы.",
+      "en": "A universal White system against almost any reply to 1.d4."
+    },
+    "side": "w",
+    "eco": ["D02", "A48"],
+    "style": "solid",
+    "difficulty": 2,
+    "accentColor": "#4C7DFF",
+    "puzzleTags": ["Queens_Pawn_Game_London_System", "Indian_Defense_London_System"],
+    "sources": [
+      "Черновик курса (ИИ + проверка Stockfish), статус draft — до ручной проверки",
+      "Lichess open database (CC0)"
+    ]
+  },
+  "ideas": [
+    {
+      "id": "bf4-before-e3",
+      "title": { "ru": "Слон f4 до e3" },
+      "text": {
+        "ru": "Главное правило Лондона: чернопольный слон выходит на f4 раньше, чем белые сыграют e3. Если поставить пешку на e3 первой, она закроет слону дорогу, и он останется пассивным. Вне пешечной цепи слон контролирует e5 и диагональ b8–h2."
+      },
+      "diagram": {
+        "fen": "rnbqkbnr/ppp1pppp/8/3p4/3P1B2/8/PPP1PPPP/RN1QKBNR b KQkq - 1 2",
+        "arrows": [{ "from": "c1", "to": "f4", "color": "green" }]
+      },
+      "status": "draft"
+    },
+    {
+      "id": "london-triangle",
+      "title": { "ru": "Треугольник c3–d4–e3" },
+      "text": {
+        "ru": "Пешки c3, d4 и e3 образуют прочный треугольник. Центр почти невозможно разрушить, а пешка c3 заранее закрывает диагональ для слона b4 и готовит отступление ферзя на c2 или b3. Белым некуда спешить: позиция надёжная, планы понятные."
+      },
+      "diagram": {
+        "fen": "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P1B2/2P1PN2/PP1N1PPP/R2QKB1R b KQkq - 1 6",
+        "highlights": [
+          { "square": "c3", "color": "green" },
+          { "square": "d4", "color": "green" },
+          { "square": "e3", "color": "green" }
+        ]
+      },
+      "status": "draft"
+    },
+    {
+      "id": "nbd2-flexible",
+      "title": { "ru": "Конь на d2, а не на c3" },
+      "text": {
+        "ru": "Ферзевый конь в Лондоне обычно идёт на d2. Оттуда он поддерживает продвижение e4 и не мешает пешке c3. Конь на c3 загородил бы пешку и ослабил треугольник в центре."
+      },
+      "status": "draft"
+    },
+    {
+      "id": "bg3-vs-bd6",
+      "title": { "ru": "На …Bd6 — Bg3" },
+      "text": {
+        "ru": "Чёрные часто ставят слона на d6, чтобы разменять сильного лондонского слона. Белые отступают на g3 и сохраняют его. Если чёрные всё же разменяются на g3, белые берут пешкой h, и открытая линия h пригодится ладье для атаки."
+      },
+      "diagram": {
+        "fen": "rnbqk2r/ppp2ppp/3bpn2/3p4/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQkq - 2 5",
+        "arrows": [{ "from": "f4", "to": "g3", "color": "green" }]
+      },
+      "status": "draft"
+    },
+    {
+      "id": "qb3-vs-qb6",
+      "title": { "ru": "На …Qb6 — Qb3" },
+      "text": {
+        "ru": "Ферзь b6 атакует пешку b2, которую слон f4 оставил без защиты. Простой ответ — ферзь на b3: если чёрные меняются, белые берут пешкой a и получают открытую линию a для ладьи. Если чёрные отказываются от размена, ферзь b3 давит на b7 и d5."
+      },
+      "status": "draft"
+    },
+    {
+      "id": "qb6-nc3",
+      "title": { "ru": "Отравленная пешка b2" },
+      "text": {
+        "ru": "Против …d5 с ранним …Qb6 белые могут развить коня на c3 и предложить пешку b2. Взятие опасно для чёрных: ферзь уходит от защиты пешки d5, и после Nxd5 у коня появляются вилки. Это исключение из правила про пешку c3 — здесь важнее темп и тактика."
+      },
+      "status": "draft"
+    },
+    {
+      "id": "h3-retreat",
+      "title": { "ru": "h3 — отступление для слона" },
+      "text": {
+        "ru": "Против построения с …g6 и …Bg7 чёрные могут прыгнуть конём на h5 и разменять слона f4. Ход h3 заранее даёт слону поле h2, где он остаётся на той же диагонали. Заодно h3 убирает поле g4 у чёрного коня и слона."
+      },
+      "status": "draft"
+    },
+    {
+      "id": "e4-break",
+      "title": { "ru": "План с Ne5 и e4" },
+      "text": {
+        "ru": "Когда развитие закончено, белые выбирают план. Конь на e5 при поддержке пешки f4 создаёт давление на королевском фланге. Продвижение e4 открывает игру в центре — его готовят конь d2 и слон d3, который смотрит на h7."
+      },
+      "status": "draft"
+    }
+  ],
+  "course": {
+    "chapters": [
+      {
+        "id": "vs-d5",
+        "title": { "ru": "Против …d5" },
+        "description": {
+          "ru": "Главная схема Лондона против 1…d5: слон f4, пешки c3–d4–e3, кони f3 и d2."
+        },
+        "lines": [
+          {
+            "id": "vs-d5-366070c",
+            "title": { "ru": "Главная схема" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "d5",
+              "Bf4",
+              "Nf6",
+              "e3",
+              "e6",
+              "Nf3",
+              "c5",
+              "c3",
+              "Nc6",
+              "Nbd2",
+              "Bd6",
+              "Bg3",
+              "O-O",
+              "Bd3"
+            ],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "9": { "ideas": ["london-triangle"] },
+              "11": { "ideas": ["nbd2-flexible"] },
+              "13": { "ideas": ["bg3-vs-bd6"] },
+              "15": {
+                "comment": {
+                  "ru": "Слон смотрит на h7, белые готовят Ne5 или продвижение e-пешки."
+                },
+                "ideas": ["e4-break"]
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-222456a",
+            "title": { "ru": "4…Bd6: слон отступает на g3" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "d5",
+              "Bf4",
+              "Nf6",
+              "e3",
+              "e6",
+              "Nf3",
+              "Bd6",
+              "Bg3",
+              "O-O",
+              "Bd3",
+              "c5",
+              "c3",
+              "Nc6",
+              "Nbd2"
+            ],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "9": {
+                "comment": { "ru": "Не меняемся на d6: слон g3 остаётся на важной диагонали." },
+                "ideas": ["bg3-vs-bd6"]
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-060e8e3",
+            "title": { "ru": "3…c5: треугольник и Nd2" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "d5",
+              "Bf4",
+              "Nf6",
+              "e3",
+              "c5",
+              "c3",
+              "Nc6",
+              "Nd2",
+              "e6",
+              "Ngf3",
+              "Bd6",
+              "Bg3",
+              "O-O",
+              "Bd3"
+            ],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "7": {
+                "comment": { "ru": "Треугольник c3–d4–e3 надёжно держит центр." },
+                "ideas": ["london-triangle"]
+              },
+              "9": {
+                "comment": { "ru": "Конь идёт на d2, а не на c3, чтобы не мешать пешке c3." },
+                "ideas": ["nbd2-flexible"]
+              },
+              "13": { "ideas": ["bg3-vs-bd6"] }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-9a7efff",
+            "title": { "ru": "Ранний …Qb6 и …c4" },
+            "level": "advanced",
+            "moves": ["d4", "d5", "Bf4", "Nf6", "e3", "c5", "c3", "Qb6", "Qb3", "c4", "Qc2"],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "7": {
+                "comment": { "ru": "Треугольник c3–d4–e3 надёжно держит центр." },
+                "ideas": ["london-triangle"]
+              },
+              "9": { "ideas": ["qb3-vs-qb6"] },
+              "11": { "comment": { "ru": "Ферзь отступает и смотрит по диагонали на h7." } }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-320f2cc",
+            "title": { "ru": "3…Bf5: удар c4" },
+            "level": "advanced",
+            "moves": ["d4", "d5", "Bf4", "Nf6", "e3", "Bf5", "c4", "e6", "Nc3"],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "7": {
+                "comment": { "ru": "Против симметричного слона играем c4 и давим на d5 и b7." }
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-444e631",
+            "title": { "ru": "3…g6: та же схема" },
+            "level": "advanced",
+            "moves": [
+              "d4",
+              "d5",
+              "Bf4",
+              "Nf6",
+              "e3",
+              "g6",
+              "Nf3",
+              "Bg7",
+              "Be2",
+              "O-O",
+              "O-O",
+              "c5",
+              "c3"
+            ],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-40e161a",
+            "title": { "ru": "2…c5 3…Nc6: ответ на …Qb6" },
+            "level": "advanced",
+            "moves": ["d4", "d5", "Bf4", "c5", "e3", "Nc6", "c3", "Qb6", "Qb3"],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "7": {
+                "comment": { "ru": "Укрепляем d4, чтобы на …Qb6 ответить Qb3." },
+                "ideas": ["london-triangle"]
+              },
+              "9": {
+                "comment": {
+                  "ru": "Предлагаем размен ферзей: после него у белых открывается линия a."
+                },
+                "ideas": ["qb3-vs-qb6"]
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-d5-8bdeed1",
+            "title": { "ru": "2…c5 3…Qb6: отравленная b2" },
+            "level": "advanced",
+            "moves": ["d4", "d5", "Bf4", "c5", "e3", "Qb6", "Nc3"],
+            "annotations": {
+              "3": {
+                "comment": {
+                  "ru": "Слон выходит до e3, чтобы не оказаться за собственной пешкой."
+                },
+                "arrows": [{ "from": "c1", "to": "f4", "color": "green" }],
+                "ideas": ["bf4-before-e3"]
+              },
+              "7": {
+                "comment": {
+                  "ru": "Пешка b2 отравлена: если ферзь её возьмёт, пешка d5 останется без защиты."
+                },
+                "ideas": ["qb6-nc3"]
+              }
+            },
+            "status": "draft"
+          }
+        ]
+      },
+      {
+        "id": "vs-g6",
+        "title": { "ru": "Против …g6" },
+        "description": {
+          "ru": "Против староиндийского построения белые сохраняют ту же схему и заранее берегут слона."
+        },
+        "lines": [
+          {
+            "id": "vs-g6-566d0e0",
+            "title": { "ru": "Схема с h3" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "Nf6",
+              "Bf4",
+              "g6",
+              "e3",
+              "Bg7",
+              "Nf3",
+              "O-O",
+              "Be2",
+              "d6",
+              "h3",
+              "Nbd7",
+              "O-O"
+            ],
+            "annotations": {
+              "9": {
+                "comment": { "ru": "Скромное, но надёжное место слона: он не мешает рокировке." }
+              },
+              "11": {
+                "comment": { "ru": "Даём слону поле h2 на случай …Nh5." },
+                "ideas": ["h3-retreat"]
+              }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-g6-69da688",
+            "title": { "ru": "…c5: треугольник c3–d4" },
+            "level": "advanced",
+            "moves": [
+              "d4",
+              "Nf6",
+              "Bf4",
+              "g6",
+              "e3",
+              "Bg7",
+              "Nf3",
+              "O-O",
+              "Be2",
+              "d6",
+              "h3",
+              "c5",
+              "c3",
+              "Nc6",
+              "O-O"
+            ],
+            "annotations": {
+              "9": {
+                "comment": { "ru": "Скромное, но надёжное место слона: он не мешает рокировке." }
+              },
+              "11": {
+                "comment": { "ru": "Даём слону поле h2 на случай …Nh5." },
+                "ideas": ["h3-retreat"]
+              },
+              "13": { "ideas": ["london-triangle"] }
+            },
+            "status": "draft"
+          }
+        ]
+      },
+      {
+        "id": "vs-c5",
+        "title": { "ru": "Против …c5" },
+        "description": {
+          "ru": "Ранний удар …c5 — самый острый ответ. Белые держат центр и не спешат брать на c5."
+        },
+        "lines": [
+          {
+            "id": "vs-c5-10c5b0d",
+            "title": { "ru": "3…Qb6: развитие с темпом" },
+            "level": "base",
+            "moves": ["d4", "Nf6", "Bf4", "c5", "e3", "Qb6", "Nc3"],
+            "annotations": {
+              "7": { "comment": { "ru": "Развиваемся с темпом и не боимся за пешку b2." } }
+            },
+            "status": "draft"
+          },
+          {
+            "id": "vs-c5-6205dfa",
+            "title": { "ru": "3…cxd4: берём пешкой" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "Nf6",
+              "Bf4",
+              "c5",
+              "e3",
+              "cxd4",
+              "exd4",
+              "d5",
+              "c3",
+              "Nc6",
+              "Nf3",
+              "Bg4",
+              "Nbd2"
+            ],
+            "annotations": {
+              "7": {
+                "comment": {
+                  "ru": "Берём пешкой: у белых пространство, а слон f1 получает диагональ."
+                }
+              }
+            },
+            "status": "draft"
+          }
+        ]
+      },
+      {
+        "id": "vs-f5",
+        "title": { "ru": "Против голландской" },
+        "description": {
+          "ru": "Против 1…f5 работают те же идеи, а слон d3 давит на ключевое поле e4."
+        },
+        "lines": [
+          {
+            "id": "vs-f5-1ac5ef2",
+            "title": { "ru": "Слон d3 против голландской" },
+            "level": "base",
+            "moves": [
+              "d4",
+              "f5",
+              "Bf4",
+              "Nf6",
+              "e3",
+              "e6",
+              "Nf3",
+              "b6",
+              "Bd3",
+              "Bb7",
+              "Nbd2",
+              "Be7",
+              "c3"
+            ],
+            "annotations": {
+              "9": {
+                "comment": {
+                  "ru": "Слон давит на f5 и поле e4, которое чёрные хотят контролировать."
+                }
+              },
+              "11": { "ideas": ["nbd2-flexible"] }
+            },
+            "status": "draft"
+          }
+        ]
+      }
+    ]
+  },
+  "traps": [
+    {
+      "id": "trap-36e3328",
+      "title": { "ru": "Отравленная пешка b2" },
+      "kind": "for",
+      "moves": ["d4", "d5", "Bf4", "c5", "e3", "Qb6", "Nc3", "Qxb2", "Nxd5"],
+      "mistakePly": 8,
+      "explanation": {
+        "ru": "Ферзь ушёл от защиты пешки d5. Белые берут Nxd5 и грозят вилкой с поля c7."
+      },
+      "status": "draft"
+    }
+  ],
+  "explorer": {},
+  "autoLines": [],
+  "evals": {
+    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -": {
+      "cp": 28,
+      "best": "e2e4",
+      "depth": 16
+    },
+    "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq -": {
+      "cp": 28,
+      "best": "g8f6",
+      "depth": 16
+    },
+    "rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -": {
+      "cp": 32,
+      "best": "c2c4",
+      "depth": 16
+    },
+    "rnbqkbnr/ppp1pppp/8/3p4/3P1B2/8/PPP1PPPP/RN1QKBNR b KQkq -": {
+      "cp": 11,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp1pppp/5n2/3p4/3P1B2/8/PPP1PPPP/RN1QKBNR w KQkq -": {
+      "cp": 11,
+      "best": "e2e3",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp1pppp/5n2/3p4/3P1B2/4P3/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 4,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp2ppp/4pn2/3p4/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 18,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp2ppp/4pn2/3p4/3P1B2/4PN2/PPP2PPP/RN1QKB1R b KQkq -": {
+      "cp": 13,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbqkb1r/pp3ppp/4pn2/2pp4/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQkq -": {
+      "cp": 15,
+      "best": "c2c3",
+      "depth": 16
+    },
+    "rnbqkb1r/pp3ppp/4pn2/2pp4/3P1B2/2P1PN2/PP3PPP/RN1QKB1R b KQkq -": {
+      "cp": 17,
+      "best": "b8c6",
+      "depth": 16
+    },
+    "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P1B2/2P1PN2/PP3PPP/RN1QKB1R w KQkq -": {
+      "cp": 17,
+      "best": "b1d2",
+      "depth": 16
+    },
+    "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P1B2/2P1PN2/PP1N1PPP/R2QKB1R b KQkq -": {
+      "cp": 16,
+      "best": "f8e7",
+      "depth": 16
+    },
+    "r1bqk2r/pp3ppp/2nbpn2/2pp4/3P1B2/2P1PN2/PP1N1PPP/R2QKB1R w KQkq -": {
+      "cp": 25,
+      "best": "f4g3",
+      "depth": 16
+    },
+    "r1bqk2r/pp3ppp/2nbpn2/2pp4/3P4/2P1PNB1/PP1N1PPP/R2QKB1R b KQkq -": {
+      "cp": 16,
+      "best": "c5c4",
+      "depth": 16
+    },
+    "r1bq1rk1/pp3ppp/2nbpn2/2pp4/3P4/2P1PNB1/PP1N1PPP/R2QKB1R w KQ -": {
+      "cp": 20,
+      "best": "f1d3",
+      "depth": 16
+    },
+    "r1bq1rk1/pp3ppp/2nbpn2/2pp4/3P4/2PBPNB1/PP1N1PPP/R2QK2R b KQ -": {
+      "cp": 25,
+      "best": "g7g6",
+      "depth": 16
+    },
+    "rnbqk2r/ppp2ppp/3bpn2/3p4/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQkq -": {
+      "cp": 18,
+      "best": "b1d2",
+      "depth": 16
+    },
+    "rnbqk2r/ppp2ppp/3bpn2/3p4/3P4/4PNB1/PPP2PPP/RN1QKB1R b KQkq -": {
+      "cp": 21,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp2ppp/3bpn2/3p4/3P4/4PNB1/PPP2PPP/RN1QKB1R w KQ -": {
+      "cp": 24,
+      "best": "c2c4",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp2ppp/3bpn2/3p4/3P4/3BPNB1/PPP2PPP/RN1QK2R b KQ -": {
+      "cp": 9,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/pp3ppp/3bpn2/2pp4/3P4/3BPNB1/PPP2PPP/RN1QK2R w KQ -": {
+      "cp": 3,
+      "best": "c2c3",
+      "depth": 16
+    },
+    "rnbq1rk1/pp3ppp/3bpn2/2pp4/3P4/2PBPNB1/PP3PPP/RN1QK2R b KQ -": {
+      "cp": 0,
+      "best": "d8c7",
+      "depth": 16
+    },
+    "r1bq1rk1/pp3ppp/2nbpn2/2pp4/3P4/2PBPNB1/PP3PPP/RN1QK2R w KQ -": {
+      "cp": 23,
+      "best": "b1d2",
+      "depth": 16
+    },
+    "rnbqkb1r/pp2pppp/5n2/2pp4/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 7,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "rnbqkb1r/pp2pppp/5n2/2pp4/3P1B2/2P1P3/PP3PPP/RN1QKBNR b KQkq -": {
+      "cp": 12,
+      "best": "b8c6",
+      "depth": 16
+    },
+    "r1bqkb1r/pp2pppp/2n2n2/2pp4/3P1B2/2P1P3/PP3PPP/RN1QKBNR w KQkq -": {
+      "cp": 9,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "r1bqkb1r/pp2pppp/2n2n2/2pp4/3P1B2/2P1P3/PP1N1PPP/R2QKBNR b KQkq -": {
+      "cp": -9,
+      "best": "c8f5",
+      "depth": 16
+    },
+    "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P1B2/2P1P3/PP1N1PPP/R2QKBNR w KQkq -": {
+      "cp": 15,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "rnb1kb1r/pp2pppp/1q3n2/2pp4/3P1B2/2P1P3/PP3PPP/RN1QKBNR w KQkq -": {
+      "cp": 2,
+      "best": "d1c2",
+      "depth": 16
+    },
+    "rnb1kb1r/pp2pppp/1q3n2/2pp4/3P1B2/1QP1P3/PP3PPP/RN2KBNR b KQkq -": {
+      "cp": -5,
+      "best": "c5c4",
+      "depth": 16
+    },
+    "rnb1kb1r/pp2pppp/1q3n2/3p4/2pP1B2/1QP1P3/PP3PPP/RN2KBNR w KQkq -": {
+      "cp": -15,
+      "best": "b3c2",
+      "depth": 16
+    },
+    "rnb1kb1r/pp2pppp/1q3n2/3p4/2pP1B2/2P1P3/PPQ2PPP/RN2KBNR b KQkq -": {
+      "cp": -16,
+      "best": "g7g6",
+      "depth": 16
+    },
+    "rn1qkb1r/ppp1pppp/5n2/3p1b2/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 18,
+      "best": "f1d3",
+      "depth": 16
+    },
+    "rn1qkb1r/ppp1pppp/5n2/3p1b2/2PP1B2/4P3/PP3PPP/RN1QKBNR b KQkq -": {
+      "cp": 22,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rn1qkb1r/ppp2ppp/4pn2/3p1b2/2PP1B2/4P3/PP3PPP/RN1QKBNR w KQkq -": {
+      "cp": 18,
+      "best": "d1b3",
+      "depth": 16
+    },
+    "rn1qkb1r/ppp2ppp/4pn2/3p1b2/2PP1B2/2N1P3/PP3PPP/R2QKBNR b KQkq -": {
+      "cp": 9,
+      "best": "f8b4",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp1pp1p/5np1/3p4/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 35,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "rnbqkb1r/ppp1pp1p/5np1/3p4/3P1B2/4PN2/PPP2PPP/RN1QKB1R b KQkq -": {
+      "cp": 28,
+      "best": "f8g7",
+      "depth": 16
+    },
+    "rnbqk2r/ppp1ppbp/5np1/3p4/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQkq -": {
+      "cp": 29,
+      "best": "c2c3",
+      "depth": 16
+    },
+    "rnbqk2r/ppp1ppbp/5np1/3p4/3P1B2/4PN2/PPP1BPPP/RN1QK2R b KQkq -": {
+      "cp": 29,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp1ppbp/5np1/3p4/3P1B2/4PN2/PPP1BPPP/RN1QK2R w KQ -": {
+      "cp": 17,
+      "best": "e1g1",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp1ppbp/5np1/3p4/3P1B2/4PN2/PPP1BPPP/RN1Q1RK1 b - -": {
+      "cp": 25,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/pp2ppbp/5np1/2pp4/3P1B2/4PN2/PPP1BPPP/RN1Q1RK1 w - -": {
+      "cp": 24,
+      "best": "c2c3",
+      "depth": 16
+    },
+    "rnbq1rk1/pp2ppbp/5np1/2pp4/3P1B2/2P1PN2/PP2BPPP/RN1Q1RK1 b - -": {
+      "cp": 21,
+      "best": "b8c6",
+      "depth": 16
+    },
+    "rnbqkbnr/pp2pppp/8/2pp4/3P1B2/8/PPP1PPPP/RN1QKBNR w KQkq -": {
+      "cp": 8,
+      "best": "e2e3",
+      "depth": 16
+    },
+    "rnbqkbnr/pp2pppp/8/2pp4/3P1B2/4P3/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 7,
+      "best": "g8f6",
+      "depth": 16
+    },
+    "r1bqkbnr/pp2pppp/2n5/2pp4/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 7,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "r1bqkbnr/pp2pppp/2n5/2pp4/3P1B2/2P1P3/PP3PPP/RN1QKBNR b KQkq -": {
+      "cp": 3,
+      "best": "c8f5",
+      "depth": 16
+    },
+    "r1b1kbnr/pp2pppp/1qn5/2pp4/3P1B2/2P1P3/PP3PPP/RN1QKBNR w KQkq -": {
+      "cp": 8,
+      "best": "d1c2",
+      "depth": 16
+    },
+    "r1b1kbnr/pp2pppp/1qn5/2pp4/3P1B2/1QP1P3/PP3PPP/RN2KBNR b KQkq -": {
+      "cp": -31,
+      "best": "c5c4",
+      "depth": 16
+    },
+    "rnb1kbnr/pp2pppp/1q6/2pp4/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 82,
+      "best": "b1c3",
+      "depth": 16
+    },
+    "rnb1kbnr/pp2pppp/1q6/2pp4/3P1B2/2N1P3/PPP2PPP/R2QKBNR b KQkq -": {
+      "cp": 76,
+      "best": "e7e6",
+      "depth": 16
+    },
+    "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -": {
+      "cp": 23,
+      "best": "c2c4",
+      "depth": 16
+    },
+    "rnbqkb1r/pppppppp/5n2/8/3P1B2/8/PPP1PPPP/RN1QKBNR b KQkq -": {
+      "cp": 7,
+      "best": "d7d5",
+      "depth": 16
+    },
+    "rnbqkb1r/pppppp1p/5np1/8/3P1B2/8/PPP1PPPP/RN1QKBNR w KQkq -": {
+      "cp": 21,
+      "best": "b1d2",
+      "depth": 16
+    },
+    "rnbqkb1r/pppppp1p/5np1/8/3P1B2/4P3/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 10,
+      "best": "f8g7",
+      "depth": 16
+    },
+    "rnbqk2r/ppppppbp/5np1/8/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 14,
+      "best": "c2c3",
+      "depth": 16
+    },
+    "rnbqk2r/ppppppbp/5np1/8/3P1B2/4PN2/PPP2PPP/RN1QKB1R b KQkq -": {
+      "cp": 12,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/ppppppbp/5np1/8/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQ -": {
+      "cp": 9,
+      "best": "b1c3",
+      "depth": 16
+    },
+    "rnbq1rk1/ppppppbp/5np1/8/3P1B2/4PN2/PPP1BPPP/RN1QK2R b KQ -": {
+      "cp": 3,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp1ppbp/3p1np1/8/3P1B2/4PN2/PPP1BPPP/RN1QK2R w KQ -": {
+      "cp": 13,
+      "best": "h2h3",
+      "depth": 16
+    },
+    "rnbq1rk1/ppp1ppbp/3p1np1/8/3P1B2/4PN1P/PPP1BPP1/RN1QK2R b KQ -": {
+      "cp": 15,
+      "best": "c7c5",
+      "depth": 16
+    },
+    "r1bq1rk1/pppnppbp/3p1np1/8/3P1B2/4PN1P/PPP1BPP1/RN1QK2R w KQ -": {
+      "cp": 13,
+      "best": "a2a4",
+      "depth": 16
+    },
+    "r1bq1rk1/pppnppbp/3p1np1/8/3P1B2/4PN1P/PPP1BPP1/RN1Q1RK1 b - -": {
+      "cp": 16,
+      "best": "b7b6",
+      "depth": 16
+    },
+    "rnbq1rk1/pp2ppbp/3p1np1/2p5/3P1B2/4PN1P/PPP1BPP1/RN1QK2R w KQ -": {
+      "cp": 15,
+      "best": "e1g1",
+      "depth": 16
+    },
+    "rnbq1rk1/pp2ppbp/3p1np1/2p5/3P1B2/2P1PN1P/PP2BPP1/RN1QK2R b KQ -": {
+      "cp": -7,
+      "best": "d8b6",
+      "depth": 16
+    },
+    "r1bq1rk1/pp2ppbp/2np1np1/2p5/3P1B2/2P1PN1P/PP2BPP1/RN1QK2R w KQ -": {
+      "cp": 35,
+      "best": "d4c5",
+      "depth": 16
+    },
+    "r1bq1rk1/pp2ppbp/2np1np1/2p5/3P1B2/2P1PN1P/PP2BPP1/RN1Q1RK1 b - -": {
+      "cp": 15,
+      "best": "c5d4",
+      "depth": 16
+    },
+    "rnbqkb1r/pp1ppppp/5n2/2p5/3P1B2/8/PPP1PPPP/RN1QKBNR w KQkq -": {
+      "cp": 35,
+      "best": "d4d5",
+      "depth": 16
+    },
+    "rnbqkb1r/pp1ppppp/5n2/2p5/3P1B2/4P3/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 3,
+      "best": "d7d5",
+      "depth": 16
+    },
+    "rnb1kb1r/pp1ppppp/1q3n2/2p5/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 23,
+      "best": "b1c3",
+      "depth": 16
+    },
+    "rnb1kb1r/pp1ppppp/1q3n2/2p5/3P1B2/2N1P3/PPP2PPP/R2QKBNR b KQkq -": {
+      "cp": 11,
+      "best": "d7d6",
+      "depth": 16
+    },
+    "rnbqkb1r/pp1ppppp/5n2/8/3p1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 28,
+      "best": "e3d4",
+      "depth": 16
+    },
+    "rnbqkb1r/pp1ppppp/5n2/8/3P1B2/8/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 26,
+      "best": "d7d5",
+      "depth": 16
+    },
+    "rnbqkb1r/pp2pppp/5n2/3p4/3P1B2/8/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 24,
+      "best": "g1f3",
+      "depth": 16
+    },
+    "rnbqkb1r/pp2pppp/5n2/3p4/3P1B2/2P5/PP3PPP/RN1QKBNR b KQkq -": {
+      "cp": 20,
+      "best": "c8f5",
+      "depth": 16
+    },
+    "r1bqkb1r/pp2pppp/2n2n2/3p4/3P1B2/2P5/PP3PPP/RN1QKBNR w KQkq -": {
+      "cp": 31,
+      "best": "f1d3",
+      "depth": 16
+    },
+    "r1bqkb1r/pp2pppp/2n2n2/3p4/3P1B2/2P2N2/PP3PPP/RN1QKB1R b KQkq -": {
+      "cp": 13,
+      "best": "c8f5",
+      "depth": 16
+    },
+    "r2qkb1r/pp2pppp/2n2n2/3p4/3P1Bb1/2P2N2/PP3PPP/RN1QKB1R w KQkq -": {
+      "cp": 34,
+      "best": "b1d2",
+      "depth": 16
+    },
+    "r2qkb1r/pp2pppp/2n2n2/3p4/3P1Bb1/2P2N2/PP1N1PPP/R2QKB1R b KQkq -": {
+      "cp": 34,
+      "best": "e7e6",
+      "depth": 16
+    },
+    "rnbqkbnr/ppppp1pp/8/5p2/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -": {
+      "cp": 58,
+      "best": "g2g3",
+      "depth": 16
+    },
+    "rnbqkbnr/ppppp1pp/8/5p2/3P1B2/8/PPP1PPPP/RN1QKBNR b KQkq -": {
+      "cp": 52,
+      "best": "g8f6",
+      "depth": 16
+    },
+    "rnbqkb1r/ppppp1pp/5n2/5p2/3P1B2/8/PPP1PPPP/RN1QKBNR w KQkq -": {
+      "cp": 51,
+      "best": "e2e3",
+      "depth": 16
+    },
+    "rnbqkb1r/ppppp1pp/5n2/5p2/3P1B2/4P3/PPP2PPP/RN1QKBNR b KQkq -": {
+      "cp": 48,
+      "best": "e7e6",
+      "depth": 16
+    },
+    "rnbqkb1r/pppp2pp/4pn2/5p2/3P1B2/4P3/PPP2PPP/RN1QKBNR w KQkq -": {
+      "cp": 52,
+      "best": "f1d3",
+      "depth": 16
+    },
+    "rnbqkb1r/pppp2pp/4pn2/5p2/3P1B2/4PN2/PPP2PPP/RN1QKB1R b KQkq -": {
+      "cp": 47,
+      "best": "b7b6",
+      "depth": 16
+    },
+    "rnbqkb1r/p1pp2pp/1p2pn2/5p2/3P1B2/4PN2/PPP2PPP/RN1QKB1R w KQkq -": {
+      "cp": 57,
+      "best": "a2a3",
+      "depth": 16
+    },
+    "rnbqkb1r/p1pp2pp/1p2pn2/5p2/3P1B2/3BPN2/PPP2PPP/RN1QK2R b KQkq -": {
+      "cp": 44,
+      "best": "c8b7",
+      "depth": 16
+    },
+    "rn1qkb1r/pbpp2pp/1p2pn2/5p2/3P1B2/3BPN2/PPP2PPP/RN1QK2R w KQkq -": {
+      "cp": 44,
+      "best": "e1g1",
+      "depth": 16
+    },
+    "rn1qkb1r/pbpp2pp/1p2pn2/5p2/3P1B2/3BPN2/PPPN1PPP/R2QK2R b KQkq -": {
+      "cp": 30,
+      "best": "f8d6",
+      "depth": 16
+    },
+    "rn1qk2r/pbppb1pp/1p2pn2/5p2/3P1B2/3BPN2/PPPN1PPP/R2QK2R w KQkq -": {
+      "cp": 35,
+      "best": "h2h4",
+      "depth": 16
+    },
+    "rn1qk2r/pbppb1pp/1p2pn2/5p2/3P1B2/2PBPN2/PP1N1PPP/R2QK2R b KQkq -": {
+      "cp": 29,
+      "best": "e8g8",
+      "depth": 16
+    },
+    "rnb1kbnr/pp2pppp/8/2pp4/3P1B2/2N1P3/PqP2PPP/R2QKBNR w KQkq -": {
+      "cp": 362,
+      "best": "c3d5",
+      "depth": 16
+    },
+    "rnb1kbnr/pp2pppp/8/2pN4/3P1B2/4P3/PqP2PPP/R2QKBNR b KQkq -": {
+      "cp": 393,
+      "best": "e8d8",
+      "depth": 16
+    }
+  },
+  "puzzles": [],
+  "modelGames": []
+}

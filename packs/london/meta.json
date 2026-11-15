@@ -1,0 +1,20 @@
+{
+  "id": "london",
+  "format": 1,
+  "packVersion": 1,
+  "title": { "ru": "Лондонская система", "en": "London System" },
+  "description": {
+    "ru": "Универсальная система за белых против почти любого ответа на 1.d4: слон f4, пешки c3–d4–e3, понятные планы.",
+    "en": "A universal White system against almost any reply to 1.d4."
+  },
+  "side": "w",
+  "eco": ["D02", "A48"],
+  "style": "solid",
+  "difficulty": 2,
+  "accentColor": "#4C7DFF",
+  "puzzleTags": ["Queens_Pawn_Game_London_System", "Indian_Defense_London_System"],
+  "sources": [
+    "Черновик курса (ИИ + проверка Stockfish), статус draft — до ручной проверки",
+    "Lichess open database (CC0)"
+  ]
+}

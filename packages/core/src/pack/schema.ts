@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import type { Square } from '../chess/position';
+
 /**
  * Opening Pack format (ТЗ §3). One pack = one course; the app knows nothing
  * about specific openings. Structural rules live here (zod → TS types + JSON
@@ -22,7 +24,10 @@ export const LocalizedTextSchema = z
 export const ContentStatusSchema = z.enum(['draft', 'engine-checked', 'reviewed']);
 
 export const SideSchema = z.enum(['w', 'b']);
-const square = z.string().regex(/^[a-h][1-8]$/, 'must be a square like "e4"');
+const square = z
+  .string()
+  .regex(/^[a-h][1-8]$/, 'must be a square like "e4"')
+  .transform((v) => v as Square);
 const annotationColor = z.enum(['green', 'red', 'blue', 'yellow']);
 
 export const ArrowSchema = z.object({

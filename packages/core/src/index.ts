@@ -15,3 +15,4 @@ export * from './explorer';
 export * from './engine';
 export * from './puzzles';
 export * from './textcheck';
+export * from './srs';

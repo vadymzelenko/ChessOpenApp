@@ -14,7 +14,7 @@
     "legendVerified": "Reviewed by a human",
     "legendGenerated": "Generated from statistics",
     "heroTitle": "London System",
-    "heroBody": "The first course is in the works. Meanwhile, practise on the board with a variation tree.",
+    "heroBody": "Bishop f4, the c3–d4–e3 triangle and clear plans. The draft course is ready to study.",
     "courses": "Courses",
     "soon": "Soon",
     "white": "White",
@@ -37,7 +37,8 @@
     "puzzles": "Puzzles",
     "puzzlesSub": "Tactics from your openings",
     "start": "Start",
-    "heroBadge": "White · D02"
+    "heroBadge": "White · D02",
+    "openCourse": "Open the course"
   },
   "board": {
     "whiteToMove": "White to move",
@@ -91,5 +92,48 @@
     "languageAuto": "Auto",
     "reset": "Reset settings",
     "pieceSet": "Pieces"
+  },
+  "course": {
+    "lines": "Lines",
+    "ideas": "Ideas",
+    "learned": "Learned",
+    "continue": "Continue",
+    "startCourse": "Start the course",
+    "level_base": "Base",
+    "level_advanced": "Advanced",
+    "level_deep": "Deep",
+    "draftNote": "Draft: texts not yet reviewed by a human",
+    "notFound": "Course not found",
+    "back": "Back",
+    "allDone": "All lines studied — keep repeating them in training",
+    "positions_one": "{{count}} position",
+    "positions_other": "{{count}} positions"
+  },
+  "line": {
+    "study": "Study",
+    "train": "Training",
+    "next": "Next",
+    "prev": "Back",
+    "start": "Start position",
+    "nowYou": "Now you",
+    "yourMove": "Your move",
+    "opponentMove": "Opponent is moving…",
+    "wrong": "Not that move",
+    "wrongHint": "That is not the course move. Think again.",
+    "correctWas": "Course move: {{san}}",
+    "hint": "Hint",
+    "hint1": "Highlight the piece",
+    "hint2": "Idea of the move",
+    "hint3": "Show the move",
+    "done": "Line complete!",
+    "doneClean": "No mistakes!",
+    "mistakes": "Mistakes: {{count}}",
+    "xp": "+{{count}} XP",
+    "again": "Again",
+    "toCourse": "To the course",
+    "nextLine": "Next line",
+    "idea": "Idea",
+    "noComment": "A move from the course plan.",
+    "trap": "Trap"
   }
 }

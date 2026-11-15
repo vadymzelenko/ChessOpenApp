@@ -46,11 +46,13 @@ interface CourseTile {
   side: 'w' | 'b';
   color: string;
   icon: IconComponent;
+  /** Pack id when the course is available in the app. */
+  pack?: string;
 }
 
 /** MVP catalogue from ТЗ §9; real packs replace this list with module 28. */
 const COURSES: CourseTile[] = [
-  { key: 'london', side: 'w', color: ACCENTS.blue, icon: ChessRook },
+  { key: 'london', side: 'w', color: ACCENTS.blue, icon: ChessRook, pack: 'london' },
   { key: 'caroKann', side: 'b', color: ACCENTS.green, icon: ChessPawn },
   { key: 'slav', side: 'b', color: ACCENTS.purple, icon: ChessKnight },
   { key: 'italian', side: 'w', color: ACCENTS.orange, icon: ChessQueen },
@@ -101,9 +103,9 @@ export default function HomeScreen() {
           <ThemedText style={{ color: 'rgba(255,255,255,0.85)' }}>{t('home.heroBody')}</ThemedText>
           <Button
             variant="inverse"
-            icon={ChessKnight}
-            label={t('home.tryBoard')}
-            onPress={() => router.navigate('/board')}
+            icon={ChessRook}
+            label={t('home.openCourse')}
+            onPress={() => router.push('/course/london')}
             style={{
               alignSelf: 'flex-start',
               marginTop: theme.spacing.xs,
@@ -192,7 +194,8 @@ export default function HomeScreen() {
               icon={c.icon}
               accent={c.color}
               watermark={c.icon}
-              badge={t('home.soon')}
+              badge={c.pack ? undefined : t('home.soon')}
+              onPress={c.pack ? () => router.push(`/course/${c.pack}`) : undefined}
             />
           </Appear>
         ))}
