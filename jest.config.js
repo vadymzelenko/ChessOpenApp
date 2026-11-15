@@ -6,7 +6,7 @@ module.exports = {
       rootDir: '<rootDir>/packages/core',
       testEnvironment: 'node',
       transform: {
-        '^.+\\.[jt]sx?$': ['babel-jest', { configFile: require.resolve('./babel.config.js') }],
+        '^.+\\.[jt]sx?$': ['babel-jest', { configFile: require.resolve('./babel.jest.config.js') }],
       },
     },
     {
@@ -14,7 +14,7 @@ module.exports = {
       rootDir: '<rootDir>/packages/ui',
       testEnvironment: 'node',
       transform: {
-        '^.+\\.[jt]sx?$': ['babel-jest', { configFile: require.resolve('./babel.config.js') }],
+        '^.+\\.[jt]sx?$': ['babel-jest', { configFile: require.resolve('./babel.jest.config.js') }],
       },
     },
   ],

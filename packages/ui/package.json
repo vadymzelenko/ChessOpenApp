@@ -9,11 +9,15 @@
     "test": "jest --selectProjects ui --rootDir ../..",
     "typecheck": "tsc -b"
   },
-  "dependencies": {
-    "zustand": "^5.1.0"
-  },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-svg": "*",
+    "react-native-reanimated": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-worklets": "*"
+  },
+  "dependencies": {
+    "@chess-open/core": "*"
   }
 }

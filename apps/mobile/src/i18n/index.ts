@@ -26,9 +26,9 @@ void i18n.use(initReactI18next).init({
   returnNull: false,
 });
 
-/** Switch to the device language. Call once after the first client render. */
-export function applyDeviceLanguage(): void {
-  const lang = detectLanguage();
+/** Apply the language setting ('auto' = device language). Call after the first client render. */
+export function applyLanguage(setting: Language | 'auto'): void {
+  const lang = setting === 'auto' ? detectLanguage() : setting;
   if (i18n.language !== lang) void i18n.changeLanguage(lang);
 }
 

@@ -8,5 +8,8 @@
   "scripts": {
     "test": "jest --selectProjects core --rootDir ../..",
     "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "chess.js": "^1.4.0"
   }
 }

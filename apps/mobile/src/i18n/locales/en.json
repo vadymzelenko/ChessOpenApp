@@ -5,14 +5,37 @@
   },
   "tabs": {
     "home": "Home",
+    "board": "Board",
     "settings": "Settings"
   },
   "home": {
     "comingSoonTitle": "Courses are coming soon",
-    "comingSoonBody": "The app skeleton and themes are ready. The first course is the London System.",
+    "comingSoonBody": "The board, animations, sounds and settings are ready. The first course is the London System.",
+    "tryBoard": "Open the board",
     "legendTitle": "Legend",
     "legendVerified": "Reviewed by a human",
     "legendGenerated": "Generated from statistics"
+  },
+  "board": {
+    "whiteToMove": "White to move",
+    "blackToMove": "Black to move",
+    "check": "Check!",
+    "checkmateWhite": "Checkmate. White wins",
+    "checkmateBlack": "Checkmate. Black wins",
+    "stalemate": "Stalemate — draw",
+    "draw": "Draw",
+    "browsing": "Browsing history",
+    "playFromHere": "Play from here",
+    "start": "To start",
+    "back": "Back",
+    "forward": "Forward",
+    "end": "To end",
+    "flip": "Flip board",
+    "undo": "Take back",
+    "reset": "New game",
+    "moves": "Moves",
+    "noMoves": "Make the first move",
+    "hotkeys": "Keys: ← → moves, Home/End start/end, F flip, Z take back"
   },
   "settings": {
     "appearance": "Appearance",
@@ -25,6 +48,24 @@
     "animationsNormal": "Normal",
     "animationsOff": "Off",
     "reduceMotionNote": "If “Reduce motion” is enabled in the system, animations are turned off automatically.",
-    "palette": "Theme palette"
+    "board": "Board",
+    "boardTheme": "Board colours",
+    "coordinates": "Coordinates on the board",
+    "legalMoves": "Show legal moves",
+    "moveInput": "Move input",
+    "moveInputDrag": "Drag",
+    "moveInputTap": "Tap",
+    "moveInputBoth": "Both",
+    "autoQueen": "Auto-queen",
+    "autoQueenHint": "Pawns promote to a queen without asking",
+    "soundAndHaptics": "Sound & haptics",
+    "sound": "Sounds",
+    "soundWood": "Wood",
+    "soundSoft": "Soft",
+    "soundOff": "Off",
+    "haptics": "Vibration",
+    "language": "Language",
+    "languageAuto": "System",
+    "reset": "Reset settings"
   }
 }

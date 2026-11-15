@@ -1,5 +1,3 @@
-import { applyDeviceLanguage } from '@/i18n';
-
 import { ThemeProvider, useTheme } from '@chess-open/ui';
 import {
   DarkTheme,
@@ -11,8 +9,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, type ColorValue } from 'react-native';
+import { Platform, Text, type ColorValue } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { applyLanguage } from '@/i18n';
+import { preloadSounds } from '@/services/feedback';
 import { useSettings } from '@/store/settings';
 
 void SplashScreen.preventAutoHideAsync();
@@ -20,16 +21,24 @@ void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const theme = useSettings((s) => s.theme);
   const animationSpeed = useSettings((s) => s.animationSpeed);
+  const language = useSettings((s) => s.language);
+  const soundSet = useSettings((s) => s.soundSet);
 
   useEffect(() => {
-    applyDeviceLanguage();
+    // Web: settings are read after hydration so pre-rendered HTML matches.
+    if (Platform.OS === 'web') void useSettings.persist.rehydrate();
     void SplashScreen.hideAsync();
   }, []);
 
+  useEffect(() => applyLanguage(language), [language]);
+  useEffect(() => preloadSounds(soundSet), [soundSet]);
+
   return (
-    <ThemeProvider preference={theme} animationSpeed={animationSpeed}>
-      <ThemedNavigation />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider preference={theme} animationSpeed={animationSpeed}>
+        <ThemedNavigation />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
@@ -67,6 +76,13 @@ function ThemedNavigation() {
           name="index"
           options={{
             title: tr('tabs.home'),
+            tabBarIcon: ({ color }) => <TabGlyph glyph="⌂" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="board"
+          options={{
+            title: tr('tabs.board'),
             tabBarIcon: ({ color }) => <TabGlyph glyph="♞" color={color} />,
           }}
         />

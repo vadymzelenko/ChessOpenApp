@@ -5,14 +5,37 @@
   },
   "tabs": {
     "home": "Главная",
+    "board": "Доска",
     "settings": "Настройки"
   },
   "home": {
     "comingSoonTitle": "Курсы скоро появятся",
-    "comingSoonBody": "Сейчас готов каркас приложения и темы. Первый курс — Лондонская система.",
+    "comingSoonBody": "Готовы доска, анимации, звуки и настройки. Первый курс — Лондонская система.",
+    "tryBoard": "Открыть доску",
     "legendTitle": "Обозначения",
     "legendVerified": "Проверено человеком",
     "legendGenerated": "Сгенерировано из статистики"
+  },
+  "board": {
+    "whiteToMove": "Ход белых",
+    "blackToMove": "Ход чёрных",
+    "check": "Шах!",
+    "checkmateWhite": "Мат. Победили белые",
+    "checkmateBlack": "Мат. Победили чёрные",
+    "stalemate": "Пат — ничья",
+    "draw": "Ничья",
+    "browsing": "Просмотр истории",
+    "playFromHere": "Играть отсюда",
+    "start": "В начало",
+    "back": "Назад",
+    "forward": "Вперёд",
+    "end": "В конец",
+    "flip": "Перевернуть доску",
+    "undo": "Взять ход назад",
+    "reset": "Новая партия",
+    "moves": "Ходы",
+    "noMoves": "Сделайте первый ход",
+    "hotkeys": "Клавиши: ← → — ходы, Home/End — начало/конец, F — перевернуть, Z — взять ход назад"
   },
   "settings": {
     "appearance": "Оформление",
@@ -25,6 +48,24 @@
     "animationsNormal": "Норма",
     "animationsOff": "Выкл",
     "reduceMotionNote": "Если в системе включено «Уменьшить движение», анимации отключаются автоматически.",
-    "palette": "Палитра темы"
+    "board": "Доска",
+    "boardTheme": "Цвет доски",
+    "coordinates": "Координаты на доске",
+    "legalMoves": "Показывать возможные ходы",
+    "moveInput": "Способ хода",
+    "moveInputDrag": "Перетаскивание",
+    "moveInputTap": "Касание",
+    "moveInputBoth": "Оба",
+    "autoQueen": "Автоферзь",
+    "autoQueenHint": "Пешка сразу превращается в ферзя, без выбора фигуры",
+    "soundAndHaptics": "Звук и вибро",
+    "sound": "Звуки",
+    "soundWood": "Дерево",
+    "soundSoft": "Мягкие",
+    "soundOff": "Выкл",
+    "haptics": "Вибро",
+    "language": "Язык",
+    "languageAuto": "Как в системе",
+    "reset": "Сбросить настройки"
   }
 }

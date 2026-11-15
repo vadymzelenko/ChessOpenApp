@@ -7,3 +7,5 @@
 
 /** Version of the Opening Pack format this build of the app understands. */
 export const SUPPORTED_PACK_FORMAT = 1;
+
+export * from './chess';

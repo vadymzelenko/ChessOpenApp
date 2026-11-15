@@ -4,3 +4,6 @@ export { ThemedText, type ThemedTextProps } from './components/ThemedText';
 export { Screen, type ScreenProps } from './components/Screen';
 export { Card, type CardProps } from './components/Card';
 export { SegmentedControl, type SegmentedControlProps } from './components/SegmentedControl';
+export * from './board';
+export { ToggleRow, type ToggleRowProps } from './components/ToggleRow';
+export { Button, type ButtonProps } from './components/Button';

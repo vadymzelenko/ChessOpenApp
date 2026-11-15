@@ -1,4 +1,5 @@
-import { Card, Screen, ThemedText, useTheme } from '@chess-open/ui';
+import { Button, Card, Screen, ThemedText, useTheme } from '@chess-open/ui';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
@@ -16,6 +17,12 @@ export default function HomeScreen() {
       <Card>
         <ThemedText variant="heading">{t('home.comingSoonTitle')}</ThemedText>
         <ThemedText tone="textMuted">{t('home.comingSoonBody')}</ThemedText>
+        <Button
+          variant="primary"
+          label={t('home.tryBoard')}
+          onPress={() => router.navigate('/board')}
+          style={{ alignSelf: 'flex-start', marginTop: theme.spacing.sm }}
+        />
       </Card>
 
       <Card>
