@@ -17,7 +17,8 @@
     "format:check": "prettier --check .",
     "pack:build": "tsx tools/pipeline/build-pack.ts",
     "pack:check": "tsx tools/pipeline/build-pack.ts --all --check",
-    "pack:schema": "tsx tools/pipeline/build-pack.ts schema"
+    "pack:schema": "tsx tools/pipeline/build-pack.ts schema",
+    "pack:explorer": "tsx tools/pipeline/build-explorer.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",

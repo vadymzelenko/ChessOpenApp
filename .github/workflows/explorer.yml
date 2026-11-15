@@ -1,0 +1,44 @@
+name: Explorer pipeline
+
+# Builds opponent statistics from the Lichess Opening Explorer for one pack
+# (ТЗ §5, modules 11 + 13). Started by hand: Actions → Explorer pipeline → Run.
+on:
+  workflow_dispatch:
+    inputs:
+      pack:
+        description: 'Pack folder in packs/ (e.g. london, _example)'
+        required: true
+        default: '_example'
+      max:
+        description: 'Max positions to fetch'
+        required: true
+        default: '1500'
+
+jobs:
+  explorer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: .cache/explorer
+          key: explorer-${{ inputs.pack }}-${{ github.run_id }}
+          restore-keys: explorer-${{ inputs.pack }}-
+      - name: Build explorer data
+        env:
+          LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
+        run: npm run pack:explorer -- "${{ inputs.pack }}" --max "${{ inputs.max }}"
+      - name: Report
+        run: cat "packs/${{ inputs.pack }}/explorer-report.md" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: explorer-${{ inputs.pack }}
+          path: |
+            packs/${{ inputs.pack }}/explorer.json
+            packs/${{ inputs.pack }}/explorer-report.md

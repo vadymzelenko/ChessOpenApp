@@ -106,10 +106,16 @@ export const ExplorerMoveSchema = z.object({
   stats: z.partialRecord(RatingGroupSchema, WdlSchema),
   /** This is the repertoire move in this position. */
   repertoire: z.boolean().optional(),
+  /** Our move chosen by the pipeline (not by the course author) — shown with ⚙. */
+  auto: z.boolean().optional(),
 });
 
 /** Keyed by positionKey (FEN without counters). */
-export const ExplorerNodeSchema = z.object({ moves: z.array(ExplorerMoveSchema).min(1) });
+export const ExplorerNodeSchema = z.object({
+  moves: z.array(ExplorerMoveSchema).min(1),
+  /** All games in the position (including moves not stored), for move shares and coverage. */
+  total: z.number().int().min(0).optional(),
+});
 
 export const EvalSchema = z
   .object({

@@ -22,3 +22,4 @@ apps/mobile/ios/
 .DS_Store
 coverage/
 npm-debug.*
+.cache/

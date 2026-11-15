@@ -44,6 +44,9 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
     const pgn = pgnFiles.map((f) => readFileSync(join(dir, f), 'utf8')).join('\n\n');
 
     const { pack, warnings: buildWarnings } = buildPackFromPgn({ meta, ideas, pgn });
+    // Statistics from the explorer pipeline (npm run pack:explorer), if present.
+    const explorerPath = join(dir, 'explorer.json');
+    if (existsSync(explorerPath)) pack.explorer = readJson(explorerPath) as typeof pack.explorer;
     const result = validatePack(pack);
     const warnings = [...buildWarnings, ...result.warnings];
     warnings.forEach((w) => console.log(`  ⚠ ${w}`));
@@ -56,7 +59,8 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
     console.log(
       `  ✓ ${p.course.chapters.length} chapters, ${lines.length} lines ` +
         `(base ${byLevel('base')} / advanced ${byLevel('advanced')} / deep ${byLevel('deep')}), ` +
-        `${reviewed} reviewed ⭐, ${p.ideas.length} ideas, ${p.traps.length} traps, ${p.modelGames.length} model games`,
+        `${reviewed} reviewed ⭐, ${p.ideas.length} ideas, ${p.traps.length} traps, ${p.modelGames.length} model games, ` +
+        `${Object.keys(p.explorer).length} explorer positions`,
     );
 
     if (!opts.check) {
