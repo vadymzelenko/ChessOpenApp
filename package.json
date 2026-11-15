@@ -32,5 +32,6 @@
     "prettier": "^3.10.1",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3"
-  }
+  },
+  "license": "GPL-3.0-or-later"
 }

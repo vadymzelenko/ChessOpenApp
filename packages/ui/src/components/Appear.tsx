@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { useTheme } from '../theme/ThemeProvider';
+import { entranceAnimationsEnabled } from './entrance';
 
 export interface AppearProps {
   children: ReactNode;
@@ -17,7 +18,10 @@ export interface AppearProps {
  */
 export function Appear({ children, index = 0, style }: AppearProps) {
   const t = useTheme();
-  if (t.animationsDisabled) return <Animated.View style={style}>{children}</Animated.View>;
+  // Decided once at mount: elements present at page load never animate in.
+  const [animate] = useState(entranceAnimationsEnabled);
+  if (t.animationsDisabled || !animate)
+    return <Animated.View style={style}>{children}</Animated.View>;
   const entering = FadeInDown.duration(Math.max(180, t.durations.screenTransition + 60))
     .delay(Math.min(index, 8) * 45)
     .withInitialValues({ transform: [{ translateY: 14 }] });

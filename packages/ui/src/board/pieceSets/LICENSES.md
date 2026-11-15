@@ -1,18 +1,19 @@
 # Piece set licences
 
 Imported by `tools/pieces/import.py` from lichess-org/lila (`public/piece/*`), licences as listed in lila's COPYING.md.
+The app itself is GPL-3.0-or-later (see /LICENSE), which permits the GPL sets.
 
-| Set      | Author          | Licence    | Source                                        |
-| -------- | --------------- | ---------- | --------------------------------------------- |
-| Celtic   | Maurizio Monge  | MIT        | https://github.com/maurimo/chess-art          |
-| Chessnut | Alexis Luengas  | Apache-2.0 | https://github.com/LexLuengas/chessnut-pieces |
-| Spatial  | Maurizio Monge  | MIT        | https://github.com/maurimo/chess-art          |
-| Fantasy  | Maurizio Monge  | MIT        | https://github.com/maurimo/chess-art          |
-| Papercut | Nikolay Anzarov | CC-BY-4.0  | https://nikoichu.itch.io/                     |
-| Totoy    | Kosal Sen       | CC-BY-4.0  | https://github.com/lichess-org/lila           |
-| RhosGFX  | RhosGFX         | CC0-1.0    | https://rhosgfx.itch.io/                      |
+| Set      | Author                      | Licence          | Source                                        |
+| -------- | --------------------------- | ---------------- | --------------------------------------------- |
+| Cburnett | Colin M.L. Burnett          | GPL-2.0-or-later | https://en.wikipedia.org/wiki/User:Cburnett   |
+| Merida   | Armando Hernandez Marroquin | GPL-2.0-or-later | https://github.com/lichess-org/lila           |
+| MPChess  | Maxime Chupin               | GPL-3.0-or-later | https://github.com/chupinmaxime               |
+| Chessnut | Alexis Luengas              | Apache-2.0       | https://github.com/LexLuengas/chessnut-pieces |
+| Celtic   | Maurizio Monge              | MIT              | https://github.com/maurimo/chess-art          |
+| Spatial  | Maurizio Monge              | MIT              | https://github.com/maurimo/chess-art          |
+| Papercut | Nikolay Anzarov             | CC-BY-4.0        | https://nikoichu.itch.io/                     |
 
-CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ — CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ — GPL: see /LICENSE and https://www.gnu.org/licenses/
 
 ## MIT (Maurizio Monge, chess-art)
 

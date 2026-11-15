@@ -2,8 +2,8 @@
 
 Run: python3 tools/pieces/import.py
 Source: lichess-org/lila public/piece/<set> (licences per lila COPYING.md).
-Only sets whose licence allows use in a (possibly ad-supported) app are listed.
-GPL / AGPL / NC sets (cburnett, merida, alpha, staunty, …) are deliberately excluded.
+The app is GPL-3.0-or-later, so GPL sets are allowed. AGPL and non-commercial (NC)
+sets (alpha, staunty, maestro, …) are excluded.
 """
 import json
 import os
@@ -11,13 +11,13 @@ import re
 import urllib.request
 
 SETS = {
-    'celtic': ('Celtic', 'Maurizio Monge', 'MIT', 'https://github.com/maurimo/chess-art'),
+    'cburnett': ('Cburnett', 'Colin M.L. Burnett', 'GPL-2.0-or-later', 'https://en.wikipedia.org/wiki/User:Cburnett'),
+    'merida': ('Merida', 'Armando Hernandez Marroquin', 'GPL-2.0-or-later', 'https://github.com/lichess-org/lila'),
+    'mpchess': ('MPChess', 'Maxime Chupin', 'GPL-3.0-or-later', 'https://github.com/chupinmaxime'),
     'chessnut': ('Chessnut', 'Alexis Luengas', 'Apache-2.0', 'https://github.com/LexLuengas/chessnut-pieces'),
+    'celtic': ('Celtic', 'Maurizio Monge', 'MIT', 'https://github.com/maurimo/chess-art'),
     'spatial': ('Spatial', 'Maurizio Monge', 'MIT', 'https://github.com/maurimo/chess-art'),
-    'fantasy': ('Fantasy', 'Maurizio Monge', 'MIT', 'https://github.com/maurimo/chess-art'),
     'papercut': ('Papercut', 'Nikolay Anzarov', 'CC-BY-4.0', 'https://nikoichu.itch.io/'),
-    'totoy': ('Totoy', 'Kosal Sen', 'CC-BY-4.0', 'https://github.com/lichess-org/lila'),
-    'rhosgfx': ('RhosGFX', 'RhosGFX', 'CC0-1.0', 'https://rhosgfx.itch.io/'),
 }
 PIECES = ['wK', 'wQ', 'wR', 'wB', 'wN', 'wP', 'bK', 'bQ', 'bR', 'bB', 'bN', 'bP']
 BASE = 'https://raw.githubusercontent.com/lichess-org/lila/master/public/piece'

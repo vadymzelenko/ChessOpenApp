@@ -6,7 +6,12 @@ import {
   Manrope_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/manrope';
-import { ThemeProvider, useTheme, type IconComponent } from '@chess-open/ui';
+import {
+  ThemeProvider,
+  enableEntranceAnimations,
+  useTheme,
+  type IconComponent,
+} from '@chess-open/ui';
 import {
   DarkTheme,
   DefaultTheme,
@@ -16,7 +21,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { ChessKnight, House, Settings } from 'lucide-react-native';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Animated, Dimensions, Easing, Platform, type ColorValue } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -40,8 +45,9 @@ export default function RootLayout() {
     Manrope_700Bold,
     Manrope_800ExtraBold,
   });
-  // Web renders immediately (static HTML) and swaps the font in when it arrives.
+  // Web renders immediately (static HTML) and is revealed once fonts are in.
   const ready = fontsLoaded || !!fontError || Platform.OS === 'web';
+  const revealed = useWebReveal(fontsLoaded || !!fontError);
 
   useEffect(() => {
     // Web: settings are read after hydration so pre-rendered HTML matches.
@@ -56,12 +62,42 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider preference={theme} animationSpeed={animationSpeed}>
-        <ThemedNavigation />
-      </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#0F1115' }}>
+      <Animated.View style={{ flex: 1, opacity: revealed }}>
+        <ThemeProvider preference={theme} animationSpeed={animationSpeed}>
+          <ThemedNavigation />
+        </ThemeProvider>
+      </Animated.View>
     </GestureHandlerRootView>
   );
+}
+
+/**
+ * Web only: the statically pre-rendered page stays transparent until it has
+ * hydrated, read the real window size and loaded the fonts (max 1.5 s), then
+ * fades in once — no layout jumps or font swaps are visible. Native: always 1.
+ */
+function useWebReveal(fontsReady: boolean): Animated.Value | number {
+  const [opacity] = useState(() => new Animated.Value(Platform.OS === 'web' ? 0 : 1));
+  const [timedOut, setTimedOut] = useState(false);
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const id = setTimeout(() => setTimedOut(true), 1500);
+    return () => clearTimeout(id);
+  }, []);
+  const go = Platform.OS === 'web' && (fontsReady || timedOut);
+  useEffect(() => {
+    if (!go) return;
+    // Boards and other measured views settle a few frames after hydration;
+    // wait for that, then fade in once.
+    const id = setTimeout(() => {
+      Animated.timing(opacity, { toValue: 1, duration: 220, useNativeDriver: false }).start(() =>
+        enableEntranceAnimations(),
+      );
+    }, 300);
+    return () => clearTimeout(id);
+  }, [go, opacity]);
+  return opacity;
 }
 
 /**

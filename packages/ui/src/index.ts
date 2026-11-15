@@ -12,3 +12,4 @@ export { Appear, type AppearProps } from './components/Appear';
 export { IconBadge, type IconBadgeProps } from './components/IconBadge';
 export { Tile, shade, type TileProps } from './components/Tile';
 export { SectionHeader, type SectionHeaderProps } from './components/SectionHeader';
+export { enableEntranceAnimations } from './components/entrance';

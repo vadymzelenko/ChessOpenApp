@@ -14,5 +14,6 @@ Spec: «ТЗ: бесплатный тренажёр дебютов (React Native
 - Must work on Android and in the browser (static web export).
 - Add app deps with `npx expo install` in `apps/mobile` (offline env: `EXPO_OFFLINE=1`).
 - Before committing: `npm test && npm run typecheck && npm run lint && npm run format:check`.
-- Licences (ТЗ §12): no chessground, no Stockfish inside the app without GPL review, no copied
+- Licences (ТЗ §12): the app is GPL-3.0-or-later (GPL piece sets, Stockfish allowed). No chessground
+  (own board), no AGPL/NC assets, no copied
   Chessable/Chessigma content, OFL fonts only.
