@@ -24,6 +24,7 @@ import {
 import { boardThemes, type BoardTheme } from './boardThemes';
 import { squareToXY, xyToSquare } from './geometry';
 import { PieceIcon } from './PieceIcon';
+import { DEFAULT_PIECE_SET, type PieceSetId } from './pieceSets';
 import { diffPieces, keyPieces, type KeyedPiece } from './pieceDiff';
 
 export interface BoardMove {
@@ -56,6 +57,7 @@ export interface BoardProps {
   /** Promote to a queen without asking. */
   autoQueen?: boolean;
   boardTheme?: BoardTheme;
+  pieceSet?: PieceSetId;
   disabled?: boolean;
 }
 
@@ -108,6 +110,7 @@ export function Board({
   moveInput = 'both',
   autoQueen = false,
   boardTheme = boardThemes.green,
+  pieceSet = DEFAULT_PIECE_SET,
   disabled = false,
 }: BoardProps) {
   const theme = useTheme();
@@ -384,7 +387,14 @@ export function Board({
                   pointerEvents="none"
                   style={[
                     styles.abs,
-                    { left: 0, top: 0, width: sq, height: sq, backgroundColor: boardTheme.hover },
+                    {
+                      left: 0,
+                      top: 0,
+                      width: sq,
+                      height: sq,
+                      borderWidth: Math.max(2, sq * 0.06),
+                      borderColor: boardTheme.hover,
+                    },
                     hoverStyle,
                   ]}
                 />
@@ -396,6 +406,7 @@ export function Board({
                   squareSize={sq}
                   orientation={orientation}
                   duration={durations.capture}
+                  pieceSet={pieceSet}
                 />
               ))}
               {keyed.map((p) => (
@@ -408,6 +419,7 @@ export function Board({
                   bounceDuration={durations.wrongMove}
                   hidden={p.square === dragFrom}
                   dropHint={dropHint}
+                  pieceSet={pieceSet}
                 />
               ))}
               <BoardHints
@@ -429,7 +441,12 @@ export function Board({
                     { left: 0, top: 0, width: sq, height: sq },
                     ghostStyle,
                   ]}>
-                  <PieceIcon color={dragPiece.color} kind={dragPiece.type} size={sq} />
+                  <PieceIcon
+                    color={dragPiece.color}
+                    kind={dragPiece.type}
+                    size={sq}
+                    set={pieceSet}
+                  />
                 </Animated.View>
               )}
             </View>
@@ -467,7 +484,7 @@ export function Board({
                       backgroundColor: pressed ? boardTheme.selected : theme.colors.surfaceRaised,
                     },
                   ]}>
-                  <PieceIcon color={promoColor} kind={kind} size={sq} />
+                  <PieceIcon color={promoColor} kind={kind} size={sq} set={pieceSet} />
                 </Pressable>
               ))}
             </Pressable>
@@ -481,12 +498,6 @@ export function Board({
 const styles = StyleSheet.create({
   outer: { width: '100%', aspectRatio: 1 },
   abs: { position: 'absolute' },
-  ghost: {
-    shadowColor: '#000',
-    shadowOpacity: 0.35,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 8,
-    zIndex: 10,
-  },
+  // No shadow/elevation: on Android elevation draws a square box around the piece.
+  ghost: { zIndex: 10 },
 });

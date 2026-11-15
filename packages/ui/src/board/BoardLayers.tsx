@@ -12,6 +12,7 @@ import Svg, {
   Text,
 } from 'react-native-svg';
 
+import { fontFamilies } from '../theme/tokens';
 import type { BoardTheme } from './boardThemes';
 import { ALL_SQUARES, squareToXY } from './geometry';
 
@@ -77,7 +78,7 @@ function SquaresImpl({ size, orientation, theme, showCoordinates }: SquaresProps
                   x={x + sq * 0.06}
                   y={y + font * 1.05}
                   fontSize={font}
-                  fontWeight="600"
+                  fontFamily={fontFamilies.bold}
                   fill={color}>
                   {s[1]}
                 </Text>
@@ -87,7 +88,7 @@ function SquaresImpl({ size, orientation, theme, showCoordinates }: SquaresProps
                   x={x + sq * 0.94}
                   y={y + sq - sq * 0.06}
                   fontSize={font}
-                  fontWeight="600"
+                  fontFamily={fontFamilies.bold}
                   fill={color}
                   textAnchor="end">
                   {s[0]}

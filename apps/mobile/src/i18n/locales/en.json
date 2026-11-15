@@ -10,7 +10,7 @@
   },
   "home": {
     "comingSoonTitle": "Courses are coming soon",
-    "comingSoonBody": "The board, animations, sounds and settings are ready. The first course is the London System.",
+    "comingSoonBody": "The board with a variation tree, 7 piece sets, animations, sounds and settings are ready. The first course is the London System.",
     "tryBoard": "Open the board",
     "legendTitle": "Legend",
     "legendVerified": "Reviewed by a human",
@@ -24,18 +24,18 @@
     "checkmateBlack": "Checkmate. Black wins",
     "stalemate": "Stalemate — draw",
     "draw": "Draw",
-    "browsing": "Browsing history",
-    "playFromHere": "Play from here",
     "start": "To start",
     "back": "Back",
     "forward": "Forward",
     "end": "To end",
     "flip": "Flip board",
-    "undo": "Take back",
     "reset": "New game",
     "moves": "Moves",
     "noMoves": "Make the first move",
-    "hotkeys": "Keys: ← → moves, Home/End start/end, F flip, Z take back"
+    "hotkeys": "Keys: ← → moves, ↑ ↓ variations, Home/End start/end, F flip",
+    "inVariation": "Variation",
+    "promote": "Make main line",
+    "deleteVariation": "Delete variation"
   },
   "settings": {
     "appearance": "Appearance",
@@ -65,7 +65,8 @@
     "soundOff": "Off",
     "haptics": "Vibration",
     "language": "Language",
-    "languageAuto": "System",
-    "reset": "Reset settings"
+    "languageAuto": "Auto",
+    "reset": "Reset settings",
+    "pieceSet": "Pieces"
   }
 }

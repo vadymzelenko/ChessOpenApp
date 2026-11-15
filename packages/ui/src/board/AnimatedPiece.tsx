@@ -10,6 +10,7 @@ import Animated, {
 
 import { squareToXY } from './geometry';
 import { PieceIcon } from './PieceIcon';
+import type { PieceSetId } from './pieceSets';
 import type { KeyedPiece } from './pieceDiff';
 
 /** Where a piece should start its next animation from (a drop point). */
@@ -29,6 +30,7 @@ interface AnimatedPieceProps {
   bounceDuration: number;
   hidden: boolean;
   dropHint: DropHint | null;
+  pieceSet: PieceSetId;
 }
 
 function AnimatedPieceImpl({
@@ -39,6 +41,7 @@ function AnimatedPieceImpl({
   bounceDuration,
   hidden,
   dropHint,
+  pieceSet,
 }: AnimatedPieceProps) {
   const target = squareToXY(piece.square, orientation, squareSize);
   const x = useSharedValue(target.x);
@@ -90,7 +93,7 @@ function AnimatedPieceImpl({
         { opacity: hidden ? 0 : 1 },
         style,
       ]}>
-      <PieceIcon color={piece.color} kind={piece.type} size={squareSize} />
+      <PieceIcon color={piece.color} kind={piece.type} size={squareSize} set={pieceSet} />
     </Animated.View>
   );
 }
@@ -102,10 +105,17 @@ interface CapturedPieceProps {
   squareSize: number;
   orientation: Color;
   duration: number;
+  pieceSet: PieceSetId;
 }
 
 /** A captured piece shrinking and fading out (ТЗ §10: 150 ms). */
-function CapturedPieceImpl({ piece, squareSize, orientation, duration }: CapturedPieceProps) {
+function CapturedPieceImpl({
+  piece,
+  squareSize,
+  orientation,
+  duration,
+  pieceSet,
+}: CapturedPieceProps) {
   const { x, y } = squareToXY(piece.square, orientation, squareSize);
   const progress = useSharedValue(duration > 0 ? 0 : 1);
 
@@ -125,7 +135,7 @@ function CapturedPieceImpl({ piece, squareSize, orientation, duration }: Capture
         { position: 'absolute', left: 0, top: 0, width: squareSize, height: squareSize },
         style,
       ]}>
-      <PieceIcon color={piece.color} kind={piece.type} size={squareSize} />
+      <PieceIcon color={piece.color} kind={piece.type} size={squareSize} set={pieceSet} />
     </Animated.View>
   );
 }

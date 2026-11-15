@@ -1,26 +1,35 @@
-import { Pressable, type ViewStyle } from 'react-native';
+import type { ComponentType } from 'react';
+import { Pressable, View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '../theme/ThemeProvider';
 import { ThemedText } from './ThemedText';
 
+/** Any icon component with lucide-like props (lucide-react-native fits). */
+export type IconComponent = ComponentType<{ color?: string; size?: number; strokeWidth?: number }>;
+
 export interface ButtonProps {
-  label: string;
+  label?: string;
+  icon?: IconComponent;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   disabled?: boolean;
   accessibilityLabel?: string;
   style?: ViewStyle;
   compact?: boolean;
+  /** Stretch to the available width (flex: 1). */
+  grow?: boolean;
 }
 
 export function Button({
   label,
+  icon: Icon,
   onPress,
   variant = 'secondary',
   disabled,
   accessibilityLabel,
   style,
   compact,
+  grow,
 }: ButtonProps) {
   const t = useTheme();
   const bg =
@@ -29,6 +38,13 @@ export function Button({
       : variant === 'secondary'
         ? t.colors.surfaceRaised
         : 'transparent';
+  const fg =
+    variant === 'primary'
+      ? t.colors.onAccent
+      : variant === 'danger'
+        ? t.colors.danger
+        : t.colors.text;
+  const iconOnly = !label;
   return (
     <Pressable
       accessibilityRole="button"
@@ -36,24 +52,36 @@ export function Button({
       accessibilityState={{ disabled: !!disabled }}
       disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [
+      hitSlop={iconOnly ? 4 : undefined}
+      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
         {
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: compact ? 40 : 44,
-          minWidth: compact ? 44 : undefined,
-          paddingHorizontal: compact ? t.spacing.md : t.spacing.lg,
+          gap: t.spacing.sm,
+          minHeight: compact ? 40 : 46,
+          minWidth: iconOnly ? (compact ? 44 : 48) : undefined,
+          paddingHorizontal: iconOnly ? t.spacing.sm : compact ? t.spacing.md : t.spacing.lg,
           borderRadius: t.radii.md,
           backgroundColor: bg,
           borderWidth: variant === 'secondary' ? 1 : 0,
           borderColor: t.colors.border,
-          opacity: disabled ? 0.4 : pressed ? 0.75 : 1,
+          opacity: disabled ? 0.35 : pressed ? 0.7 : hovered ? 0.88 : 1,
+          transform: [{ scale: pressed && !disabled ? 0.97 : 1 }],
         },
+        grow ? { flex: 1 } : null,
         style,
       ]}>
-      <ThemedText variant="label" tone={variant === 'primary' ? 'onAccent' : 'text'}>
-        {label}
-      </ThemedText>
+      {Icon ? (
+        <View pointerEvents="none">
+          <Icon color={fg} size={compact ? 20 : 22} strokeWidth={2.25} />
+        </View>
+      ) : null}
+      {label ? (
+        <ThemedText variant="label" style={{ color: fg }}>
+          {label}
+        </ThemedText>
+      ) : null}
     </Pressable>
   );
 }

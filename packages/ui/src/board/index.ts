@@ -7,6 +7,18 @@ export {
 } from './BoardLayers';
 export { BOARD_THEME_IDS, boardThemes, type BoardTheme, type BoardThemeId } from './boardThemes';
 export { ALL_SQUARES, squareToXY, xyToSquare } from './geometry';
-export { PieceIcon, type PieceIconProps } from './PieceIcon';
-export { pieceSvg, type PieceColor, type PieceKind } from './pieceShapes';
+export {
+  PieceIcon,
+  pieceCode,
+  type PieceColor,
+  type PieceIconProps,
+  type PieceKind,
+} from './PieceIcon';
+export {
+  DEFAULT_PIECE_SET,
+  PIECE_SET_IDS,
+  pieceSets,
+  type PieceSet,
+  type PieceSetId,
+} from './pieceSets';
 export { diffPieces, keyPieces, type KeyedPiece } from './pieceDiff';

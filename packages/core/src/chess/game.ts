@@ -55,7 +55,7 @@ export type GameStatus =
   | 'threefold-repetition'
   | 'fifty-moves';
 
-function toRecord(m: ChessJsMove, ply: number, after: Chess): MoveRecord {
+export function toRecord(m: ChessJsMove, ply: number, after: Chess): MoveRecord {
   const promotion = m.promotion as PromotionPiece | undefined;
   const enPassant = m.isEnPassant();
   const record: MoveRecord = {

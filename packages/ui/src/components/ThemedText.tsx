@@ -23,20 +23,29 @@ export interface ThemedTextProps extends TextProps {
 }
 
 function variantStyle(t: Theme, variant: Variant): TextStyle {
-  const { size, lineHeight, weight, family } = t.typography;
-  const base: TextStyle = family.sans ? { fontFamily: family.sans } : {};
+  const { size, lineHeight, family } = t.typography;
   switch (variant) {
     case 'title':
-      return { ...base, fontSize: size.xxl, lineHeight: lineHeight.xxl, fontWeight: weight.bold };
+      return {
+        fontFamily: family.extrabold,
+        fontSize: size.xxl,
+        lineHeight: lineHeight.xxl,
+        letterSpacing: -0.5,
+      };
     case 'heading':
-      return { ...base, fontSize: size.lg, lineHeight: lineHeight.lg, fontWeight: weight.semibold };
+      return {
+        fontFamily: family.bold,
+        fontSize: size.lg,
+        lineHeight: lineHeight.lg,
+        letterSpacing: -0.2,
+      };
     case 'label':
-      return { ...base, fontSize: size.sm, lineHeight: lineHeight.sm, fontWeight: weight.semibold };
+      return { fontFamily: family.semibold, fontSize: size.sm, lineHeight: lineHeight.sm };
     case 'caption':
-      return { ...base, fontSize: size.xs, lineHeight: lineHeight.xs, fontWeight: weight.regular };
+      return { fontFamily: family.medium, fontSize: size.xs, lineHeight: lineHeight.xs };
     case 'body':
     default:
-      return { ...base, fontSize: size.md, lineHeight: lineHeight.md, fontWeight: weight.regular };
+      return { fontFamily: family.regular, fontSize: size.md, lineHeight: lineHeight.md };
   }
 }
 

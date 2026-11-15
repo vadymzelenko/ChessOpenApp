@@ -1,62 +1,31 @@
 import { memo } from 'react';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 
-import {
-  PIECE_STROKE_WIDTH,
-  pieceShapes,
-  pieceStyles,
-  type PieceColor,
-  type PieceKind,
-} from './pieceShapes';
+import { pieceSets, type PieceCode, type PieceSetId } from './pieceSets';
+
+export type PieceColor = 'w' | 'b';
+export type PieceKind = 'p' | 'n' | 'b' | 'r' | 'q' | 'k';
 
 export interface PieceIconProps {
   color: PieceColor;
   kind: PieceKind;
   size: number;
+  set: PieceSetId;
 }
 
-function PieceIconImpl({ color, kind, size }: PieceIconProps) {
-  const s = pieceStyles[color];
-  const body = {
-    fill: s.fill,
-    stroke: s.stroke,
-    strokeWidth: PIECE_STROKE_WIDTH,
-    strokeLinejoin: 'round' as const,
-  };
+export function pieceCode(color: PieceColor, kind: PieceKind): PieceCode {
+  return `${color}${kind.toUpperCase()}` as PieceCode;
+}
+
+/** Native: render the set's SVG markup with react-native-svg. */
+function PieceIconImpl({ color, kind, size, set }: PieceIconProps) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 45 45" pointerEvents="none">
-      {pieceShapes[kind].map((sh, i) => {
-        switch (sh.kind) {
-          case 'path':
-            return <Path key={i} d={sh.d} {...body} />;
-          case 'circle':
-            return <Circle key={i} cx={sh.cx} cy={sh.cy} r={sh.r} {...body} />;
-          case 'rect':
-            return (
-              <Rect
-                key={i}
-                x={sh.x}
-                y={sh.y}
-                width={sh.w}
-                height={sh.h}
-                rx={sh.rx ?? 0}
-                {...body}
-              />
-            );
-          case 'detail':
-            return (
-              <Path
-                key={i}
-                d={sh.d}
-                fill="none"
-                stroke={s.detail}
-                strokeWidth={PIECE_STROKE_WIDTH}
-                strokeLinecap="round"
-              />
-            );
-        }
-      })}
-    </Svg>
+    <SvgXml
+      xml={pieceSets[set].svgs[pieceCode(color, kind)]}
+      width={size}
+      height={size}
+      pointerEvents="none"
+    />
   );
 }
 

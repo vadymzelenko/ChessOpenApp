@@ -1,4 +1,13 @@
-import type { AnimationSpeed, BoardThemeId, MoveInputMode, ThemePreference } from '@chess-open/ui';
+import {
+  DEFAULT_PIECE_SET,
+  boardThemes,
+  pieceSets,
+  type AnimationSpeed,
+  type BoardThemeId,
+  type MoveInputMode,
+  type PieceSetId,
+  type ThemePreference,
+} from '@chess-open/ui';
 import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -12,6 +21,7 @@ export interface Settings {
   theme: ThemePreference;
   animationSpeed: AnimationSpeed;
   boardTheme: BoardThemeId;
+  pieceSet: PieceSetId;
   showCoordinates: boolean;
   showLegalMoves: boolean;
   moveInput: MoveInputMode;
@@ -25,6 +35,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'dark',
   animationSpeed: 'normal',
   boardTheme: 'green',
+  pieceSet: DEFAULT_PIECE_SET,
   showCoordinates: true,
   showLegalMoves: true,
   moveInput: 'both',
@@ -53,11 +64,17 @@ export const useSettings = create<SettingsState>()(
     }),
     {
       name: 'settings',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => kvStorage),
       partialize: ({ set: _set, reset: _reset, ...rest }) => rest,
-      // Unknown / missing keys from older versions fall back to defaults.
-      merge: (persisted, current) => ({ ...current, ...(persisted as Partial<Settings>) }),
+      migrate: (persisted) => persisted as Settings,
+      // Unknown / missing keys fall back to defaults; values that no longer exist are dropped.
+      merge: (persisted, current) => {
+        const p = { ...(persisted as Partial<Settings>) };
+        if (p.pieceSet && !(p.pieceSet in pieceSets)) delete p.pieceSet;
+        if (p.boardTheme && !(p.boardTheme in boardThemes)) delete p.boardTheme;
+        return { ...current, ...p };
+      },
       skipHydration: Platform.OS === 'web',
     },
   ),

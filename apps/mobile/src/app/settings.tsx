@@ -1,5 +1,8 @@
 import {
   BOARD_THEME_IDS,
+  PIECE_SET_IDS,
+  PieceIcon,
+  pieceSets,
   Button,
   Card,
   Screen,
@@ -11,6 +14,7 @@ import {
   type AnimationSpeed,
   type BoardThemeId,
   type MoveInputMode,
+  type PieceSetId,
   type ThemePreference,
 } from '@chess-open/ui';
 import { useTranslation } from 'react-i18next';
@@ -96,6 +100,18 @@ export default function SettingsScreen() {
               id={id}
               selected={s.boardTheme === id}
               onPress={() => s.set('boardTheme', id)}
+            />
+          ))}
+        </View>
+        {label(t('settings.pieceSet'))}
+        <View style={{ flexDirection: 'row', gap: theme.spacing.sm, flexWrap: 'wrap' }}>
+          {PIECE_SET_IDS.map((id) => (
+            <PieceSetSwatch
+              key={id}
+              id={id}
+              boardTheme={s.boardTheme}
+              selected={s.pieceSet === id}
+              onPress={() => s.set('pieceSet', id)}
             />
           ))}
         </View>
@@ -186,6 +202,48 @@ function BoardSwatch({
           <View key={i} style={{ width: cell, height: cell, backgroundColor: c }} />
         ))}
       </View>
+    </Pressable>
+  );
+}
+
+function PieceSetSwatch({
+  id,
+  boardTheme,
+  selected,
+  onPress,
+}: {
+  id: PieceSetId;
+  boardTheme: BoardThemeId;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  const theme = useTheme();
+  const b = boardThemes[boardTheme];
+  const cell = 34;
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityLabel={pieceSets[id].name}
+      accessibilityState={{ selected }}
+      onPress={onPress}
+      style={{
+        padding: 3,
+        borderRadius: theme.radii.md,
+        borderWidth: 2,
+        borderColor: selected ? theme.colors.accent : 'transparent',
+        alignItems: 'center',
+      }}>
+      <View style={{ flexDirection: 'row', borderRadius: 6, overflow: 'hidden' }}>
+        <View style={{ width: cell, height: cell, backgroundColor: b.light }}>
+          <PieceIcon set={id} color="w" kind="n" size={cell} />
+        </View>
+        <View style={{ width: cell, height: cell, backgroundColor: b.dark }}>
+          <PieceIcon set={id} color="b" kind="q" size={cell} />
+        </View>
+      </View>
+      <ThemedText variant="caption" tone={selected ? 'text' : 'textMuted'} style={{ marginTop: 2 }}>
+        {pieceSets[id].name}
+      </ThemedText>
     </Pressable>
   );
 }

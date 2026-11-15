@@ -93,12 +93,21 @@ export const radii = {
   pill: 999,
 } as const;
 
+/**
+ * Font: Manrope (SIL OFL 1.1, ТЗ §12), loaded by the app from @expo-google-fonts/manrope.
+ * Android ignores fontWeight for custom fonts, so every weight is its own family.
+ */
+export const fontFamilies = {
+  regular: 'Manrope_400Regular',
+  medium: 'Manrope_500Medium',
+  semibold: 'Manrope_600SemiBold',
+  bold: 'Manrope_700Bold',
+  extrabold: 'Manrope_800ExtraBold',
+} as const;
+export type FontWeightName = keyof typeof fontFamilies;
+
 export const typography = {
-  /** Fonts must be OFL-licensed (ТЗ §12). `undefined` = platform system font for now. */
-  family: {
-    sans: undefined as string | undefined,
-    mono: undefined as string | undefined,
-  },
+  family: fontFamilies,
   size: {
     xs: 12,
     sm: 14,
@@ -114,12 +123,6 @@ export const typography = {
     lg: 28,
     xl: 32,
     xxl: 40,
-  },
-  weight: {
-    regular: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
   },
 } as const;
 

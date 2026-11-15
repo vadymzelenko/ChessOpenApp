@@ -8,42 +8,50 @@ import {
   useTheme,
   type BoardMove,
 } from '@chess-open/ui';
+import {
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  CornerUpLeft,
+  GitBranch,
+  RotateCcw,
+  Trash2,
+} from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, useWindowDimensions, View } from 'react-native';
 
-import { MoveList } from '@/components/MoveList';
-import { useChessGame } from '@/hooks/useChessGame';
+import { MoveTree } from '@/components/MoveTree';
+import { useGameTree } from '@/hooks/useGameTree';
 import { useHotkeys } from '@/hooks/useHotkeys';
 import { moveFeedback, playSound } from '@/services/feedback';
 import { useSettings } from '@/store/settings';
 
-/** Free board: play both sides, browse history, flip (ТЗ «Анализ / свободная доска»). */
+/** Free board with a move tree (ТЗ «Анализ / свободная доска»). */
 export default function BoardScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const wide = width >= 820;
   const settings = useSettings();
-  const { game, version, mutate, reset } = useChessGame();
+  const { tree, version, mutate, reset } = useGameTree();
   const [orientation, setOrientation] = useState<'w' | 'b'>('w');
 
-  // `version` changes on every move/navigation; the game object itself is stable.
+  // `version` changes on every move/navigation; the tree object itself is stable.
   /* eslint-disable react-hooks/exhaustive-deps */
-  const pieces = useMemo(() => game.pieces(), [game, version]);
-  const legalMoves = useCallback(
-    (from: Square) => (game.isAtEnd ? game.destinations(from) : []),
-    [game, version],
-  );
+  const pieces = useMemo(() => tree.pieces(), [tree, version]);
+  const legalMoves = useCallback((from: Square) => tree.destinations(from), [tree, version]);
   const isPromotion = useCallback(
-    (from: Square, to: Square) => game.isPromotion(from, to),
-    [game, version],
+    (from: Square, to: Square) => tree.isPromotion(from, to),
+    [tree, version],
   );
   /* eslint-enable react-hooks/exhaustive-deps */
 
   const onMove = useCallback(
     (m: BoardMove) => {
-      const record = mutate((g) => g.play(m));
+      const record = mutate((tr) => tr.play(m));
       if (!record) return false;
       moveFeedback(record);
       return true;
@@ -51,46 +59,49 @@ export default function BoardScreen() {
     [mutate],
   );
 
-  const navigate = useCallback(
-    (fn: () => void) => {
-      const before = game.cursor;
-      mutate(fn);
-      if (game.cursor > before && game.lastMove) moveFeedback(game.lastMove);
-      else if (game.cursor !== before) playSound('move');
-    },
-    [game, mutate],
-  );
-
-  const back = () => navigate(() => game.back());
-  const forward = () => navigate(() => game.forward());
-  const toStart = () => navigate(() => game.toStart());
-  const toEnd = () => navigate(() => game.toEnd());
-  const flip = () => setOrientation((o) => (o === 'w' ? 'b' : 'w'));
-  const undo = () => {
-    if (!game.isAtEnd) return;
-    mutate((g) => g.undo());
+  /** Navigation with sound: forward plays the move's sound, backward a soft tick. */
+  const navigate = (fn: () => void) => {
+    const before = tree.current;
+    mutate(fn);
+    const now = tree.current;
+    if (now === before) return;
+    if (now.parent === before && now.move) moveFeedback(now.move);
+    else playSound('move');
   };
+
+  const back = () => navigate(() => tree.back());
+  const forward = () => navigate(() => tree.forward());
+  const toStart = () => navigate(() => tree.toStart());
+  const toEnd = () => navigate(() => tree.toEnd());
+  const prevVariation = () => navigate(() => tree.switchSibling(-1));
+  const nextVariation = () => navigate(() => tree.switchSibling(1));
+  const flip = () => setOrientation((o) => (o === 'w' ? 'b' : 'w'));
 
   useHotkeys({
     ArrowLeft: back,
     ArrowRight: forward,
+    ArrowUp: prevVariation,
+    ArrowDown: nextVariation,
     Home: toStart,
     End: toEnd,
     f: flip,
-    z: undo,
   });
 
+  const current = tree.current;
+  const atStart = current === tree.root;
+  const atEnd = current.children.length === 0;
+  const varStart = tree.variationStart(current);
+
   const status = (() => {
-    if (!game.isAtEnd) return t('board.browsing');
-    switch (game.status) {
+    switch (tree.status) {
       case 'checkmate':
-        return game.turn === 'w' ? t('board.checkmateBlack') : t('board.checkmateWhite');
+        return tree.turn === 'w' ? t('board.checkmateBlack') : t('board.checkmateWhite');
       case 'stalemate':
         return t('board.stalemate');
       case 'playing':
-        return game.inCheck
+        return tree.inCheck
           ? t('board.check')
-          : game.turn === 'w'
+          : tree.turn === 'w'
             ? t('board.whiteToMove')
             : t('board.blackToMove');
       default:
@@ -98,13 +109,13 @@ export default function BoardScreen() {
     }
   })();
 
-  const last = game.lastMove;
-  const boardEl = (
+  const last = tree.lastMove;
+  const board = (
     <Board
       pieces={pieces}
       orientation={orientation}
       lastMove={last ? { from: last.from, to: last.to } : null}
-      check={game.checkedKingSquare}
+      check={tree.checkedKingSquare}
       legalMoves={legalMoves}
       isPromotion={isPromotion}
       onMove={onMove}
@@ -113,110 +124,169 @@ export default function BoardScreen() {
       moveInput={settings.moveInput}
       autoQueen={settings.autoQueen}
       boardTheme={boardThemes[settings.boardTheme]}
+      pieceSet={settings.pieceSet}
     />
   );
 
   const controls = (
-    <View style={{ flexDirection: 'row', gap: theme.spacing.xs, flexWrap: 'wrap' }}>
+    <View style={{ flexDirection: 'row', gap: theme.spacing.xs }}>
       <Button
+        grow
         compact
-        label="⏮"
+        icon={ChevronsLeft}
         accessibilityLabel={t('board.start')}
         onPress={toStart}
-        disabled={game.cursor === 0}
+        disabled={atStart}
       />
       <Button
+        grow
         compact
-        label="◀"
+        icon={ChevronLeft}
         accessibilityLabel={t('board.back')}
         onPress={back}
-        disabled={game.cursor === 0}
+        disabled={atStart}
       />
       <Button
+        grow
         compact
-        label="▶"
+        icon={ChevronRight}
         accessibilityLabel={t('board.forward')}
         onPress={forward}
-        disabled={game.isAtEnd}
+        disabled={atEnd}
       />
       <Button
+        grow
         compact
-        label="⏭"
+        icon={ChevronsRight}
         accessibilityLabel={t('board.end')}
         onPress={toEnd}
-        disabled={game.isAtEnd}
+        disabled={atEnd}
       />
-      <Button compact label="⇅" accessibilityLabel={t('board.flip')} onPress={flip} />
-      <Button
-        compact
-        label="↶"
-        accessibilityLabel={t('board.undo')}
-        onPress={undo}
-        disabled={!game.isAtEnd || game.length === 0}
-      />
+      <Button grow compact icon={ArrowUpDown} accessibilityLabel={t('board.flip')} onPress={flip} />
     </View>
   );
 
-  const panel = (
-    <View style={{ gap: theme.spacing.md, flex: wide ? 1 : undefined }}>
+  const branchBar = varStart ? (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: theme.spacing.sm,
+        padding: theme.spacing.sm,
+        paddingLeft: theme.spacing.md,
+        borderRadius: theme.radii.md,
+        backgroundColor: theme.colors.surfaceRaised,
+        borderLeftWidth: 3,
+        borderLeftColor: theme.colors.accent,
+      }}>
+      <GitBranch color={theme.colors.accent} size={18} />
+      <ThemedText variant="label" style={{ flex: 1 }}>
+        {t('board.inVariation')}
+      </ThemedText>
+      <Button
+        compact
+        variant="ghost"
+        icon={CornerUpLeft}
+        accessibilityLabel={t('board.promote')}
+        label={wide ? t('board.promote') : undefined}
+        onPress={() => mutate((tr) => tr.promoteToMainline(tr.current))}
+      />
+      <Button
+        compact
+        variant="ghost"
+        icon={Trash2}
+        accessibilityLabel={t('board.deleteVariation')}
+        onPress={() => mutate((tr) => tr.deleteBranch(varStart))}
+      />
+    </View>
+  ) : null;
+
+  const movesCard = (
+    <Card style={{ gap: theme.spacing.sm }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <ThemedText variant="label" tone="textMuted" style={{ flex: 1 }}>
+          {t('board.moves')}
+        </ThemedText>
+        <Button compact variant="ghost" icon={RotateCcw} label={t('board.reset')} onPress={reset} />
+      </View>
+      {tree.root.children.length === 0 ? (
+        <ThemedText tone="textMuted">{t('board.noMoves')}</ThemedText>
+      ) : (
+        <MoveTree
+          tree={tree}
+          version={version}
+          onSelect={(node) => navigate(() => tree.goTo(node))}
+        />
+      )}
+    </Card>
+  );
+
+  const statusRow = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
+      <View
+        style={{
+          width: 14,
+          height: 14,
+          borderRadius: 7,
+          backgroundColor: tree.turn === 'w' ? '#F4F4F2' : '#1E1F24',
+          borderWidth: 1,
+          borderColor: theme.colors.border,
+        }}
+      />
       <ThemedText variant="heading" accessibilityLiveRegion="polite">
         {status}
       </ThemedText>
-      {controls}
-      {!game.isAtEnd && (
-        <Button
-          variant="primary"
-          label={t('board.playFromHere')}
-          onPress={() => mutate((g) => g.truncateToCursor())}
-          style={{ alignSelf: 'flex-start' }}
-        />
-      )}
-      <Card>
-        <ThemedText variant="label" tone="textMuted">
-          {t('board.moves')}
-        </ThemedText>
-        {game.length === 0 ? (
-          <ThemedText tone="textMuted">{t('board.noMoves')}</ThemedText>
-        ) : (
-          <MoveList
-            moves={game.history}
-            cursor={game.cursor}
-            onSelect={(ply) => navigate(() => game.goTo(ply))}
-          />
-        )}
-      </Card>
-      <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
-        <Button label={t('board.reset')} onPress={reset} />
-      </View>
-      {Platform.OS === 'web' && (
-        <ThemedText variant="caption" tone="textMuted">
-          {t('board.hotkeys')}
-        </ThemedText>
-      )}
     </View>
   );
+
+  if (wide) {
+    return (
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.colors.background }}
+        contentContainerStyle={{
+          padding: theme.spacing.xl,
+          gap: theme.spacing.xl,
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          maxWidth: 1280,
+          width: '100%',
+          alignSelf: 'center',
+        }}>
+        <View style={{ width: Math.min(680, width * 0.55) }}>{board}</View>
+        <View style={{ flex: 1, gap: theme.spacing.md }}>
+          {statusRow}
+          {controls}
+          {branchBar}
+          {movesCard}
+          {Platform.OS === 'web' && (
+            <ThemedText variant="caption" tone="textMuted">
+              {t('board.hotkeys')}
+            </ThemedText>
+          )}
+        </View>
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme.colors.background }}
-      contentContainerStyle={{
-        padding: wide ? theme.spacing.xl : theme.spacing.md,
-        gap: theme.spacing.lg,
-        flexDirection: wide ? 'row' : 'column',
-        alignItems: 'flex-start',
-        maxWidth: 1200,
-        width: '100%',
-        alignSelf: 'center',
-      }}>
+      contentContainerStyle={{ paddingBottom: theme.spacing.xl }}>
+      {/* Edge-to-edge board on phones. */}
+      <View style={{ width: '100%', maxWidth: 640, alignSelf: 'center' }}>{board}</View>
       <View
         style={{
-          width: wide ? Math.min(640, width * 0.55) : '100%',
+          padding: theme.spacing.md,
+          gap: theme.spacing.md,
+          width: '100%',
           maxWidth: 640,
           alignSelf: 'center',
         }}>
-        {boardEl}
+        {controls}
+        {statusRow}
+        {branchBar}
+        {movesCard}
       </View>
-      <View style={{ width: wide ? undefined : '100%', flex: wide ? 1 : undefined }}>{panel}</View>
     </ScrollView>
   );
 }
