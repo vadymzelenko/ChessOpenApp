@@ -30,6 +30,8 @@ jobs:
       - run: npm run format:check
       - name: Validate opening packs
         run: npm run pack:check
+      - name: Check moves mentioned in comments
+        run: npm run pack:check-texts -- --all
 
   web:
     needs: checks

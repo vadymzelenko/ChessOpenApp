@@ -45,8 +45,11 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
 
     const { pack, warnings: buildWarnings } = buildPackFromPgn({ meta, ideas, pgn });
     // Statistics from the explorer pipeline (npm run pack:explorer), if present.
-    const explorerPath = join(dir, 'explorer.json');
-    if (existsSync(explorerPath)) pack.explorer = readJson(explorerPath) as typeof pack.explorer;
+    // Pipeline outputs (pack:explorer / pack:evals / pack:puzzles), if present.
+    for (const part of ['explorer', 'evals', 'puzzles'] as const) {
+      const file = join(dir, `${part}.json`);
+      if (existsSync(file)) (pack as Record<string, unknown>)[part] = readJson(file);
+    }
     const result = validatePack(pack);
     const warnings = [...buildWarnings, ...result.warnings];
     warnings.forEach((w) => console.log(`  ⚠ ${w}`));
@@ -60,7 +63,7 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
       `  ✓ ${p.course.chapters.length} chapters, ${lines.length} lines ` +
         `(base ${byLevel('base')} / advanced ${byLevel('advanced')} / deep ${byLevel('deep')}), ` +
         `${reviewed} reviewed ⭐, ${p.ideas.length} ideas, ${p.traps.length} traps, ${p.modelGames.length} model games, ` +
-        `${Object.keys(p.explorer).length} explorer positions`,
+        `${Object.keys(p.explorer).length} explorer positions, ${Object.keys(p.evals).length} evals, ${p.puzzles.length} puzzles`,
     );
 
     if (!opts.check) {

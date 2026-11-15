@@ -173,6 +173,8 @@ export const PackMetaSchema = z.object({
   accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
   /** Defaults to the standard start position. */
   startFen: z.string().optional(),
+  /** Lichess puzzle opening tags for the puzzle pipeline, e.g. ["London_System"]. */
+  puzzleTags: z.array(z.string().min(1)).optional(),
   /** Data sources and licences (ТЗ §12), shown on the «Лицензии» screen. */
   sources: z.array(z.string().min(1)),
 });

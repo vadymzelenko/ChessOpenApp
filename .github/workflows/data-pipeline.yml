@@ -1,0 +1,84 @@
+name: Data pipeline
+
+# Builds the data parts of an Opening Pack from Lichess open data
+# (ТЗ §5, modules 11–15). Started by hand: Actions → Data pipeline → Run workflow.
+# Download the artifact and put the files into packs/<pack>/, then pack:build.
+on:
+  workflow_dispatch:
+    inputs:
+      pack:
+        description: 'Pack folder in packs/ (e.g. london, _example)'
+        required: true
+        default: '_example'
+      steps:
+        description: 'Steps: any of explorer, evals, puzzles'
+        required: true
+        default: 'explorer evals puzzles'
+      max:
+        description: 'Explorer: max positions to fetch'
+        required: true
+        default: '1500'
+      depth:
+        description: 'Stockfish depth for positions without a cloud eval'
+        required: true
+        default: '18'
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      PACK: ${{ inputs.pack }}
+      STEPS: ${{ inputs.steps }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Stockfish and zstd
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq stockfish zstd && echo "STOCKFISH_PATH=/usr/games/stockfish" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: data-${{ inputs.pack }}-${{ github.run_id }}
+          restore-keys: data-${{ inputs.pack }}-
+
+      - name: Explorer (opponent statistics)
+        if: contains(inputs.steps, 'explorer')
+        env:
+          LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
+        run: npm run pack:explorer -- "$PACK" --max "${{ inputs.max }}"
+
+      - name: Evaluations (cloud + Stockfish)
+        if: contains(inputs.steps, 'evals')
+        run: npm run pack:evals -- "$PACK" --depth "${{ inputs.depth }}"
+
+      - name: Puzzles (Lichess puzzle DB, streamed)
+        if: contains(inputs.steps, 'puzzles')
+        run: |
+          set -o pipefail
+          curl -sL https://database.lichess.org/lichess_db_puzzle.csv.zst | zstd -dc | npm run --silent pack:puzzles -- "$PACK"
+
+      - name: Check comment moves
+        run: npm run pack:check-texts -- "$PACK" || true
+
+      - name: Build pack
+        run: npm run pack:build -- "$PACK" --check
+
+      - name: Summary
+        if: always()
+        run: |
+          [ -f "packs/$PACK/explorer-report.md" ] && cat "packs/$PACK/explorer-report.md" >> "$GITHUB_STEP_SUMMARY" || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: data-${{ inputs.pack }}
+          if-no-files-found: ignore
+          path: |
+            packs/${{ inputs.pack }}/explorer.json
+            packs/${{ inputs.pack }}/explorer-report.md
+            packs/${{ inputs.pack }}/evals.json
+            packs/${{ inputs.pack }}/puzzles.json

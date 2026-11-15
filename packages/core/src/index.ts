@@ -12,3 +12,6 @@ export * from './chess';
 export * from './pack';
 export * from './pgn';
 export * from './explorer';
+export * from './engine';
+export * from './puzzles';
+export * from './textcheck';
