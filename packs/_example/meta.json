@@ -1,0 +1,13 @@
+{
+  "id": "example",
+  "format": 1,
+  "packVersion": 1,
+  "title": { "ru": "Пример пакета", "en": "Example pack" },
+  "description": { "ru": "Образец формата исходников. Не курс и не попадает в приложение." },
+  "side": "w",
+  "eco": ["D02"],
+  "style": "solid",
+  "difficulty": 2,
+  "accentColor": "#5B8CFF",
+  "sources": ["Пример формата"]
+}

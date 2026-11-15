@@ -1,0 +1,14 @@
+[
+  {
+    "id": "bf4-before-e3",
+    "title": { "ru": "Слон f4 до e3" },
+    "text": {
+      "ru": "Чернопольный слон выходит на f4 раньше хода e3. Если сначала сыграть e3, пешка закроет слону дорогу, и он останется пассивным за цепью пешек."
+    },
+    "diagram": {
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/3P1B2/8/PPP1PPPP/RN1QKBNR b KQkq - 1 2",
+      "arrows": [{ "from": "c1", "to": "f4", "color": "green" }]
+    },
+    "status": "draft"
+  }
+]

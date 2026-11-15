@@ -11,10 +11,13 @@
     "web": "npm run web -w apps/mobile",
     "android": "npm run android -w apps/mobile",
     "test": "jest",
-    "typecheck": "tsc -b packages/core packages/ui && npm run typecheck -w apps/mobile",
+    "typecheck": "tsc -b packages/core packages/ui tools/pipeline && npm run typecheck -w apps/mobile",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "pack:build": "tsx tools/pipeline/build-pack.ts",
+    "pack:check": "tsx tools/pipeline/build-pack.ts --all --check",
+    "pack:schema": "tsx tools/pipeline/build-pack.ts schema"
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",
@@ -26,6 +29,7 @@
     "eslint-config-expo": "^58.0.4",
     "jest": "^30.5.2",
     "prettier": "^3.10.1",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3"
   }
 }

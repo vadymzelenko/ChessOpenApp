@@ -9,3 +9,5 @@
 export const SUPPORTED_PACK_FORMAT = 1;
 
 export * from './chess';
+export * from './pack';
+export * from './pgn';

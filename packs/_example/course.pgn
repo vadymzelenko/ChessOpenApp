@@ -1,0 +1,11 @@
+[Event "Пример: Против ...d5"]
+[ChapterName "Против ...d5"]
+
+{ Образец главы: каждая ветка — отдельная линия курса. }
+1. d4 d5 2. Bf4 { [%cal Gc1f4] Слон выходит до e3. [%idea bf4-before-e3] }
+2... Nf6 (2... c5 3. e3 { [%level advanced] } Nc6 4. Nf3) 3. e3 e6 *
+
+[Event "Пример: Ловушки"]
+[ChapterName "Ловушки"]
+
+1. d4 d5 2. Bf4 c5 3. e3 Qb6 4. Nc3 { [%trap against] [%csl Rb2] Пешка b2 осталась без защиты. } 4... Qxb2 *
