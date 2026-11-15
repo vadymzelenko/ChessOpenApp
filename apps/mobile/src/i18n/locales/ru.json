@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Chess Open",
+    "tagline": "Бесплатный тренажёр шахматных дебютов"
+  },
+  "tabs": {
+    "home": "Главная",
+    "settings": "Настройки"
+  },
+  "home": {
+    "comingSoonTitle": "Курсы скоро появятся",
+    "comingSoonBody": "Сейчас готов каркас приложения и темы. Первый курс — Лондонская система.",
+    "legendTitle": "Обозначения",
+    "legendVerified": "Проверено человеком",
+    "legendGenerated": "Сгенерировано из статистики"
+  },
+  "settings": {
+    "appearance": "Оформление",
+    "theme": "Тема",
+    "themeSystem": "Системная",
+    "themeDark": "Тёмная",
+    "themeLight": "Светлая",
+    "animations": "Скорость анимаций",
+    "animationsFast": "Быстро",
+    "animationsNormal": "Норма",
+    "animationsOff": "Выкл",
+    "reduceMotionNote": "Если в системе включено «Уменьшить движение», анимации отключаются автоматически.",
+    "palette": "Палитра темы"
+  }
+}

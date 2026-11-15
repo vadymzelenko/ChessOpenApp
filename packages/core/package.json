@@ -1,0 +1,12 @@
+{
+  "name": "@chess-open/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pure TypeScript logic (opening tree, SRS, opponent move selection). No UI dependencies.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "jest --selectProjects core --rootDir ../..",
+    "typecheck": "tsc -b"
+  }
+}

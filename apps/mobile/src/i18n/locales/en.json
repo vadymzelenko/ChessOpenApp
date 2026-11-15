@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Chess Open",
+    "tagline": "Free chess opening trainer"
+  },
+  "tabs": {
+    "home": "Home",
+    "settings": "Settings"
+  },
+  "home": {
+    "comingSoonTitle": "Courses are coming soon",
+    "comingSoonBody": "The app skeleton and themes are ready. The first course is the London System.",
+    "legendTitle": "Legend",
+    "legendVerified": "Reviewed by a human",
+    "legendGenerated": "Generated from statistics"
+  },
+  "settings": {
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "animations": "Animation speed",
+    "animationsFast": "Fast",
+    "animationsNormal": "Normal",
+    "animationsOff": "Off",
+    "reduceMotionNote": "If “Reduce motion” is enabled in the system, animations are turned off automatically.",
+    "palette": "Theme palette"
+  }
+}
