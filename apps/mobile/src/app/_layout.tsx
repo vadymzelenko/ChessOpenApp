@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { Animated, Dimensions, Easing, Platform, type ColorValue } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { TabBar } from '@/components/TabBar';
 import { applyLanguage } from '@/i18n';
 import { preloadSounds } from '@/services/feedback';
 import { useSettings } from '@/store/settings';
@@ -115,22 +116,10 @@ function ThemedNavigation() {
     <NavigationThemeProvider value={navTheme}>
       <StatusBar style={t.name === 'dark' ? 'light' : 'dark'} />
       <Tabs
+        tabBar={(props) => <TabBar {...props} />}
         screenOptions={{
-          tabBarActiveTintColor: t.colors.accent,
-          tabBarInactiveTintColor: t.colors.textMuted,
-          tabBarLabelStyle: {
-            fontFamily: t.typography.family.semibold,
-            fontSize: 11,
-            lineHeight: 14,
-          },
-          // Mount all tabs up front so the slider never reveals an empty screen.
-          lazy: false,
-          tabBarStyle: {
-            backgroundColor: t.colors.surface,
-            borderTopColor: t.colors.border,
-            // Native heights come from safe-area insets; web needs room for the label.
-            ...(Platform.OS === 'web' ? { height: 62, paddingTop: 6, paddingBottom: 8 } : null),
-          },
+          // Screens draw their own large titles (see <Screen title>).
+          headerShown: false,
           headerStyle: { backgroundColor: t.colors.surface },
           headerShadowVisible: false,
           headerTitleStyle: { fontFamily: t.typography.family.bold, fontSize: 18 },

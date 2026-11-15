@@ -11,7 +11,8 @@ export interface ButtonProps {
   label?: string;
   icon?: IconComponent;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  /** `inverse`: white button for coloured / gradient backgrounds. */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'inverse';
   disabled?: boolean;
   accessibilityLabel?: string;
   style?: ViewStyle;
@@ -35,15 +36,19 @@ export function Button({
   const bg =
     variant === 'primary'
       ? t.colors.accent
-      : variant === 'secondary'
-        ? t.colors.surfaceRaised
-        : 'transparent';
+      : variant === 'inverse'
+        ? '#FFFFFF'
+        : variant === 'secondary'
+          ? t.colors.surfaceRaised
+          : 'transparent';
   const fg =
     variant === 'primary'
       ? t.colors.onAccent
-      : variant === 'danger'
-        ? t.colors.danger
-        : t.colors.text;
+      : variant === 'inverse'
+        ? '#14161C'
+        : variant === 'danger'
+          ? t.colors.danger
+          : t.colors.text;
   const iconOnly = !label;
   return (
     <Pressable

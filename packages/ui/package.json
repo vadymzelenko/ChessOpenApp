@@ -15,7 +15,9 @@
     "react-native-svg": "*",
     "react-native-reanimated": "*",
     "react-native-gesture-handler": "*",
-    "react-native-worklets": "*"
+    "react-native-worklets": "*",
+    "expo-linear-gradient": "*",
+    "react-native-safe-area-context": "*"
   },
   "dependencies": {
     "@chess-open/core": "*"

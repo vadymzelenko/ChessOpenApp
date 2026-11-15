@@ -326,13 +326,6 @@ export function Board({
     ],
   }));
 
-  const hoverStyle = useAnimatedStyle(() => {
-    const s = xyToSquare(dragX.get(), dragY.get() + liftY, orientation, sq);
-    if (!s) return { opacity: 0 };
-    const { x, y } = squareToXY(s, orientation, sq);
-    return { opacity: 1, transform: [{ translateX: x }, { translateY: y }] };
-  });
-
   const onLayout = (e: LayoutChangeEvent) => {
     const w = Math.floor(e.nativeEvent.layout.width);
     if (w !== size) setSize(w);
@@ -379,23 +372,6 @@ export function Board({
                       backgroundColor: boardTheme.wrong,
                     },
                     flashStyle,
-                  ]}
-                />
-              )}
-              {dragFrom && (
-                <Animated.View
-                  pointerEvents="none"
-                  style={[
-                    styles.abs,
-                    {
-                      left: 0,
-                      top: 0,
-                      width: sq,
-                      height: sq,
-                      borderWidth: Math.max(2, sq * 0.06),
-                      borderColor: boardTheme.hover,
-                    },
-                    hoverStyle,
                   ]}
                 />
               )}

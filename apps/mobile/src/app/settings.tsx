@@ -1,4 +1,6 @@
 import {
+  Appear,
+  IconBadge,
   BOARD_THEME_IDS,
   PIECE_SET_IDS,
   PieceIcon,
@@ -12,11 +14,14 @@ import {
   boardThemes,
   useTheme,
   type AnimationSpeed,
+  type IconComponent,
   type BoardThemeId,
   type MoveInputMode,
   type PieceSetId,
   type ThemePreference,
 } from '@chess-open/ui';
+import { LayoutGrid, Palette, Volume2 } from 'lucide-react-native';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, View } from 'react-native';
 
@@ -61,9 +66,8 @@ export default function SettingsScreen() {
   );
 
   return (
-    <Screen>
-      <Card>
-        <ThemedText variant="heading">{t('settings.appearance')}</ThemedText>
+    <Screen title={t('tabs.settings')}>
+      <Group index={1} icon={Palette} color="#4C7DFF" title={t('settings.appearance')}>
         {label(t('settings.theme'))}
         <SegmentedControl
           accessibilityLabel={t('settings.theme')}
@@ -88,10 +92,9 @@ export default function SettingsScreen() {
           value={s.language}
           onChange={(v) => s.set('language', v)}
         />
-      </Card>
+      </Group>
 
-      <Card>
-        <ThemedText variant="heading">{t('settings.board')}</ThemedText>
+      <Group index={2} icon={LayoutGrid} color="#2FB574" title={t('settings.board')}>
         {label(t('settings.boardTheme'))}
         <View style={{ flexDirection: 'row', gap: theme.spacing.sm, flexWrap: 'wrap' }}>
           {BOARD_THEME_IDS.map((id) => (
@@ -138,10 +141,9 @@ export default function SettingsScreen() {
           value={s.autoQueen}
           onChange={(v) => s.set('autoQueen', v)}
         />
-      </Card>
+      </Group>
 
-      <Card>
-        <ThemedText variant="heading">{t('settings.soundAndHaptics')}</ThemedText>
+      <Group index={3} icon={Volume2} color="#F08A3C" title={t('settings.soundAndHaptics')}>
         {label(t('settings.sound'))}
         <SegmentedControl
           accessibilityLabel={t('settings.sound')}
@@ -159,9 +161,16 @@ export default function SettingsScreen() {
             onChange={(v) => s.set('haptics', v)}
           />
         )}
-      </Card>
+      </Group>
 
-      <Button label={t('settings.reset')} onPress={s.reset} style={{ alignSelf: 'flex-start' }} />
+      <Appear index={4}>
+        <Button
+          variant="ghost"
+          label={t('settings.reset')}
+          onPress={s.reset}
+          style={{ alignSelf: 'flex-start' }}
+        />
+      </Appear>
     </Screen>
   );
 }
@@ -245,5 +254,39 @@ function PieceSetSwatch({
         {pieceSets[id].name}
       </ThemedText>
     </Pressable>
+  );
+}
+
+function Group({
+  index,
+  icon,
+  color,
+  title,
+  children,
+}: {
+  index: number;
+  icon: IconComponent;
+  color: string;
+  title: string;
+  children: ReactNode;
+}) {
+  const theme = useTheme();
+  return (
+    <Appear index={index}>
+      <Card
+        style={{ borderRadius: theme.radii.xl, gap: theme.spacing.sm, padding: theme.spacing.lg }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: theme.spacing.md,
+            marginBottom: theme.spacing.xs,
+          }}>
+          <IconBadge icon={icon} color={color} size={38} />
+          <ThemedText variant="heading">{title}</ThemedText>
+        </View>
+        {children}
+      </Card>
+    </Appear>
   );
 }

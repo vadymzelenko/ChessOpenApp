@@ -26,7 +26,18 @@
     "slav": "Славянская защита",
     "slavSub": "Против 1.d4, 1.c4 и 1.Nf3",
     "italian": "Итальянская партия",
-    "italianSub": "1.e4 e5 2.Nf3 Nc6 3.Bc4"
+    "italianSub": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+    "train": "Тренировка",
+    "freeBoard": "Свободная доска",
+    "freeBoardSub": "Анализ с деревом вариантов",
+    "review": "Повторение",
+    "reviewSub": "Интервальные повторения",
+    "traps": "Ловушки",
+    "trapsSub": "Накажи ошибку соперника",
+    "puzzles": "Пазлы",
+    "puzzlesSub": "Задачи из твоих дебютов",
+    "start": "Начать",
+    "heroBadge": "Белые · D02"
   },
   "board": {
     "whiteToMove": "Ход белых",

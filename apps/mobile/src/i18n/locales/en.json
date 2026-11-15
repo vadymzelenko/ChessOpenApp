@@ -26,7 +26,18 @@
     "slav": "Slav Defence",
     "slavSub": "Against 1.d4, 1.c4 and 1.Nf3",
     "italian": "Italian Game",
-    "italianSub": "1.e4 e5 2.Nf3 Nc6 3.Bc4"
+    "italianSub": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+    "train": "Training",
+    "freeBoard": "Free board",
+    "freeBoardSub": "Analysis with a variation tree",
+    "review": "Review",
+    "reviewSub": "Spaced repetition",
+    "traps": "Traps",
+    "trapsSub": "Punish the opponent’s mistake",
+    "puzzles": "Puzzles",
+    "puzzlesSub": "Tactics from your openings",
+    "start": "Start",
+    "heroBadge": "White · D02"
   },
   "board": {
     "whiteToMove": "White to move",

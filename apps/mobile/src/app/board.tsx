@@ -21,6 +21,7 @@ import {
 } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform, ScrollView, View } from 'react-native';
 
 import { MoveTree } from '@/components/MoveTree';
@@ -35,6 +36,7 @@ export default function BoardScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const { width, height } = useScreenSize();
+  const insets = useSafeAreaInsets();
   const wide = width >= 820;
   const settings = useSettings();
   const { tree, version, mutate, reset } = useGameTree();
@@ -130,10 +132,20 @@ export default function BoardScreen() {
   );
 
   const controls = (
-    <View style={{ flexDirection: 'row', gap: theme.spacing.xs }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        gap: theme.spacing.xxs,
+        padding: theme.spacing.xxs + 2,
+        borderRadius: theme.radii.lg,
+        backgroundColor: theme.colors.surface,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+      }}>
       <Button
         grow
         compact
+        variant="ghost"
         icon={ChevronsLeft}
         accessibilityLabel={t('board.start')}
         onPress={toStart}
@@ -142,6 +154,7 @@ export default function BoardScreen() {
       <Button
         grow
         compact
+        variant="ghost"
         icon={ChevronLeft}
         accessibilityLabel={t('board.back')}
         onPress={back}
@@ -150,6 +163,7 @@ export default function BoardScreen() {
       <Button
         grow
         compact
+        variant="ghost"
         icon={ChevronRight}
         accessibilityLabel={t('board.forward')}
         onPress={forward}
@@ -158,12 +172,20 @@ export default function BoardScreen() {
       <Button
         grow
         compact
+        variant="ghost"
         icon={ChevronsRight}
         accessibilityLabel={t('board.end')}
         onPress={toEnd}
         disabled={atEnd}
       />
-      <Button grow compact icon={ArrowUpDown} accessibilityLabel={t('board.flip')} onPress={flip} />
+      <Button
+        grow
+        compact
+        variant="ghost"
+        icon={ArrowUpDown}
+        accessibilityLabel={t('board.flip')}
+        onPress={flip}
+      />
     </View>
   );
 
@@ -203,7 +225,7 @@ export default function BoardScreen() {
   ) : null;
 
   const movesCard = (
-    <Card style={{ gap: theme.spacing.sm }}>
+    <Card style={{ gap: theme.spacing.sm, borderRadius: theme.radii.xl }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <ThemedText variant="label" tone="textMuted" style={{ flex: 1 }}>
           {t('board.moves')}
@@ -223,20 +245,44 @@ export default function BoardScreen() {
   );
 
   const statusRow = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        gap: theme.spacing.sm,
+        paddingHorizontal: theme.spacing.md,
+        paddingVertical: theme.spacing.xs + 2,
+        borderRadius: theme.radii.pill,
+        backgroundColor:
+          tree.inCheck || tree.status !== 'playing'
+            ? `${theme.colors.danger}22`
+            : theme.colors.surface,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+      }}>
       <View
         style={{
-          width: 14,
-          height: 14,
-          borderRadius: 7,
+          width: 12,
+          height: 12,
+          borderRadius: 6,
           backgroundColor: tree.turn === 'w' ? '#F4F4F2' : '#1E1F24',
           borderWidth: 1,
-          borderColor: theme.colors.border,
+          borderColor: theme.colors.textMuted,
         }}
       />
-      <ThemedText variant="heading" accessibilityLiveRegion="polite">
+      <ThemedText variant="label" accessibilityLiveRegion="polite">
         {status}
       </ThemedText>
+    </View>
+  );
+
+  const titleRow = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md }}>
+      <ThemedText variant="title" style={{ flex: 1, fontSize: 26, lineHeight: 32 }}>
+        {t('tabs.board')}
+      </ThemedText>
+      {statusRow}
     </View>
   );
 
@@ -246,6 +292,7 @@ export default function BoardScreen() {
         style={{ flex: 1, backgroundColor: theme.colors.background }}
         contentContainerStyle={{
           padding: theme.spacing.xl,
+          paddingTop: insets.top + theme.spacing.xl,
           gap: theme.spacing.xl,
           flexDirection: 'row',
           alignItems: 'flex-start',
@@ -253,12 +300,12 @@ export default function BoardScreen() {
           width: '100%',
           alignSelf: 'center',
         }}>
-        {/* Fit the board into the window: header + tab bar + paddings ≈ 190 px. */}
-        <View style={{ width: Math.max(320, Math.min(720, width * 0.55, height - 190)) }}>
+        {/* Fit the board into the window: tab bar + paddings ≈ 150 px. */}
+        <View style={{ width: Math.max(320, Math.min(760, width * 0.55, height - 150)) }}>
           {board}
         </View>
         <View style={{ flex: 1, gap: theme.spacing.md }}>
-          {statusRow}
+          {titleRow}
           {controls}
           {branchBar}
           {movesCard}
@@ -276,6 +323,17 @@ export default function BoardScreen() {
     <ScrollView
       style={{ flex: 1, backgroundColor: theme.colors.background }}
       contentContainerStyle={{ paddingBottom: theme.spacing.xl }}>
+      <View
+        style={{
+          paddingTop: insets.top + theme.spacing.md,
+          paddingHorizontal: theme.spacing.lg,
+          paddingBottom: theme.spacing.md,
+          width: '100%',
+          maxWidth: 640,
+          alignSelf: 'center',
+        }}>
+        {titleRow}
+      </View>
       {/* Edge-to-edge board on phones. */}
       <View style={{ width: '100%', maxWidth: 640, alignSelf: 'center' }}>{board}</View>
       <View
@@ -287,7 +345,6 @@ export default function BoardScreen() {
           alignSelf: 'center',
         }}>
         {controls}
-        {statusRow}
         {branchBar}
         {movesCard}
       </View>

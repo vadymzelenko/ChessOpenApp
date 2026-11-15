@@ -7,3 +7,8 @@ export { SegmentedControl, type SegmentedControlProps } from './components/Segme
 export * from './board';
 export { ToggleRow, type ToggleRowProps } from './components/ToggleRow';
 export { Button, type ButtonProps, type IconComponent } from './components/Button';
+export { PressableScale, type PressableScaleProps } from './components/PressableScale';
+export { Appear, type AppearProps } from './components/Appear';
+export { IconBadge, type IconBadgeProps } from './components/IconBadge';
+export { Tile, shade, type TileProps } from './components/Tile';
+export { SectionHeader, type SectionHeaderProps } from './components/SectionHeader';
