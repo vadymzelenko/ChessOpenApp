@@ -9,12 +9,24 @@
     "settings": "Settings"
   },
   "home": {
-    "comingSoonTitle": "Courses are coming soon",
-    "comingSoonBody": "The board with a variation tree, 7 piece sets, animations, sounds and settings are ready. The first course is the London System.",
     "tryBoard": "Open the board",
     "legendTitle": "Legend",
     "legendVerified": "Reviewed by a human",
-    "legendGenerated": "Generated from statistics"
+    "legendGenerated": "Generated from statistics",
+    "heroTitle": "London System",
+    "heroBody": "The first course is in the works. Meanwhile, practise on the board with a variation tree.",
+    "courses": "Courses",
+    "soon": "Soon",
+    "white": "White",
+    "black": "Black",
+    "london": "London System",
+    "londonSub": "Against almost any reply to 1.d4",
+    "caroKann": "Caro-Kann",
+    "caroKannSub": "A solid answer to 1.e4",
+    "slav": "Slav Defence",
+    "slavSub": "Against 1.d4, 1.c4 and 1.Nf3",
+    "italian": "Italian Game",
+    "italianSub": "1.e4 e5 2.Nf3 Nc6 3.Bc4"
   },
   "board": {
     "whiteToMove": "White to move",

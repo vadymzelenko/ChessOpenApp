@@ -21,19 +21,20 @@ import {
 } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, ScrollView, useWindowDimensions, View } from 'react-native';
+import { Platform, ScrollView, View } from 'react-native';
 
 import { MoveTree } from '@/components/MoveTree';
 import { useGameTree } from '@/hooks/useGameTree';
 import { useHotkeys } from '@/hooks/useHotkeys';
 import { moveFeedback, playSound } from '@/services/feedback';
+import { useScreenSize } from '@/hooks/useScreenWidth';
 import { useSettings } from '@/store/settings';
 
 /** Free board with a move tree (ТЗ «Анализ / свободная доска»). */
 export default function BoardScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { width } = useWindowDimensions();
+  const { width, height } = useScreenSize();
   const wide = width >= 820;
   const settings = useSettings();
   const { tree, version, mutate, reset } = useGameTree();
@@ -252,7 +253,10 @@ export default function BoardScreen() {
           width: '100%',
           alignSelf: 'center',
         }}>
-        <View style={{ width: Math.min(680, width * 0.55) }}>{board}</View>
+        {/* Fit the board into the window: header + tab bar + paddings ≈ 190 px. */}
+        <View style={{ width: Math.max(320, Math.min(720, width * 0.55, height - 190)) }}>
+          {board}
+        </View>
         <View style={{ flex: 1, gap: theme.spacing.md }}>
           {statusRow}
           {controls}
