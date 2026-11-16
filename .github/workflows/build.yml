@@ -148,11 +148,20 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="build-${{ github.run_number }}"
-          gh release create "$TAG" out/chess-open.apk out/chess-open.aab \
-            --target "$GITHUB_SHA" \
-            --latest \
-            --title "Сборка #${{ github.run_number }}" \
-            --notes "Тестовая сборка из ${GITHUB_SHA::7}. **APK** — установить на телефон напрямую. **AAB** — для Google Play (подписан release-ключом, если заданы секреты ANDROID_KEYSTORE_*)."
+          git tag -f "$TAG" "$GITHUB_SHA"
+          git push -f origin "refs/tags/$TAG"
+          # The releases API sometimes answers 403 for a moment: retry.
+          for i in 1 2 3 4; do
+            gh release view "$TAG" >/dev/null 2>&1 && break
+            gh release create "$TAG" out/chess-open.apk out/chess-open.aab \
+              --verify-tag \
+              --latest \
+              --title "Сборка #${{ github.run_number }}" \
+              --notes "Тестовая сборка из ${GITHUB_SHA::7}. **APK** — установить на телефон напрямую. **AAB** — для Google Play (подписан release-ключом, если заданы секреты ANDROID_KEYSTORE_*)." \
+              && break
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 20))
+          done
 
       - name: Keep only the 5 newest builds
         env:
