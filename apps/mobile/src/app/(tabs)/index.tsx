@@ -26,6 +26,8 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { StatsChips, TodayCard } from '@/components/TodayCard';
+import { usePack } from '@/hooks/usePack';
 import { useScreenWidth } from '@/hooks/useScreenWidth';
 import { packCards, useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
@@ -68,6 +70,7 @@ export default function HomeScreen() {
   const cards = useProgress((s) => s.cards);
   const [now] = useState(() => Date.now());
   const due = dueCount(packCards(cards, 'london'), now);
+  const london = usePack('london');
   const columns = wide ? 4 : 2;
 
   const position = useMemo(() => GameTree.fromSan(LONDON), []);
@@ -172,7 +175,12 @@ export default function HomeScreen() {
   let i = 1;
 
   return (
-    <Screen title={t('app.name')} subtitle={t('app.tagline')}>
+    <Screen title={t('app.name')} subtitle={t('app.tagline')} right={<StatsChips />}>
+      {london ? (
+        <Appear index={i++}>
+          <TodayCard index={london} />
+        </Appear>
+      ) : null}
       <Appear index={i++}>{hero}</Appear>
 
       <Appear index={i++}>

@@ -252,5 +252,34 @@
     "against": "Don’t fall for it",
     "done": "Trap explained",
     "none": "No traps in this course yet"
+  },
+  "progress": {
+    "title": "Progress & tree",
+    "open": "Tree & progress",
+    "streak": "Day streak",
+    "xp": "Experience (XP)",
+    "learned": "Positions learned",
+    "coverage": "Coverage",
+    "coverageText": "You are ready for {{pct}}% of opponents up to move {{n}}",
+    "noCoverage": "Coverage appears once Lichess statistics are loaded",
+    "errors": "Mistake map",
+    "noErrors": "No mistakes yet — keep it up!",
+    "lapses_one": "{{count}} mistake",
+    "lapses_other": "{{count}} mistakes",
+    "tree": "Repertoire tree",
+    "legendNew": "new",
+    "legendLearning": "learning",
+    "legendLearned": "learned",
+    "legendForgotten": "forgotten",
+    "train": "Train"
+  },
+  "today": {
+    "title": "Today",
+    "review": "Review positions",
+    "reviewSub": "{{count}} due",
+    "reviewDone": "Today’s review is done",
+    "newLine": "New line",
+    "newLineSub": "{{title}}",
+    "allStudied": "All lines studied — try an exam or practice"
   }
 }
