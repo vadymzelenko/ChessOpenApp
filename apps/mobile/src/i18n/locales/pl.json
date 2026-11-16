@@ -1,6 +1,13 @@
 {
-  "app": { "name": "Chess Open", "tagline": "Darmowy trener debiutów szachowych" },
-  "tabs": { "home": "Start", "board": "Plansza", "settings": "Ustawienia" },
+  "app": {
+    "name": "Chess Open",
+    "tagline": "Darmowy trener debiutów szachowych"
+  },
+  "tabs": {
+    "home": "Start",
+    "board": "Plansza",
+    "settings": "Ustawienia"
+  },
   "home": {
     "tryBoard": "Otwórz planszę",
     "legendTitle": "Oznaczenia",
@@ -292,5 +299,34 @@
     "thanks": "Dziękujemy autorom otwartych zestawów, danych i bibliotek!",
     "privacyText": "Aplikacja nie zbiera ani nie przekazuje danych osobowych. Nie ma rejestracji, reklam ani analityki. Cały postęp i ustawienia są przechowywane wyłącznie na twoim urządzeniu (w wersji webowej — w przeglądarce) i go nie opuszczają. Możesz je usunąć, czyszcząc dane aplikacji lub przeglądarki. Jeśli w przyszłości pojawi się synchronizacja w chmurze lub reklamy, ta polityka zostanie zaktualizowana przed ich włączeniem.",
     "contact": "Pytania — przez Issues na GitHubie."
+  },
+  "import": {
+    "title": "Moje partie",
+    "subtitle": "Gdzie odszedłem od repertuaru",
+    "intro": "Pobierz swoje ostatnie partie z Lichess lub Chess.com — aplikacja znajdzie ruchy, w których odszedłeś od kursu.",
+    "nick": "Nick w serwisie",
+    "load": "Pobierz partie",
+    "privacy": "Zapytanie trafia bezpośrednio do serwisu, nick jest zapisywany tylko na urządzeniu.",
+    "summary": "Pobrano partii: {{total}}, tym kolorem: {{ours}}",
+    "found_one": "Znaleziono {{count}} odstępstwo od repertuaru",
+    "found_few": "Znaleziono {{count}} odstępstwa od repertuaru",
+    "found_many": "Znaleziono {{count}} odstępstw od repertuaru",
+    "found_other": "Znaleziono {{count}} odstępstwa od repertuaru",
+    "clean": "Ani razu nie odszedłeś od repertuaru — świetnie!",
+    "noSide": "Brak partii tym kolorem",
+    "deviations": "Odstępstwa",
+    "insteadOf": "zamiast {{move}}",
+    "games_one": "{{count}} partia",
+    "games_few": "{{count}} partie",
+    "games_many": "{{count}} partii",
+    "games_other": "{{count}} partii",
+    "toReview": "Do powtórki",
+    "queued": "Dodano",
+    "openGame": "Partia",
+    "error": {
+      "nick": "Wpisz poprawny nick (litery łacińskie, cyfry, _ i -)",
+      "notFound": "Nie znaleziono gracza",
+      "network": "Nie udało się pobrać partii. Sprawdź internet i spróbuj ponownie."
+    }
   }
 }

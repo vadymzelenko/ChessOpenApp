@@ -32,6 +32,9 @@ export interface Settings {
   language: LanguageSetting;
   /** Rating group of the «live» opponents (ТЗ §5). */
   opponentLevel: OpponentLevel;
+  /** Last nickname used to import games (module 34). */
+  importNick: string;
+  importSource: 'lichess' | 'chesscom';
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -47,6 +50,8 @@ export const DEFAULT_SETTINGS: Settings = {
   haptics: true,
   language: 'auto',
   opponentLevel: '1400-1800',
+  importNick: '',
+  importSource: 'lichess',
 };
 
 interface SettingsState extends Settings {

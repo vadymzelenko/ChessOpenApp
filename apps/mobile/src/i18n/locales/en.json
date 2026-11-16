@@ -295,5 +295,30 @@
     "thanks": "Thanks to the authors of open piece sets, data and libraries!",
     "privacyText": "The app does not collect or share personal data. There is no sign-up, no ads and no analytics. All progress and settings are stored only on your device (in the browser for the web version) and never leave it. You can delete them by clearing the app or browser data. If cloud sync or ads are added in the future, this policy will be updated before they are enabled.",
     "contact": "Questions — via GitHub Issues."
+  },
+  "import": {
+    "title": "My games",
+    "subtitle": "Where I left the repertoire",
+    "intro": "Load your recent games from Lichess or Chess.com — the app finds the moves where you left the course.",
+    "nick": "Username",
+    "load": "Load games",
+    "privacy": "The request goes straight to the site; the username is stored only on this device.",
+    "summary": "Games loaded: {{total}}, with this side: {{ours}}",
+    "found_one": "Found {{count}} deviation from the repertoire",
+    "found_other": "Found {{count}} deviations from the repertoire",
+    "clean": "You never left the repertoire — great!",
+    "noSide": "No games with this course's side",
+    "deviations": "Deviations",
+    "insteadOf": "instead of {{move}}",
+    "games_one": "{{count}} game",
+    "games_other": "{{count}} games",
+    "toReview": "Add to review",
+    "queued": "Added",
+    "openGame": "Game",
+    "error": {
+      "nick": "Enter a valid username (latin letters, digits, _ and -)",
+      "notFound": "Player not found",
+      "network": "Could not load games. Check your connection and try again."
+    }
   }
 }

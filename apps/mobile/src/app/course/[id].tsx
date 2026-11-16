@@ -22,6 +22,7 @@ import {
   Puzzle,
   Skull,
   Swords,
+  UserSearch,
   Network,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
@@ -207,6 +208,16 @@ export default function CourseScreen() {
             icon={Network}
             accent="#4C7DFF"
             onPress={() => router.push(`/progress/${meta.id}`)}
+            minHeight={0}
+          />
+        </Appear>
+        <Appear index={i++}>
+          <Tile
+            title={t('import.title')}
+            subtitle={t('import.subtitle')}
+            icon={UserSearch}
+            accent="#14A3B8"
+            onPress={() => router.push(`/import/${meta.id}`)}
             minHeight={0}
           />
         </Appear>
