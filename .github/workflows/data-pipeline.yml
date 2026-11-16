@@ -53,7 +53,8 @@ jobs:
 
       - name: Evaluations (cloud + Stockfish)
         if: contains(inputs.steps, 'evals')
-        run: npm run pack:evals -- "$PACK" --depth "${{ inputs.depth }}"
+        # Time budget leaves room for puzzles and the upload; a re-run continues.
+        run: npm run pack:evals -- "$PACK" --depth "${{ inputs.depth }}" --minutes 200
 
       - name: Puzzles (Lichess puzzle DB, streamed)
         if: contains(inputs.steps, 'puzzles')

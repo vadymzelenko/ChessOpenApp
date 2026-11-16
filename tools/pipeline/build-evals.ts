@@ -2,7 +2,10 @@
  * Evaluations for every pack position (ТЗ §3 `evals`, module 12):
  * Lichess cloud eval first (cached, free), local Stockfish for the rest.
  *
- *   npm run pack:evals -- <id> [--depth 18] [--no-cloud] [--no-stockfish]
+ *   npm run pack:evals -- <id> [--depth 18] [--minutes 240] [--no-cloud] [--no-stockfish]
+ *
+ * `--minutes` is a time budget: the run stops in time and keeps what it has
+ * (progress is also saved every 100 positions), so a later run continues.
  *
  * Writes packs/<id>/evals.json (merged into the pack by pack:build).
  */
@@ -80,9 +83,19 @@ async function main() {
   console.log(
     `▶ ${id}: ${positions.size} positions, ${Object.keys(existing).length} already evaluated`,
   );
-  const result = await buildEvals(positions, evaluators, existing, (done, total) => {
-    if (done % 100 === 0) console.log(`  ${done}/${total}`);
-  });
+  const deadline = Date.now() + numberArg('minutes', 1e6) * 60_000;
+  const result = await buildEvals(
+    positions,
+    evaluators,
+    existing,
+    (done, total, evals) => {
+      if (done % 100 === 0) {
+        console.log(`  ${done}/${total}`);
+        writeFileSync(out, JSON.stringify(evals));
+      }
+    },
+    () => Date.now() > deadline,
+  );
   sf?.quit();
   writeFileSync(out, JSON.stringify(result.evals));
   console.log(

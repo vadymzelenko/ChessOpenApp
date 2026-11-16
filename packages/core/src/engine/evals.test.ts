@@ -42,3 +42,23 @@ describe('buildEvals', () => {
     expect(Object.keys(r.evals).length + r.missing.length).toBe(positions.size);
   });
 });
+
+describe('buildEvals time budget', () => {
+  it('stops evaluating once shouldStop is true and reports the rest as missing', async () => {
+    const positions = new Map([
+      ['a', 'fa'],
+      ['b', 'fb'],
+      ['c', 'fc'],
+    ]);
+    let calls = 0;
+    const r = await buildEvals(
+      positions,
+      [async () => (calls++, { cp: 10 })],
+      {},
+      undefined,
+      () => calls >= 2,
+    );
+    expect(Object.keys(r.evals)).toEqual(['a', 'b']);
+    expect(r.missing).toEqual(['c']);
+  });
+});

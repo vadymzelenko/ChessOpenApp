@@ -59,7 +59,9 @@ export async function buildEvals(
   positions: ReadonlyMap<string, string>,
   evaluators: readonly Evaluator[],
   existing: Readonly<Record<string, Eval>> = {},
-  onProgress?: (done: number, total: number) => void,
+  onProgress?: (done: number, total: number, evals: Readonly<Record<string, Eval>>) => void,
+  /** Checked before each position: true stops early (time budget); the rest counts as missing. */
+  shouldStop?: () => boolean,
 ): Promise<EvalBuild> {
   const evals: Record<string, Eval> = { ...existing };
   const missing: string[] = [];
@@ -68,6 +70,10 @@ export async function buildEvals(
   for (const [key, fen] of positions) {
     done++;
     if (evals[key]) continue;
+    if (shouldStop?.()) {
+      missing.push(key);
+      continue;
+    }
     let result: Eval | null = null;
     for (let i = 0; i < evaluators.length && !result; i++) {
       result = await evaluators[i]!(fen);
@@ -75,7 +81,7 @@ export async function buildEvals(
     }
     if (result) evals[key] = result;
     else missing.push(key);
-    onProgress?.(done, positions.size);
+    onProgress?.(done, positions.size, evals);
   }
   return { evals, missing, answered };
 }
