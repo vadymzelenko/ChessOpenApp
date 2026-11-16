@@ -15,7 +15,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { kvStorage } from '@/services/kvStorage';
 
 export type SoundSet = 'wood' | 'soft' | 'off';
-export type LanguageSetting = 'auto' | 'ru' | 'en';
+export type LanguageSetting = 'auto' | 'ru' | 'uk' | 'pl' | 'en';
 export type OpponentLevel = 'lt1400' | '1400-1800' | 'gt1800';
 
 export interface Settings {

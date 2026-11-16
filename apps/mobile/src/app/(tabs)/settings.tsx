@@ -20,7 +20,8 @@ import {
   type PieceSetId,
   type ThemePreference,
 } from '@chess-open/ui';
-import { LayoutGrid, Palette, Volume2 } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { Info, LayoutGrid, Palette, Volume2 } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, View } from 'react-native';
@@ -65,8 +66,10 @@ export default function SettingsScreen() {
   ];
   const languageOptions: { value: LanguageSetting; label: string }[] = [
     { value: 'auto', label: t('settings.languageAuto') },
-    { value: 'ru', label: 'Русский' },
-    { value: 'en', label: 'English' },
+    { value: 'ru', label: 'RU' },
+    { value: 'uk', label: 'UA' },
+    { value: 'pl', label: 'PL' },
+    { value: 'en', label: 'EN' },
   ];
 
   const label = (text: string) => (
@@ -181,6 +184,12 @@ export default function SettingsScreen() {
       </Group>
 
       <Appear index={4}>
+        <Button
+          icon={Info}
+          label={`${t('about.title')} · ${t('about.licenses')}`}
+          onPress={() => router.push('/licenses')}
+          style={{ alignSelf: 'flex-start', marginBottom: theme.spacing.sm }}
+        />
         <Button
           variant="ghost"
           label={t('settings.reset')}

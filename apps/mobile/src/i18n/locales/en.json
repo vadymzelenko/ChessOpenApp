@@ -281,5 +281,19 @@
     "newLine": "New line",
     "newLineSub": "{{title}}",
     "allStudied": "All lines studied — try an exam or practice"
+  },
+  "about": {
+    "title": "About",
+    "licenses": "Licences and credits",
+    "privacy": "Privacy policy",
+    "version": "Version {{version}}",
+    "appLicense": "Chess Open is free software under GPL-3.0-or-later. The source code is open.",
+    "sourceCode": "Source code on GitHub",
+    "pieces": "Piece sets",
+    "software": "Libraries and fonts",
+    "data": "Data",
+    "thanks": "Thanks to the authors of open piece sets, data and libraries!",
+    "privacyText": "The app does not collect or share personal data. There is no sign-up, no ads and no analytics. All progress and settings are stored only on your device (in the browser for the web version) and never leave it. You can delete them by clearing the app or browser data. If cloud sync or ads are added in the future, this policy will be updated before they are enabled.",
+    "contact": "Questions — via GitHub Issues."
   }
 }

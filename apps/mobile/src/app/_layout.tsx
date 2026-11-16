@@ -15,7 +15,7 @@ import {
 } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -40,7 +40,11 @@ export default function RootLayout() {
   });
   // Web renders immediately (static HTML) and is revealed once fonts are in.
   const ready = fontsLoaded || !!fontError || Platform.OS === 'web';
-  const revealed = useWebReveal(fontsLoaded || !!fontError);
+  // Web: the pre-rendered HTML is Russian; the user's language is applied only
+  // after hydration has fully finished (otherwise React reports a text mismatch).
+  const [settled, setSettled] = useState(Platform.OS !== 'web');
+  const onSettled = useCallback(() => setSettled(true), []);
+  const revealed = useWebReveal(fontsLoaded || !!fontError, onSettled);
 
   useEffect(() => {
     // Web: settings are read after hydration so pre-rendered HTML matches.
@@ -52,7 +56,9 @@ export default function RootLayout() {
   useEffect(() => {
     if (ready) void SplashScreen.hideAsync();
   }, [ready]);
-  useEffect(() => applyLanguage(language), [language]);
+  useEffect(() => {
+    if (settled) applyLanguage(language);
+  }, [language, settled]);
   useEffect(() => preloadSounds(soundSet), [soundSet]);
 
   if (!ready) return null;
@@ -73,7 +79,7 @@ export default function RootLayout() {
  * hydrated, read the real window size and loaded the fonts (max 1.5 s), then
  * fades in once — no layout jumps or font swaps are visible. Native: always 1.
  */
-function useWebReveal(fontsReady: boolean): Animated.Value | number {
+function useWebReveal(fontsReady: boolean, onSettled: () => void): Animated.Value | number {
   const [opacity] = useState(() => new Animated.Value(Platform.OS === 'web' ? 0 : 1));
   const [timedOut, setTimedOut] = useState(false);
   useEffect(() => {
@@ -86,13 +92,22 @@ function useWebReveal(fontsReady: boolean): Animated.Value | number {
     if (!go) return;
     // Boards and other measured views settle a few frames after hydration;
     // wait for that, then fade in once.
+    // Hydration (incl. lazy Suspense boundaries) is over by now: switch to the
+    // user's language while still hidden, then fade in.
+    let fade: ReturnType<typeof setTimeout> | undefined;
     const id = setTimeout(() => {
-      Animated.timing(opacity, { toValue: 1, duration: 220, useNativeDriver: false }).start(() =>
-        enableEntranceAnimations(),
-      );
+      onSettled();
+      fade = setTimeout(() => {
+        Animated.timing(opacity, { toValue: 1, duration: 220, useNativeDriver: false }).start(() =>
+          enableEntranceAnimations(),
+        );
+      }, 80);
     }, 300);
-    return () => clearTimeout(id);
-  }, [go, opacity]);
+    return () => {
+      clearTimeout(id);
+      if (fade) clearTimeout(fade);
+    };
+  }, [go, opacity, onSettled]);
   return opacity;
 }
 
