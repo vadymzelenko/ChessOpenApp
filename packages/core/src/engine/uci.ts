@@ -1,4 +1,5 @@
 import { Chess } from 'chess.js';
+import type { Square } from 'chess.js';
 
 /** Parsed `info` line of a UCI engine (Stockfish). */
 export interface UciInfo {
@@ -70,4 +71,16 @@ export function pvToSan(fen: string, pv: readonly string[], max = 8): string[] {
     }
   }
   return out;
+}
+
+/**
+ * Lichess writes castling as «king takes own rook» (e1h1); standard UCI is
+ * e1g1. Converts such moves when a king stands on the from-square.
+ */
+export function normalizeCastling(fen: string, uci: string): string {
+  const fixes: Record<string, string> = { e1h1: 'e1g1', e1a1: 'e1c1', e8h8: 'e8g8', e8a8: 'e8c8' };
+  const fixed = fixes[uci];
+  if (!fixed) return uci;
+  const piece = new Chess(fen).get(uci.slice(0, 2) as Square);
+  return piece?.type === 'k' ? fixed : uci;
 }

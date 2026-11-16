@@ -1,5 +1,5 @@
 import { classifyMove, formatScore, winProbability, winningChances } from './score';
-import { parseUciInfo, pvToSan, toWhitePov } from './uci';
+import { normalizeCastling, parseUciInfo, pvToSan, toWhitePov } from './uci';
 
 describe('parseUciInfo', () => {
   it('parses depth, multipv, score and pv', () => {
@@ -62,5 +62,15 @@ describe('pvToSan', () => {
     expect(pvToSan(start, ['d2d4', 'd7d5', 'c1f4', 'e1e8', 'g8f6'])).toEqual(['d4', 'd5', 'Bf4']);
     expect(pvToSan('7k/P7/8/8/8/8/8/K7 w - - 0 1', ['a7a8q'])).toEqual(['a8=Q+']);
     expect(pvToSan(start, ['e2e4', 'e7e5', 'g1f3'], 2)).toEqual(['e4', 'e5']);
+  });
+});
+
+describe('normalizeCastling', () => {
+  it('turns king-takes-rook castling into standard UCI', () => {
+    const fen = 'rnbq1rk1/pp1pppbp/5np1/2p5/3P1B2/4PN2/PPP1BPPP/RN1QK2R w KQ - 0 7';
+    expect(normalizeCastling(fen, 'e1h1')).toBe('e1g1');
+    expect(normalizeCastling(fen, 'e2e4')).toBe('e2e4');
+    // A rook (not a king) moving e1→h1 stays as is.
+    expect(normalizeCastling('4k3/8/8/8/8/8/8/K3R3 w - - 0 1', 'e1h1')).toBe('e1h1');
   });
 });

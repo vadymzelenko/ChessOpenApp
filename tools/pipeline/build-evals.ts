@@ -13,7 +13,13 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { buildEvals, packPositions, type Eval, type Evaluator } from '@chess-open/core';
+import {
+  buildEvals,
+  normalizeCastling,
+  packPositions,
+  type Eval,
+  type Evaluator,
+} from '@chess-open/core';
 
 import { PACKS, ROOT, loadPack, numberArg, readJsonFile, sleep } from './common';
 import { Stockfish } from './stockfish';
@@ -55,7 +61,7 @@ const cloudEval: Evaluator = async (fen) => {
         result = {
           ...(pv.cp !== undefined ? { cp: pv.cp } : {}),
           ...(pv.mate !== undefined ? { mate: pv.mate } : {}),
-          best: pv.moves.split(' ')[0]!,
+          best: normalizeCastling(fen, pv.moves.split(' ')[0]!),
           depth: body.depth,
         };
       }
