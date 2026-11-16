@@ -213,7 +213,12 @@
     "f_pawns": "better pawn structure",
     "f_mobility": "more active pieces",
     "for": "{{side}}:",
-    "balanced": "Neither side has a clear edge"
+    "balanced": "Neither side has a clear edge",
+    "engine": "Engine",
+    "engineHint": "Stockfish right in the browser",
+    "depth": "depth {{depth}}",
+    "bestLine": "Best line",
+    "thinking": "Stockfish is thinking…"
   },
   "theory": {
     "endTitle": "Theory ends here",

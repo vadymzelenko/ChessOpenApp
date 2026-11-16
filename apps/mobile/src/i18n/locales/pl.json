@@ -215,7 +215,12 @@
     "f_pawns": "lepsza struktura pionów",
     "f_mobility": "aktywniejsze figury",
     "for": "U {{side}}:",
-    "balanced": "Żadna strona nie ma wyraźnej przewagi"
+    "balanced": "Żadna strona nie ma wyraźnej przewagi",
+    "engine": "Silnik",
+    "engineHint": "Stockfish w przeglądarce",
+    "depth": "głębokość {{depth}}",
+    "bestLine": "Najlepszy wariant",
+    "thinking": "Stockfish myśli…"
   },
   "theory": {
     "endTitle": "Tu kończy się teoria",

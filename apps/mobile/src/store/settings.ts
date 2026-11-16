@@ -35,6 +35,8 @@ export interface Settings {
   /** Last nickname used to import games (module 34). */
   importNick: string;
   importSource: 'lichess' | 'chesscom';
+  /** Live Stockfish analysis on the board (web). */
+  engineOn: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -52,6 +54,7 @@ export const DEFAULT_SETTINGS: Settings = {
   opponentLevel: '1400-1800',
   importNick: '',
   importSource: 'lichess',
+  engineOn: false,
 };
 
 interface SettingsState extends Settings {

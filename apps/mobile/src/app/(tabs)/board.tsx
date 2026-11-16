@@ -25,7 +25,8 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform, ScrollView, View } from 'react-native';
 
-import { AnalysisCard } from '@/components/AnalysisCard';
+import { AnalysisCard, type EngineControl } from '@/components/AnalysisCard';
+import { useEngine, useEngineAvailable } from '@/hooks/useEngine';
 import { MoveTree } from '@/components/MoveTree';
 import { useGameTree } from '@/hooks/useGameTree';
 import { useHotkeys } from '@/hooks/useHotkeys';
@@ -42,6 +43,8 @@ export default function BoardScreen() {
   const insets = useSafeAreaInsets();
   const wide = width >= 820;
   const settings = useSettings();
+  const engineOn = settings.engineOn;
+  const setSetting = settings.set;
   const { tree, version, mutate, reset } = useGameTree();
   const [orientation, setOrientation] = useState<'w' | 'b'>('w');
 
@@ -116,7 +119,17 @@ export default function BoardScreen() {
   })();
 
   const last = tree.lastMove;
-  const evaluation = evalFor(tree.key);
+  const canAnalyse = useEngineAvailable();
+  const live = useEngine(tree.fen, engineOn && tree.status === 'playing');
+  const evaluation = live?.evaluation ?? evalFor(tree.key);
+  const engine: EngineControl | undefined = canAnalyse
+    ? {
+        on: engineOn,
+        onToggle: () => setSetting('engineOn', !engineOn),
+        depth: live?.depth,
+        line: live?.line,
+      }
+    : undefined;
   const board = (
     <View style={{ flexDirection: 'row', gap: 4 }}>
       <EvalBar chances={evaluation ? winningChances(evaluation) : null} orientation={orientation} />
@@ -317,7 +330,7 @@ export default function BoardScreen() {
           {titleRow}
           {controls}
           {branchBar}
-          <AnalysisCard fen={tree.fen} evaluation={evaluation} />
+          <AnalysisCard fen={tree.fen} evaluation={evaluation} engine={engine} />
           {movesCard}
           {Platform.OS === 'web' && (
             <ThemedText variant="caption" tone="textMuted">
@@ -356,7 +369,7 @@ export default function BoardScreen() {
         }}>
         {controls}
         {branchBar}
-        <AnalysisCard fen={tree.fen} evaluation={evaluation} />
+        <AnalysisCard fen={tree.fen} evaluation={evaluation} engine={engine} />
         {movesCard}
       </View>
     </ScrollView>

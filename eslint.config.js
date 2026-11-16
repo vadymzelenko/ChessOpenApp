@@ -11,6 +11,8 @@ module.exports = defineConfig([
       '**/.expo/**',
       'apps/mobile/android/**',
       'apps/mobile/ios/**',
+      // Vendored Stockfish WASM build.
+      'apps/mobile/public/engine/**',
     ],
   },
   {

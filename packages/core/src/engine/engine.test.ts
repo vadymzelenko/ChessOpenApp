@@ -1,5 +1,5 @@
 import { classifyMove, formatScore, winProbability, winningChances } from './score';
-import { parseUciInfo, toWhitePov } from './uci';
+import { parseUciInfo, pvToSan, toWhitePov } from './uci';
 
 describe('parseUciInfo', () => {
   it('parses depth, multipv, score and pv', () => {
@@ -53,5 +53,14 @@ describe('winning chances and classification', () => {
     expect(formatScore({ cp: 2 })).toBe('0.0');
     expect(formatScore({ mate: 3 })).toBe('#3');
     expect(formatScore({ mate: -2 })).toBe('#−2');
+  });
+});
+
+describe('pvToSan', () => {
+  it('converts a UCI line and stops at an illegal move', () => {
+    const start = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    expect(pvToSan(start, ['d2d4', 'd7d5', 'c1f4', 'e1e8', 'g8f6'])).toEqual(['d4', 'd5', 'Bf4']);
+    expect(pvToSan('7k/P7/8/8/8/8/8/K7 w - - 0 1', ['a7a8q'])).toEqual(['a8=Q+']);
+    expect(pvToSan(start, ['e2e4', 'e7e5', 'g1f3'], 2)).toEqual(['e4', 'e5']);
   });
 });

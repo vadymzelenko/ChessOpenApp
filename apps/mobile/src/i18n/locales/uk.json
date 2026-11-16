@@ -215,7 +215,12 @@
     "f_pawns": "краща пішакова структура",
     "f_mobility": "активніші фігури",
     "for": "У {{side}}:",
-    "balanced": "Ні в кого немає явних переваг"
+    "balanced": "Ні в кого немає явних переваг",
+    "engine": "Рушій",
+    "engineHint": "Stockfish просто в браузері",
+    "depth": "глибина {{depth}}",
+    "bestLine": "Найкраща лінія",
+    "thinking": "Stockfish думає…"
   },
   "theory": {
     "endTitle": "Теорія тут закінчується",

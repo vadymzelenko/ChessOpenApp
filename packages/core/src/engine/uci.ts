@@ -1,3 +1,5 @@
+import { Chess } from 'chess.js';
+
 /** Parsed `info` line of a UCI engine (Stockfish). */
 export interface UciInfo {
   depth: number;
@@ -53,4 +55,19 @@ export function toWhitePov<T extends { cp?: number; mate?: number }>(
     ...(score.cp !== undefined ? { cp: -score.cp } : {}),
     ...(score.mate !== undefined ? { mate: -score.mate } : {}),
   };
+}
+
+/** Principal variation (UCI) → SAN, stopping at the first illegal move. */
+export function pvToSan(fen: string, pv: readonly string[], max = 8): string[] {
+  const g = new Chess(fen);
+  const out: string[] = [];
+  for (const uci of pv.slice(0, max)) {
+    try {
+      const m = g.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] });
+      out.push(m.san);
+    } catch {
+      break;
+    }
+  }
+  return out;
 }
