@@ -20,13 +20,25 @@ import { Stockfish } from './stockfish';
 
 const CACHE = join(ROOT, '.cache', 'cloud-eval');
 
+let cloudDisabled = false;
+
 const cloudEval: Evaluator = async (fen) => {
   const url = `https://lichess.org/api/cloud-eval?fen=${encodeURIComponent(fen)}`;
   const cacheFile = join(CACHE, `${createHash('sha1').update(url).digest('hex')}.json`);
   if (existsSync(cacheFile)) return JSON.parse(readFileSync(cacheFile, 'utf8')) as Eval | null;
-  for (;;) {
-    const res = await fetch(url, { headers: { Accept: 'application/json' } });
-    if (res.status === 429) {
+  if (cloudDisabled) return null;
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(20_000),
+    }).catch(() => null);
+    if (!res || res.status === 429) {
+      // Lichess keeps limiting us: leave the rest to local Stockfish.
+      if (attempt >= 3) {
+        console.log('  … cloud eval unavailable, using Stockfish only from now on');
+        cloudDisabled = true;
+        return null;
+      }
       console.log('  … rate limited, waiting 60 s');
       await sleep(60_000);
       continue;

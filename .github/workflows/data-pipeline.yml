@@ -53,6 +53,9 @@ jobs:
 
       - name: Evaluations (cloud + Stockfish)
         if: contains(inputs.steps, 'evals')
+        # Hard stop on top of --minutes; whatever was saved is still used.
+        timeout-minutes: 215
+        continue-on-error: true
         # Time budget leaves room for puzzles and the upload; a re-run continues.
         run: npm run pack:evals -- "$PACK" --depth "${{ inputs.depth }}" --minutes 200
 
