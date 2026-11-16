@@ -32,8 +32,10 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IdeaSheet } from '@/components/IdeaSheet';
+import { TheoryEndCard } from '@/components/TheoryEndCard';
 import { useHotkeys } from '@/hooks/useHotkeys';
 import { useScreenSize } from '@/hooks/useScreenWidth';
+import { usePack } from '@/hooks/usePack';
 import { PACK_IDS, getPack } from '@/packs/registry';
 import { moveFeedback, playSound, successFeedback, wrongFeedback } from '@/services/feedback';
 import { useProgress } from '@/store/progress';
@@ -69,7 +71,7 @@ export default function LineScreen() {
   const finishRun = useProgress((s) => s.finishRun);
   const addXp = useProgress((s) => s.addXp);
 
-  const index = packId ? getPack(packId) : null;
+  const index = usePack(packId);
   const indexed = index && lineId ? index.lines.get(lineId) : undefined;
   const steps = useMemo(() => indexed?.steps ?? [], [indexed]);
 
@@ -488,7 +490,13 @@ export default function LineScreen() {
     </View>
   );
 
-  const panel = mode === 'study' ? studyPanel : trainPanel;
+  const atEnd = mode === 'study' ? ply === steps.length && steps.length > 0 : finished;
+  const panel = (
+    <View style={{ gap: theme.spacing.md }}>
+      {mode === 'study' ? studyPanel : trainPanel}
+      {atEnd ? <TheoryEndCard index={index} indexed={indexed} onIdea={setIdea} /> : null}
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>

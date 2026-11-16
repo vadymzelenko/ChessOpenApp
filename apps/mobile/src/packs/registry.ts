@@ -33,3 +33,36 @@ export function evalFor(positionKey: string) {
   }
   return undefined;
 }
+
+const personalCache = new WeakMap<object, PackIndex>();
+
+/**
+ * The pack with the user's own lines as an extra chapter «Мой репертуар»
+ * (ТЗ §4), so they get training, review and exams like any course line.
+ */
+export function withPersonal(
+  index: PackIndex,
+  custom: readonly { id: string; moves: string[] }[] | undefined,
+  chapterTitle: string,
+): PackIndex {
+  if (!custom || custom.length === 0) return index;
+  const cached = personalCache.get(custom);
+  if (cached) return cached;
+  const chapter = {
+    id: 'my-repertoire',
+    title: { ru: chapterTitle },
+    lines: custom.map((l) => ({
+      id: l.id,
+      title: { ru: `${chapterTitle}: …${l.moves.slice(-2).join(' ')}` },
+      level: 'base' as const,
+      moves: l.moves,
+      status: 'draft' as const,
+    })),
+  };
+  const result = indexPack({
+    ...index.pack,
+    course: { chapters: [...index.pack.course.chapters, chapter] },
+  });
+  personalCache.set(custom, result);
+  return result;
+}

@@ -214,5 +214,43 @@
     "f_mobility": "more active pieces",
     "for": "{{side}}:",
     "balanced": "Neither side has a clear edge"
+  },
+  "theory": {
+    "endTitle": "Theory ends here",
+    "plan": "Middlegame plan",
+    "goFurther": "Go further ⚙",
+    "goFurtherHint": "Continuation from Lichess statistics — not reviewed by a human",
+    "addToMine": "Add to my repertoire",
+    "added": "Added to «My repertoire»",
+    "playFromHere": "Play on from here",
+    "puzzles": "Solve puzzles",
+    "myRepertoire": "My repertoire",
+    "noData": "No statistical continuation yet — run the data pipeline"
+  },
+  "puzzles": {
+    "title": "Puzzles",
+    "subtitle": "Tactics from games in this opening",
+    "findBest": "Find the best move",
+    "solved": "Solved!",
+    "wrong": "Not that. Try again",
+    "solution": "Solution",
+    "next": "Next",
+    "rating": "Rating {{rating}}",
+    "none": "No puzzles yet — the data pipeline adds them",
+    "count": "{{solved}} of {{total}} solved",
+    "opponent": "Opponent is moving…"
+  },
+  "traps": {
+    "title": "Traps",
+    "subtitle": "Punish the opponent’s mistake and avoid your own",
+    "watch": "Watching the trap…",
+    "punish": "The opponent erred — punish it!",
+    "mistake": "Opponent’s mistake",
+    "explain": "Explanation",
+    "next": "Next",
+    "for": "A trap for the opponent",
+    "against": "Don’t fall for it",
+    "done": "Trap explained",
+    "none": "No traps in this course yet"
   }
 }

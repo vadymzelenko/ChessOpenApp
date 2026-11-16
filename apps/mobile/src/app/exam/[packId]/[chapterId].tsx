@@ -9,6 +9,7 @@ import { View } from 'react-native';
 import { PanelCard, SessionLayout } from '@/components/SessionLayout';
 import { TrainingBoard } from '@/components/TrainingBoard';
 import { usePosition } from '@/hooks/usePosition';
+import { usePack } from '@/hooks/usePack';
 import { PACK_IDS, getPack } from '@/packs/registry';
 import { moveFeedback, successFeedback, wrongFeedback } from '@/services/feedback';
 import { useProgress } from '@/store/progress';
@@ -31,7 +32,7 @@ export default function ExamScreen() {
   const { packId, chapterId } = useLocalSearchParams<{ packId: string; chapterId: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
-  const index = packId ? getPack(packId) : null;
+  const index = usePack(packId);
   const chapter = index?.pack.course.chapters.find((c) => c.id === chapterId);
   const gradeCard = useProgress((s) => s.gradeCard);
   const saveExam = useProgress((s) => s.saveExam);

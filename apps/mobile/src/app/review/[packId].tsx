@@ -16,7 +16,8 @@ import { View } from 'react-native';
 import { PanelCard, SessionLayout } from '@/components/SessionLayout';
 import { TrainingBoard } from '@/components/TrainingBoard';
 import { usePosition } from '@/hooks/usePosition';
-import { PACK_IDS, getPack } from '@/packs/registry';
+import { usePack } from '@/hooks/usePack';
+import { PACK_IDS } from '@/packs/registry';
 import { moveFeedback, playSound, successFeedback, wrongFeedback } from '@/services/feedback';
 import { packCards, useProgress, useProgressHydrated } from '@/store/progress';
 
@@ -36,7 +37,7 @@ export default function ReviewScreen() {
   const { packId } = useLocalSearchParams<{ packId: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
-  const index = packId ? getPack(packId) : null;
+  const index = usePack(packId);
   const hydrated = useProgressHydrated();
   const gradeCard = useProgress((s) => s.gradeCard);
   const addXp = useProgress((s) => s.addXp);

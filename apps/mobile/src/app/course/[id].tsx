@@ -19,6 +19,8 @@ import {
   Medal,
   Play,
   Repeat,
+  Puzzle,
+  Skull,
   Swords,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
@@ -26,7 +28,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PACK_IDS, getPack } from '@/packs/registry';
+import { usePack } from '@/hooks/usePack';
+import { PACK_IDS } from '@/packs/registry';
 import { cardId, lineKey, packCards, useProgress } from '@/store/progress';
 
 const LEVEL_COLORS: Record<LineLevel, string> = {
@@ -46,7 +49,7 @@ export default function CourseScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const index = id ? getPack(id) : null;
+  const index = usePack(id);
   const cards = useProgress((s) => s.cards);
   const lineState = useProgress((s) => s.lines);
   const medals = useProgress((s) => s.medals);
@@ -196,6 +199,30 @@ export default function CourseScreen() {
             minHeight={0}
           />
         </Appear>
+        <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+          <Appear index={i++} style={{ flex: 1 }}>
+            <Tile
+              title={t('traps.title')}
+              subtitle={String(index.pack.traps.length)}
+              icon={Skull}
+              accent="#F08A3C"
+              onPress={() => router.push(`/traps/${meta.id}`)}
+              minHeight={0}
+              style={{ flex: 1 }}
+            />
+          </Appear>
+          <Appear index={i++} style={{ flex: 1 }}>
+            <Tile
+              title={t('puzzles.title')}
+              subtitle={String(index.pack.puzzles.length)}
+              icon={Puzzle}
+              accent="#2FB574"
+              onPress={() => router.push(`/puzzles/${meta.id}`)}
+              minHeight={0}
+              style={{ flex: 1 }}
+            />
+          </Appear>
+        </View>
         {isDraft ? (
           <ThemedText variant="caption" tone="generated">
             ⚙ {t('course.draftNote')}

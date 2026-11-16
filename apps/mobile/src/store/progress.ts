@@ -26,8 +26,19 @@ export interface Medal {
   at: number;
 }
 
+/** A line the user added to their own repertoire (ТЗ §4 «Личный репертуар»). */
+export interface CustomLine {
+  id: string;
+  moves: string[];
+  createdAt: number;
+}
+
 interface ProgressState {
   cards: Record<string, SrsCard>;
+  /** Personal lines by pack id. */
+  custom: Record<string, CustomLine[]>;
+  /** Puzzle results by `${packId}|${puzzleId}`. */
+  puzzles: Record<string, { ok: boolean; at: number }>;
   /** Exam medals by `${packId}|${chapterId}` (best passing score). */
   medals: Record<string, Medal>;
   lines: Record<string, LineProgress>;
@@ -44,6 +55,9 @@ interface ProgressState {
     passed: boolean,
     now?: number,
   ) => void;
+  addCustomLine: (packId: string, moves: string[], now?: number) => void;
+  savePuzzle: (packId: string, puzzleId: string, ok: boolean, now?: number) => void;
+  removeCustomLine: (packId: string, id: string) => void;
   reset: () => void;
 }
 
@@ -56,6 +70,8 @@ export const useProgress = create<ProgressState>()(
   persist(
     (set) => ({
       cards: {},
+      custom: {},
+      puzzles: {},
       medals: {},
       lines: {},
       xp: 0,
@@ -105,24 +121,57 @@ export const useProgress = create<ProgressState>()(
               : s.medals;
           return { medals, activeDays: touchDay(s.activeDays, now) };
         }),
-      reset: () => set({ cards: {}, medals: {}, lines: {}, xp: 0, activeDays: [] }),
+      addCustomLine: (packId, moves, now = Date.now()) =>
+        set((s) => {
+          const list = s.custom[packId] ?? [];
+          if (list.some((l) => l.moves.join(' ') === moves.join(' '))) return {};
+          return {
+            custom: {
+              ...s.custom,
+              [packId]: [...list, { id: `my-${now.toString(36)}`, moves, createdAt: now }],
+            },
+          };
+        }),
+      savePuzzle: (packId, puzzleId, ok, now = Date.now()) =>
+        set((s) => {
+          const k = lineKey(packId, puzzleId);
+          // A first failure stays recorded; a later success does not erase it.
+          const prev = s.puzzles[k];
+          return {
+            puzzles: { ...s.puzzles, [k]: { ok: prev ? prev.ok && ok : ok, at: now } },
+            activeDays: touchDay(s.activeDays, now),
+          };
+        }),
+      removeCustomLine: (packId, id) =>
+        set((s) => ({
+          custom: { ...s.custom, [packId]: (s.custom[packId] ?? []).filter((l) => l.id !== id) },
+        })),
+      reset: () =>
+        set({ cards: {}, custom: {}, puzzles: {}, medals: {}, lines: {}, xp: 0, activeDays: [] }),
     }),
     {
       name: 'progress',
       version: 1,
       storage: createJSONStorage(() => kvStorage),
-      partialize: ({ cards, medals, lines, xp, activeDays }) => ({
+      partialize: ({ cards, custom, puzzles, medals, lines, xp, activeDays }) => ({
         cards,
+        custom,
+        puzzles,
         medals,
         lines,
         xp,
         activeDays,
       }),
-      merge: (persisted, current) => ({
-        ...current,
-        ...(persisted as object),
-        medals: (persisted as { medals?: Record<string, Medal> })?.medals ?? {},
-      }),
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<ProgressState>;
+        return {
+          ...current,
+          ...p,
+          medals: p.medals ?? {},
+          custom: p.custom ?? {},
+          puzzles: p.puzzles ?? {},
+        };
+      },
       skipHydration: Platform.OS === 'web',
     },
   ),

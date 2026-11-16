@@ -24,7 +24,8 @@ import { ScrollView, View } from 'react-native';
 import { PanelCard, SessionLayout } from '@/components/SessionLayout';
 import { TrainingBoard } from '@/components/TrainingBoard';
 import { usePosition } from '@/hooks/usePosition';
-import { PACK_IDS, getPack } from '@/packs/registry';
+import { usePack } from '@/hooks/usePack';
+import { PACK_IDS } from '@/packs/registry';
 import { moveFeedback, playSound } from '@/services/feedback';
 import { cardId, useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
@@ -48,16 +49,24 @@ interface Played {
  * allowed but marked. Without statistics, the opponent plays course moves.
  */
 export default function PracticeScreen() {
-  const { packId } = useLocalSearchParams<{ packId: string }>();
+  const { packId, line } = useLocalSearchParams<{ packId: string; line?: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
-  const index = packId ? getPack(packId) : null;
+  const index = usePack(packId);
   const level = useSettings((s) => s.opponentLevel);
   const cards = useProgress((s) => s.cards);
 
   const [mode, setMode] = useState<OpponentMode>('realistic');
-  const [fen, setFen] = useState(() => index?.startFen ?? '');
-  const [played, setPlayed] = useState<Played[]>([]);
+  // «Доиграть отсюда»: start from the end of a course line (ТЗ §4).
+  const startLine = line && index ? index.lines.get(line) : undefined;
+  const initialFen =
+    startLine?.steps[startLine.steps.length - 1]?.move.fenAfter ?? index?.startFen ?? '';
+  const initialPlayed: Played[] = (startLine?.steps ?? []).map((s) => ({
+    san: s.move.san,
+    ours: s.ours,
+  }));
+  const [fen, setFen] = useState(initialFen);
+  const [played, setPlayed] = useState<Played[]>(initialPlayed);
   const [lastMove, setLastMove] = useState<{ from: Square; to: Square } | null>(null);
 
   const side = index?.side ?? 'w';
@@ -136,8 +145,8 @@ export default function PracticeScreen() {
 
   const restart = (m: OpponentMode = mode) => {
     setMode(m);
-    setFen(index?.startFen ?? '');
-    setPlayed([]);
+    setFen(initialFen);
+    setPlayed(initialPlayed);
     setLastMove(null);
     playSound('move');
   };
