@@ -1,4 +1,4 @@
-import { GameTree } from '@chess-open/core';
+import { GameTree, dueCount } from '@chess-open/core';
 import {
   Appear,
   Board,
@@ -22,11 +22,12 @@ import {
   Repeat,
   Swords,
 } from 'lucide-react-native';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useScreenWidth } from '@/hooks/useScreenWidth';
+import { packCards, useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 
 /** Typical London System set-up shown on the hero tile. */
@@ -64,6 +65,9 @@ export default function HomeScreen() {
   const width = useScreenWidth();
   const settings = useSettings();
   const wide = width >= 760;
+  const cards = useProgress((s) => s.cards);
+  const [now] = useState(() => Date.now());
+  const due = dueCount(packCards(cards, 'london'), now);
   const columns = wide ? 4 : 2;
 
   const position = useMemo(() => GameTree.fromSan(LONDON), []);
@@ -149,7 +153,12 @@ export default function HomeScreen() {
       color: ACCENTS.blue,
       onPress: () => router.navigate('/board'),
     },
-    { key: 'review', icon: Repeat, color: ACCENTS.purple },
+    {
+      key: 'review',
+      icon: Repeat,
+      color: ACCENTS.purple,
+      onPress: () => router.push('/review/london'),
+    },
     { key: 'traps', icon: Swords, color: ACCENTS.red },
     { key: 'puzzles', icon: Puzzle, color: ACCENTS.orange },
   ];
@@ -169,7 +178,13 @@ export default function HomeScreen() {
           <Appear key={tile.key} index={i++} style={cell}>
             <Tile
               title={t(`home.${tile.key}`)}
-              subtitle={t(`home.${tile.key}Sub`)}
+              subtitle={
+                tile.key === 'review'
+                  ? due > 0
+                    ? t('review.due', { count: due })
+                    : t('review.noneDue')
+                  : t(`home.${tile.key}Sub`)
+              }
               icon={tile.icon}
               accent={tile.color}
               watermark={tile.icon}

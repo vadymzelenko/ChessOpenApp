@@ -135,5 +135,33 @@
     "idea": "Idea",
     "noComment": "A move from the course plan.",
     "trap": "Trap"
+  },
+  "review": {
+    "title": "Review",
+    "progress": "{{done}} of {{total}}",
+    "replaying": "Replaying the line…",
+    "findMove": "Find the course move",
+    "forgot": "I forgot",
+    "correct": "Correct!",
+    "wasMove": "The move was: {{san}}",
+    "done": "Review complete",
+    "summary": "{{correct}} of {{total}} correct",
+    "nothing": "Nothing to review",
+    "nothingHint": "Positions appear here after you train lines. Come back tomorrow!",
+    "due": "Due: {{count}}",
+    "noneDue": "All reviewed"
+  },
+  "exam": {
+    "title": "Exam",
+    "subtitle": "{{count}} random lines, no hints",
+    "lineOf": "Line {{n}} of {{total}}",
+    "failedLine": "Mistake — line not counted",
+    "result": "Score: {{score}}%",
+    "passed": "Medal earned!",
+    "notPassed": "85% needed for a medal",
+    "failedLines": "Lines with mistakes",
+    "retry": "Retake",
+    "start": "Exam",
+    "medal": "Medal"
   }
 }

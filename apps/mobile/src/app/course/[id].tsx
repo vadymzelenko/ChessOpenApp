@@ -1,8 +1,9 @@
-import { mastery, type IndexedLine, type LineLevel } from '@chess-open/core';
+import { dueCount, mastery, type IndexedLine, type LineLevel } from '@chess-open/core';
 import {
   Appear,
   Button,
   PressableScale,
+  Tile,
   SectionHeader,
   ThemedText,
   shade,
@@ -10,14 +11,22 @@ import {
 } from '@chess-open/ui';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Check, ChevronLeft, ChevronRight, Play } from 'lucide-react-native';
-import { useMemo } from 'react';
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  GraduationCap,
+  Medal,
+  Play,
+  Repeat,
+} from 'lucide-react-native';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PACK_IDS, getPack } from '@/packs/registry';
-import { cardId, lineKey, useProgress } from '@/store/progress';
+import { cardId, lineKey, packCards, useProgress } from '@/store/progress';
 
 const LEVEL_COLORS: Record<LineLevel, string> = {
   base: '#2FB574',
@@ -39,6 +48,8 @@ export default function CourseScreen() {
   const index = id ? getPack(id) : null;
   const cards = useProgress((s) => s.cards);
   const lineState = useProgress((s) => s.lines);
+  const medals = useProgress((s) => s.medals);
+  const [now] = useState(() => Date.now());
 
   const lineMastery = useMemo(() => {
     const out = new Map<string, number>();
@@ -78,6 +89,7 @@ export default function CourseScreen() {
   const nextLine = allLines.find((l) => !lineState[lineKey(meta.id, l.line.id)]?.studied) ?? null;
   const open = (l: IndexedLine) => router.push(`/line/${meta.id}/${l.line.id}`);
   const isDraft = allLines.some((l) => l.line.status !== 'reviewed');
+  const due = dueCount(packCards(cards, meta.id), now);
 
   let i = 0;
   return (
@@ -162,6 +174,17 @@ export default function CourseScreen() {
           padding: theme.spacing.lg,
           gap: theme.spacing.sm,
         }}>
+        <Appear index={i++}>
+          <Tile
+            title={t('review.title')}
+            subtitle={due > 0 ? t('review.due', { count: due }) : t('review.noneDue')}
+            icon={Repeat}
+            accent="#9B6BF2"
+            badge={due > 0 ? String(due) : undefined}
+            onPress={() => router.push(`/review/${meta.id}`)}
+            minHeight={0}
+          />
+        </Appear>
         {isDraft ? (
           <ThemedText variant="caption" tone="generated">
             ⚙ {t('course.draftNote')}
@@ -170,7 +193,25 @@ export default function CourseScreen() {
         {index.pack.course.chapters.map((chapter) => (
           <View key={chapter.id} style={{ gap: theme.spacing.sm }}>
             <Appear index={i++}>
-              <SectionHeader title={chapter.title.ru} />
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: theme.spacing.sm }}>
+                <View style={{ flex: 1 }}>
+                  <SectionHeader title={chapter.title.ru} />
+                </View>
+                {medals[lineKey(meta.id, chapter.id)] ? (
+                  <Medal
+                    color={theme.colors.verified}
+                    size={22}
+                    accessibilityLabel={t('exam.medal')}
+                  />
+                ) : null}
+                <Button
+                  compact
+                  variant="ghost"
+                  icon={GraduationCap}
+                  label={t('exam.start')}
+                  onPress={() => router.push(`/exam/${meta.id}/${chapter.id}`)}
+                />
+              </View>
               {chapter.description ? (
                 <ThemedText variant="caption" tone="textMuted" style={{ marginTop: 2 }}>
                   {chapter.description.ru}

@@ -1,4 +1,5 @@
 import { dayKey, newCard, review, type Rating, type SrsCard } from '@chess-open/core';
+import { useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -20,8 +21,15 @@ export interface LineProgress {
   runs?: number;
 }
 
+export interface Medal {
+  score: number;
+  at: number;
+}
+
 interface ProgressState {
   cards: Record<string, SrsCard>;
+  /** Exam medals by `${packId}|${chapterId}` (best passing score). */
+  medals: Record<string, Medal>;
   lines: Record<string, LineProgress>;
   xp: number;
   activeDays: string[];
@@ -29,6 +37,13 @@ interface ProgressState {
   markStudied: (packId: string, lineId: string, now?: number) => void;
   finishRun: (packId: string, lineId: string, mistakes: number, now?: number) => void;
   addXp: (amount: number, now?: number) => void;
+  saveExam: (
+    packId: string,
+    chapterId: string,
+    score: number,
+    passed: boolean,
+    now?: number,
+  ) => void;
   reset: () => void;
 }
 
@@ -41,6 +56,7 @@ export const useProgress = create<ProgressState>()(
   persist(
     (set) => ({
       cards: {},
+      medals: {},
       lines: {},
       xp: 0,
       activeDays: [],
@@ -79,14 +95,57 @@ export const useProgress = create<ProgressState>()(
         }),
       addXp: (amount, now = Date.now()) =>
         set((s) => ({ xp: s.xp + amount, activeDays: touchDay(s.activeDays, now) })),
-      reset: () => set({ cards: {}, lines: {}, xp: 0, activeDays: [] }),
+      saveExam: (packId, chapterId, score, passed, now = Date.now()) =>
+        set((s) => {
+          const k = lineKey(packId, chapterId);
+          const prev = s.medals[k];
+          const medals =
+            passed && (!prev || score > prev.score)
+              ? { ...s.medals, [k]: { score, at: now } }
+              : s.medals;
+          return { medals, activeDays: touchDay(s.activeDays, now) };
+        }),
+      reset: () => set({ cards: {}, medals: {}, lines: {}, xp: 0, activeDays: [] }),
     }),
     {
       name: 'progress',
       version: 1,
       storage: createJSONStorage(() => kvStorage),
-      partialize: ({ cards, lines, xp, activeDays }) => ({ cards, lines, xp, activeDays }),
+      partialize: ({ cards, medals, lines, xp, activeDays }) => ({
+        cards,
+        medals,
+        lines,
+        xp,
+        activeDays,
+      }),
+      merge: (persisted, current) => ({
+        ...current,
+        ...(persisted as object),
+        medals: (persisted as { medals?: Record<string, Medal> })?.medals ?? {},
+      }),
       skipHydration: Platform.OS === 'web',
     },
   ),
 );
+
+/** Cards of one pack, keyed by position key (for core session helpers). */
+export function packCards(
+  cards: Readonly<Record<string, SrsCard>>,
+  packId: string,
+): Record<string, SrsCard> {
+  const prefix = `${packId}|`;
+  const out: Record<string, SrsCard> = {};
+  for (const [id, card] of Object.entries(cards))
+    if (id.startsWith(prefix)) out[id.slice(prefix.length)] = card;
+  return out;
+}
+
+const subscribeHydration = (cb: () => void) => useProgress.persist.onFinishHydration(cb);
+/** True once stored progress has been loaded (async on web, immediate on native). */
+export function useProgressHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeHydration,
+    () => useProgress.persist.hasHydrated(),
+    () => false,
+  );
+}

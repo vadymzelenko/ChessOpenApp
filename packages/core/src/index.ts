@@ -16,3 +16,4 @@ export * from './engine';
 export * from './puzzles';
 export * from './textcheck';
 export * from './srs';
+export * from './sessions';
