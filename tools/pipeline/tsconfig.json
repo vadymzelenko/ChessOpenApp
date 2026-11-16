@@ -7,6 +7,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler"
   },
-  "include": ["*.ts"],
+  "include": ["*.ts", "../web/*.ts", "../i18n-check.ts"],
   "references": [{ "path": "../../packages/core" }]
 }
