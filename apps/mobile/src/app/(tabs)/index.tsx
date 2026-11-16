@@ -159,7 +159,12 @@ export default function HomeScreen() {
       color: ACCENTS.purple,
       onPress: () => router.push('/review/london'),
     },
-    { key: 'traps', icon: Swords, color: ACCENTS.red },
+    {
+      key: 'practice',
+      icon: Swords,
+      color: ACCENTS.red,
+      onPress: () => router.push('/practice/london'),
+    },
     { key: 'puzzles', icon: Puzzle, color: ACCENTS.orange },
   ];
 

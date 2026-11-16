@@ -38,7 +38,9 @@
     "puzzlesSub": "Tactics from your openings",
     "start": "Start",
     "heroBadge": "White · D02",
-    "openCourse": "Open the course"
+    "openCourse": "Open the course",
+    "practice": "Live practice",
+    "practiceSub": "Against real players’ moves"
   },
   "board": {
     "whiteToMove": "White to move",
@@ -91,7 +93,11 @@
     "language": "Language",
     "languageAuto": "Auto",
     "reset": "Reset settings",
-    "pieceSet": "Pieces"
+    "pieceSet": "Pieces",
+    "opponentLevel": "Opponent level",
+    "level_lt1400": "Under 1400",
+    "level_1400-1800": "1400–1800",
+    "level_gt1800": "1800+"
   },
   "course": {
     "lines": "Lines",
@@ -163,5 +169,32 @@
     "retry": "Retake",
     "start": "Exam",
     "medal": "Medal"
+  },
+  "practice": {
+    "title": "Live practice",
+    "subtitle": "The opponent moves like real Lichess players",
+    "mode": "Opponent mode",
+    "mode_realistic": "Realistic",
+    "mode_hard": "Hard",
+    "mode_weak-spots": "Weak spots",
+    "mode_traps": "Traps",
+    "mode_rare": "Rare lines",
+    "yourMove": "Your move",
+    "thinking": "Opponent is thinking…",
+    "deviation": "Left the repertoire",
+    "courseMove": "Course move: {{san}}",
+    "inBook": "In the repertoire",
+    "outOfCourse": "The course has no move here — play by the ideas",
+    "end": "Out of book",
+    "endHint": "The middlegame starts here. Check the course plans and ideas.",
+    "deviations": "Deviations: {{count}}",
+    "chances": "Practical chances",
+    "white": "White",
+    "draw": "Draw",
+    "black": "Black",
+    "eval": "Eval: {{score}}",
+    "newGame": "New game",
+    "statsFrom": "games of {{group}}",
+    "courseOnly": "No Lichess statistics yet — the opponent plays course moves"
   }
 }

@@ -19,6 +19,7 @@ import {
   Medal,
   Play,
   Repeat,
+  Swords,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -182,6 +183,16 @@ export default function CourseScreen() {
             accent="#9B6BF2"
             badge={due > 0 ? String(due) : undefined}
             onPress={() => router.push(`/review/${meta.id}`)}
+            minHeight={0}
+          />
+        </Appear>
+        <Appear index={i++}>
+          <Tile
+            title={t('practice.title')}
+            subtitle={t('practice.subtitle')}
+            icon={Swords}
+            accent="#EF5A5A"
+            onPress={() => router.push(`/practice/${meta.id}`)}
             minHeight={0}
           />
         </Appear>

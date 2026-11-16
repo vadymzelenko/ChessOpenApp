@@ -16,6 +16,7 @@ import { kvStorage } from '@/services/kvStorage';
 
 export type SoundSet = 'wood' | 'soft' | 'off';
 export type LanguageSetting = 'auto' | 'ru' | 'en';
+export type OpponentLevel = 'lt1400' | '1400-1800' | 'gt1800';
 
 export interface Settings {
   theme: ThemePreference;
@@ -29,6 +30,8 @@ export interface Settings {
   soundSet: SoundSet;
   haptics: boolean;
   language: LanguageSetting;
+  /** Rating group of the «live» opponents (ТЗ §5). */
+  opponentLevel: OpponentLevel;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -43,6 +46,7 @@ export const DEFAULT_SETTINGS: Settings = {
   soundSet: 'wood',
   haptics: true,
   language: 'auto',
+  opponentLevel: '1400-1800',
 };
 
 interface SettingsState extends Settings {

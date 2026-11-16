@@ -17,3 +17,4 @@ export * from './puzzles';
 export * from './textcheck';
 export * from './srs';
 export * from './sessions';
+export * from './practice';

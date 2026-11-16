@@ -26,7 +26,12 @@ import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, View } from 'react-native';
 
 import { playSound } from '@/services/feedback';
-import { useSettings, type LanguageSetting, type SoundSet } from '@/store/settings';
+import {
+  useSettings,
+  type LanguageSetting,
+  type OpponentLevel,
+  type SoundSet,
+} from '@/store/settings';
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
@@ -52,6 +57,11 @@ export default function SettingsScreen() {
     { value: 'wood', label: t('settings.soundWood') },
     { value: 'soft', label: t('settings.soundSoft') },
     { value: 'off', label: t('settings.soundOff') },
+  ];
+  const levelOptions: { value: OpponentLevel; label: string }[] = [
+    { value: 'lt1400', label: t('settings.level_lt1400') },
+    { value: '1400-1800', label: t('settings.level_1400-1800') },
+    { value: 'gt1800', label: t('settings.level_gt1800') },
   ];
   const languageOptions: { value: LanguageSetting; label: string }[] = [
     { value: 'auto', label: t('settings.languageAuto') },
@@ -118,6 +128,13 @@ export default function SettingsScreen() {
             />
           ))}
         </View>
+        {label(t('settings.opponentLevel'))}
+        <SegmentedControl
+          accessibilityLabel={t('settings.opponentLevel')}
+          options={levelOptions}
+          value={s.opponentLevel}
+          onChange={(v) => s.set('opponentLevel', v)}
+        />
         {label(t('settings.moveInput'))}
         <SegmentedControl
           accessibilityLabel={t('settings.moveInput')}
