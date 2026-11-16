@@ -1,0 +1,35 @@
+name: Data artifact to log
+
+# Prints the data-<pack> artifact of a Data pipeline run as base64 in the job
+# log (read-only), for environments that cannot download artifacts directly.
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Data pipeline run id'
+        required: true
+      pack:
+        description: 'Pack id'
+        required: true
+        default: london
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: data-${{ inputs.pack }}
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: data
+      - name: Print
+        run: |
+          ls -la data
+          tar -C data -cJf data.tar.xz .
+          sha256sum data.tar.xz
+          echo "BEGIN-DATA"
+          base64 -w 4000 data.tar.xz
+          echo "END-DATA"
