@@ -196,5 +196,23 @@
     "newGame": "New game",
     "statsFrom": "games of {{group}}",
     "courseOnly": "No Lichess statistics yet — the opponent plays course moves"
+  },
+  "analysis": {
+    "title": "Position analysis",
+    "equal": "The position is roughly equal",
+    "slight": "{{side}} is slightly better",
+    "clear": "{{side}} is clearly better",
+    "winning": "{{side}} is winning",
+    "white": "White",
+    "black": "Black",
+    "noEval": "No engine evaluation for this position — explanation by features",
+    "f_material": "material +{{amount}}",
+    "f_development": "better development (+{{amount}})",
+    "f_king": "safer king",
+    "f_center": "control of the centre",
+    "f_pawns": "better pawn structure",
+    "f_mobility": "more active pieces",
+    "for": "{{side}}:",
+    "balanced": "Neither side has a clear edge"
   }
 }

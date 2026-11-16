@@ -24,3 +24,12 @@ export function getPack(id: string): PackIndex | null {
   cache.set(id, result);
   return result;
 }
+
+/** Engine evaluation of a position from any shipped pack (White POV), if precomputed. */
+export function evalFor(positionKey: string) {
+  for (const id of PACK_IDS) {
+    const e = getPack(id)?.pack.evals[positionKey];
+    if (e) return e;
+  }
+  return undefined;
+}

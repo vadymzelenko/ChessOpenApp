@@ -1,7 +1,8 @@
-import type { Square } from '@chess-open/core';
+import { winningChances, type Square } from '@chess-open/core';
 import {
   Board,
   Button,
+  EvalBar,
   Card,
   ThemedText,
   boardThemes,
@@ -24,11 +25,13 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform, ScrollView, View } from 'react-native';
 
+import { AnalysisCard } from '@/components/AnalysisCard';
 import { MoveTree } from '@/components/MoveTree';
 import { useGameTree } from '@/hooks/useGameTree';
 import { useHotkeys } from '@/hooks/useHotkeys';
 import { moveFeedback, playSound } from '@/services/feedback';
 import { useScreenSize } from '@/hooks/useScreenWidth';
+import { evalFor } from '@/packs/registry';
 import { useSettings } from '@/store/settings';
 
 /** Free board with a move tree (ТЗ «Анализ / свободная доска»). */
@@ -113,22 +116,28 @@ export default function BoardScreen() {
   })();
 
   const last = tree.lastMove;
+  const evaluation = evalFor(tree.key);
   const board = (
-    <Board
-      pieces={pieces}
-      orientation={orientation}
-      lastMove={last ? { from: last.from, to: last.to } : null}
-      check={tree.checkedKingSquare}
-      legalMoves={legalMoves}
-      isPromotion={isPromotion}
-      onMove={onMove}
-      showCoordinates={settings.showCoordinates}
-      showLegalMoves={settings.showLegalMoves}
-      moveInput={settings.moveInput}
-      autoQueen={settings.autoQueen}
-      boardTheme={boardThemes[settings.boardTheme]}
-      pieceSet={settings.pieceSet}
-    />
+    <View style={{ flexDirection: 'row', gap: 4 }}>
+      <EvalBar chances={evaluation ? winningChances(evaluation) : null} orientation={orientation} />
+      <View style={{ flex: 1 }}>
+        <Board
+          pieces={pieces}
+          orientation={orientation}
+          lastMove={last ? { from: last.from, to: last.to } : null}
+          check={tree.checkedKingSquare}
+          legalMoves={legalMoves}
+          isPromotion={isPromotion}
+          onMove={onMove}
+          showCoordinates={settings.showCoordinates}
+          showLegalMoves={settings.showLegalMoves}
+          moveInput={settings.moveInput}
+          autoQueen={settings.autoQueen}
+          boardTheme={boardThemes[settings.boardTheme]}
+          pieceSet={settings.pieceSet}
+        />
+      </View>
+    </View>
   );
 
   const controls = (
@@ -308,6 +317,7 @@ export default function BoardScreen() {
           {titleRow}
           {controls}
           {branchBar}
+          <AnalysisCard fen={tree.fen} evaluation={evaluation} />
           {movesCard}
           {Platform.OS === 'web' && (
             <ThemedText variant="caption" tone="textMuted">
@@ -346,6 +356,7 @@ export default function BoardScreen() {
         }}>
         {controls}
         {branchBar}
+        <AnalysisCard fen={tree.fen} evaluation={evaluation} />
         {movesCard}
       </View>
     </ScrollView>

@@ -22,3 +22,4 @@ export {
   type PieceSetId,
 } from './pieceSets';
 export { diffPieces, keyPieces, type KeyedPiece } from './pieceDiff';
+export { EvalBar, type EvalBarProps } from './EvalBar';
