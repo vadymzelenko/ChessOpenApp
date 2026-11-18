@@ -1,7 +1,7 @@
 {
   "id": "london",
   "format": 1,
-  "packVersion": 1,
+  "packVersion": 2,
   "title": { "ru": "Лондонская система", "en": "London System" },
   "description": {
     "ru": "Универсальная система за белых против почти любого ответа на 1.d4: слон f4, пешки c3–d4–e3, понятные планы.",

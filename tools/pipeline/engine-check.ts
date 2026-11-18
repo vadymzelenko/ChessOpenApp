@@ -3,7 +3,9 @@
  * module 15): every move of our side in course lines is graded against the
  * engine; mistakes are reported, blunders fail the run.
  *
- *   npm run pack:engine-check -- <id> [--depth 16]
+ *   npm run pack:engine-check -- <id> [--depth 16] [--verbose]
+ *
+ * `--verbose` also lists inaccuracies and the evaluation at the end of each line.
  *
  * Uses packs/<id>/evals.json where available, local Stockfish for the rest.
  */
@@ -27,6 +29,7 @@ async function main() {
   const sf = new Stockfish();
   await sf.init();
   const depth = numberArg('depth', 16);
+  const verbose = process.argv.includes('--verbose');
   const evalOf = async (g: ChessGame): Promise<Eval> => {
     const hit = cache[g.key];
     if (hit && (hit.depth ?? 0) >= depth) return hit;
@@ -52,6 +55,10 @@ async function main() {
         seen.add(`${beforeKey} ${rec.uci}`);
         const after = await evalOf(g);
         const grade = classifyMove(before!, after, side, before!.best === rec.uci);
+        if (grade === 'inaccuracy' && verbose)
+          console.log(
+            `  · ${chapter.id}/${line.id} ply ${rec.ply} ${rec.san}: inaccuracy (${formatScore(before!)} → ${formatScore(after)}, engine: ${before!.best ?? '?'})`,
+          );
         if (grade === 'mistake' || grade === 'blunder') {
           if (grade === 'blunder') blunders++;
           else mistakes++;
@@ -61,6 +68,7 @@ async function main() {
           );
         }
       }
+      if (verbose) console.log(`  = ${chapter.id}/${line.id}: ${formatScore(await evalOf(g))}`);
     }
   }
   sf.quit();
