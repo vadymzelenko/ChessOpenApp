@@ -46,3 +46,17 @@ export function countOurMoves(nodes: readonly RepertoireNode[]): number {
   for (const node of nodes) n += (node.ours ? 1 : 0) + countOurMoves(node.children);
   return n;
 }
+
+/** The children reachable after playing `path` (SAN) from the root; null if off the tree. */
+export function childrenAt(
+  roots: readonly RepertoireNode[],
+  path: readonly string[],
+): readonly RepertoireNode[] | null {
+  let level: readonly RepertoireNode[] = roots;
+  for (const san of path) {
+    const node = level.find((n) => n.san === san);
+    if (!node) return null;
+    level = node.children;
+  }
+  return level;
+}

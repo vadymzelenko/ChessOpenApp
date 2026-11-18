@@ -11,4 +11,3 @@ packs/*/explorer.json
 packs/*/evals.json
 packs/*/puzzles.json
 apps/mobile/assets/packs/*.json
-apps/mobile/public/engine/

@@ -85,3 +85,19 @@ export function mostPopularStrong(moves: readonly MoveStats[], minGames: number)
   }
   return best;
 }
+
+/**
+ * Share of each move among all games in an explorer position (0–1), all rating
+ * groups together. Uses the stored total when present (moves not stored count too).
+ */
+export function moveShares(
+  node: { moves: readonly MoveStats[]; total?: number } | undefined,
+): Map<string, number> {
+  const out = new Map<string, number>();
+  if (!node) return out;
+  const sum = node.moves.reduce((a, m) => a + moveGames(m), 0);
+  const total = Math.max(node.total ?? 0, sum);
+  if (total === 0) return out;
+  for (const m of node.moves) out.set(m.san, moveGames(m) / total);
+  return out;
+}

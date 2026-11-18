@@ -26,12 +26,7 @@ const SOFTWARE: { name: string; license: string; url: string }[] = [
   { name: 'Zustand', license: 'MIT', url: 'https://github.com/pmndrs/zustand' },
   { name: 'i18next', license: 'MIT', url: 'https://www.i18next.com' },
   { name: 'zod', license: 'MIT', url: 'https://zod.dev' },
-  { name: 'Stockfish 19 (engine)', license: 'GPL-3.0', url: 'https://stockfishchess.org' },
-  {
-    name: 'Stockfish.js (WASM build)',
-    license: 'GPL-3.0',
-    url: 'https://github.com/nmrugg/stockfish.js',
-  },
+  { name: 'Stockfish (course check)', license: 'GPL-3.0', url: 'https://stockfishchess.org' },
 ];
 
 const DATA: { name: string; license: string; url: string }[] = [

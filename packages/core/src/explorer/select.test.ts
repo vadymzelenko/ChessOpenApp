@@ -1,4 +1,4 @@
-import { mostPopularStrong, selectOpponentMoves, type MoveStats } from './select';
+import { moveShares, mostPopularStrong, selectOpponentMoves, type MoveStats } from './select';
 
 const mv = (san: string, games: number, strong = 0): MoveStats => ({
   san,
@@ -55,5 +55,23 @@ describe('mostPopularStrong', () => {
     const moves = [mv('Bf4', 100, 40), mv('c4', 10, 60), mv('Nf3', 500, 5)];
     expect(mostPopularStrong(moves, 20)?.san).toBe('c4');
     expect(mostPopularStrong(moves, 100)).toBeNull();
+  });
+});
+
+describe('moveShares', () => {
+  it('divides games of each move by the position total', () => {
+    const node = {
+      total: 200,
+      moves: [
+        { san: 'd5', stats: { lt1400: { w: 40, d: 10, l: 50 } } },
+        { san: 'Nf6', stats: { gt1800: { w: 20, d: 20, l: 10 } } },
+      ],
+    };
+    const s = moveShares(node);
+    expect(s.get('d5')).toBeCloseTo(0.5);
+    expect(s.get('Nf6')).toBeCloseTo(0.25);
+    expect(moveShares(undefined).size).toBe(0);
+    // Without a total, the sum of stored moves is used.
+    expect(moveShares({ moves: node.moves }).get('d5')).toBeCloseTo(100 / 150);
   });
 });

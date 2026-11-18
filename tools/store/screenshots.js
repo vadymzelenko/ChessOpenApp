@@ -13,11 +13,11 @@ const lang = process.argv[3] ?? 'ru';
 const out = join(process.cwd(), 'docs', 'store', 'screenshots', lang);
 const shots = [
   ['01-home', '/'],
-  ['02-course', '/course/london'],
-  ['03-line', '/line/london/vs-d5-366070c'],
-  ['04-board', '/board'],
-  ['05-progress', '/progress/london'],
-  ['06-settings', '/settings'],
+  ['02-exam', '/exam/london/vs-d5-nf6'],
+  ['03-line', '/line/london/bd6-main'],
+  ['04-tree', '/tree'],
+  ['05-review', '/review/london'],
+  ['06-traps', '/traps/london'],
 ];
 
 (async () => {

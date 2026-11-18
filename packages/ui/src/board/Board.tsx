@@ -406,7 +406,13 @@ export function Board({
                 occupied={occupied}
               />
               {arrows.length > 0 && (
-                <BoardArrows size={size} orientation={orientation} arrows={arrows} />
+                <BoardArrows
+                  size={size}
+                  orientation={orientation}
+                  arrows={arrows}
+                  duration={durations.arrow}
+                  delay={durations.move}
+                />
               )}
               {dragPiece && (
                 <Animated.View

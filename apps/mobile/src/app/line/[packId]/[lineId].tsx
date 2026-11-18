@@ -32,7 +32,6 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IdeaSheet } from '@/components/IdeaSheet';
-import { TheoryEndCard } from '@/components/TheoryEndCard';
 import { useHotkeys } from '@/hooks/useHotkeys';
 import { useScreenSize } from '@/hooks/useScreenWidth';
 import { usePack } from '@/hooks/usePack';
@@ -491,10 +490,37 @@ export default function LineScreen() {
   );
 
   const atEnd = mode === 'study' ? ply === steps.length && steps.length > 0 : finished;
+  const ordered = [...index.lines.values()];
+  const nextLine = ordered[ordered.findIndex((l) => l.line.id === indexed.line.id) + 1];
   const panel = (
     <View style={{ gap: theme.spacing.md }}>
       {mode === 'study' ? studyPanel : trainPanel}
-      {atEnd ? <TheoryEndCard index={index} indexed={indexed} onIdea={setIdea} /> : null}
+      {atEnd && nextLine ? (
+        <PressableScale
+          accessibilityRole="button"
+          accessibilityLabel={t('line.nextLine')}
+          onPress={() => router.replace(`/line/${index.pack.meta.id}/${nextLine.line.id}`)}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: theme.spacing.md,
+            padding: theme.spacing.lg,
+            borderRadius: theme.radii.xl,
+            backgroundColor: theme.colors.surface,
+            borderWidth: 1,
+            borderColor: theme.colors.border,
+          }}>
+          <View style={{ flex: 1, gap: 2 }}>
+            <ThemedText variant="caption" tone="textMuted">
+              {t('line.nextLine')}
+            </ThemedText>
+            <ThemedText variant="label" style={{ fontSize: 15 }}>
+              {nextLine.line.title.ru}
+            </ThemedText>
+          </View>
+          <ChevronRight color={theme.colors.textMuted} size={22} />
+        </PressableScale>
+      ) : null}
     </View>
   );
 

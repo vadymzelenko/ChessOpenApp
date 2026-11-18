@@ -1,6 +1,6 @@
 import { useTheme, type IconComponent } from '@chess-open/ui';
 import { Tabs } from 'expo-router';
-import { ChessKnight, House, Settings } from 'lucide-react-native';
+import { BookOpen, GitBranch, Settings } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { Animated, Dimensions, Easing, type ColorValue } from 'react-native';
 
@@ -58,10 +58,13 @@ export default function TabsLayout() {
               },
             }),
       }}>
-      <Tabs.Screen name="index" options={{ title: tr('tabs.home'), tabBarIcon: tabIcon(House) }} />
       <Tabs.Screen
-        name="board"
-        options={{ title: tr('tabs.board'), tabBarIcon: tabIcon(ChessKnight) }}
+        name="index"
+        options={{ title: tr('tabs.course'), tabBarIcon: tabIcon(BookOpen) }}
+      />
+      <Tabs.Screen
+        name="tree"
+        options={{ title: tr('tabs.tree'), tabBarIcon: tabIcon(GitBranch) }}
       />
       <Tabs.Screen
         name="settings"

@@ -1,5 +1,12 @@
 import type { Color, Square } from '@chess-open/core';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 import Svg, {
   Circle,
   Defs,
@@ -213,52 +220,122 @@ interface ArrowsProps {
   size: number;
   orientation: Color;
   arrows: readonly BoardArrow[];
+  /** Draw-in animation length (0 = static). */
+  duration?: number;
+  /** Wait before drawing (e.g. until the piece has landed). */
+  delay?: number;
 }
 
-function ArrowsImpl({ size, orientation, arrows }: ArrowsProps) {
-  const sq = size / 8;
-  const width = sq * 0.16;
+function arrowGeometry(a: BoardArrow, orientation: Color, sq: number) {
+  const f = squareToXY(a.from, orientation, sq);
+  const t = squareToXY(a.to, orientation, sq);
+  const x1 = f.x + sq / 2;
+  const y1 = f.y + sq / 2;
+  const x2 = t.x + sq / 2;
+  const y2 = t.y + sq / 2;
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  if (len === 0) return null;
+  const ux = (x2 - x1) / len;
+  const uy = (y2 - y1) / len;
   const head = sq * 0.42;
+  // Shaft stops where the head begins; the head tip stops a bit before the centre.
+  const tipX = x2 - ux * sq * 0.12;
+  const tipY = y2 - uy * sq * 0.12;
+  const baseX = tipX - ux * head;
+  const baseY = tipY - uy * head;
+  const px = -uy * head * 0.55;
+  const py = ux * head * 0.55;
+  return {
+    x1: x1 + ux * sq * 0.18,
+    y1: y1 + uy * sq * 0.18,
+    baseX,
+    baseY,
+    points: `${tipX},${tipY} ${baseX + px},${baseY + py} ${baseX - px},${baseY - py}`,
+  };
+}
+
+/**
+ * One arrow in its own layer: it grows out of its start square and fades in
+ * (transform + opacity only), so a new course comment «draws» its plan.
+ */
+function AnimatedArrow({
+  arrow,
+  size,
+  orientation,
+  duration,
+  delay,
+}: {
+  arrow: BoardArrow;
+  size: number;
+  orientation: Color;
+  duration: number;
+  delay: number;
+}) {
+  const sq = size / 8;
+  const g = arrowGeometry(arrow, orientation, sq);
+  const progress = useSharedValue(duration > 0 ? 0 : 1);
+  useEffect(() => {
+    if (duration <= 0) {
+      progress.set(1);
+      return;
+    }
+    progress.set(0);
+    progress.set(withDelay(delay, withTiming(1, { duration, easing: Easing.out(Easing.cubic) })));
+  }, [progress, duration, delay]);
+  // Scale around the arrow's start point: translate there, scale, translate back.
+  const ox = (g?.x1 ?? size / 2) - size / 2;
+  const oy = (g?.y1 ?? size / 2) - size / 2;
+  const style = useAnimatedStyle(() => {
+    const p = progress.get();
+    return {
+      opacity: p,
+      transform: [
+        { translateX: ox },
+        { translateY: oy },
+        { scale: 0.3 + 0.7 * p },
+        { translateX: -ox },
+        { translateY: -oy },
+      ],
+    };
+  });
+  if (!g) return null;
+  const color = annotationColors[arrow.color ?? 'green'];
   return (
-    <Svg width={size} height={size} pointerEvents="none" style={{ position: 'absolute' }}>
-      {arrows.map((a, i) => {
-        const f = squareToXY(a.from, orientation, sq);
-        const t = squareToXY(a.to, orientation, sq);
-        const x1 = f.x + sq / 2;
-        const y1 = f.y + sq / 2;
-        const x2 = t.x + sq / 2;
-        const y2 = t.y + sq / 2;
-        const len = Math.hypot(x2 - x1, y2 - y1);
-        if (len === 0) return null;
-        const ux = (x2 - x1) / len;
-        const uy = (y2 - y1) / len;
-        // Shaft stops where the head begins; the head tip stops a bit before the centre.
-        const tipX = x2 - ux * sq * 0.12;
-        const tipY = y2 - uy * sq * 0.12;
-        const baseX = tipX - ux * head;
-        const baseY = tipY - uy * head;
-        const px = -uy * head * 0.55;
-        const py = ux * head * 0.55;
-        const color = annotationColors[a.color ?? 'green'];
-        return (
-          <G key={i} opacity={0.85}>
-            <Line
-              x1={x1 + ux * sq * 0.18}
-              y1={y1 + uy * sq * 0.18}
-              x2={baseX}
-              y2={baseY}
-              stroke={color}
-              strokeWidth={width}
-              strokeLinecap="round"
-            />
-            <Polygon
-              points={`${tipX},${tipY} ${baseX + px},${baseY + py} ${baseX - px},${baseY - py}`}
-              fill={color}
-            />
-          </G>
-        );
-      })}
-    </Svg>
+    <Animated.View
+      pointerEvents="none"
+      style={[{ position: 'absolute', left: 0, top: 0, width: size, height: size }, style]}>
+      <Svg width={size} height={size}>
+        <G opacity={0.85}>
+          <Line
+            x1={g.x1}
+            y1={g.y1}
+            x2={g.baseX}
+            y2={g.baseY}
+            stroke={color}
+            strokeWidth={sq * 0.16}
+            strokeLinecap="round"
+          />
+          <Polygon points={g.points} fill={color} />
+        </G>
+      </Svg>
+    </Animated.View>
+  );
+}
+
+function ArrowsImpl({ size, orientation, arrows, duration = 0, delay = 0 }: ArrowsProps) {
+  return (
+    <>
+      {arrows.map((a) => (
+        <AnimatedArrow
+          key={`${a.from}${a.to}${a.color ?? 'green'}`}
+          arrow={a}
+          size={size}
+          orientation={orientation}
+          duration={duration}
+          delay={delay}
+        />
+      ))}
+    </>
   );
 }
 

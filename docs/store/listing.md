@@ -8,22 +8,19 @@
 
 ## RU
 
-**Название (≤30):** Chess Open — тренажёр дебютов
+**Название (≤30):** Chess Open — Лондонская система
 
-**Краткое описание (≤80):** Бесплатно учите шахматные дебюты: курсы, повторение, практика с живыми ходами
+**Краткое описание (≤80):** Учите Лондонскую систему за белых: 56 линий с объяснениями и повторение
 
 **Полное описание:**
 
-Chess Open — бесплатный тренажёр шахматных дебютов без рекламы и регистрации.
+Chess Open — бесплатный тренажёр Лондонской системы за белых без рекламы и регистрации: 56 линий против всех популярных ответов, у каждой ветки — объяснение.
 
-• Курсы с объяснением «зачем»: каждая линия — с идеями, стрелками и планами. ⭐ — проверено тренером, ⚙ — сгенерировано по статистике.
+• Курс с объяснением «зачем»: каждая линия — с идеями, стрелками и планами. ⭐ — проверено тренером, ⚙ — сгенерировано по статистике.
 • Интервальное повторение (FSRS): приложение само напомнит позиции, которые вы начали забывать.
 • Экзамен по главам и тренировка линий по памяти.
-• Живая практика: соперник ходит так, как играют люди вашего рейтинга на Lichess — с реальными ловушками и редкими линиями.
-• Умный анализ: оценка позиции и объяснение словами, почему одна сторона лучше.
-• Ловушки и задачи из вашего дебюта.
-• Дерево репертуара с цветами освоения, карта ошибок, серия дней и опыт.
-• «Мои партии»: загрузите свои партии с Lichess или Chess.com — приложение покажет, где вы отошли от репертуара.
+• Дерево вариантов: нажмите на любой ход соперника — увидите наш ответ стрелкой на доске и объяснение.
+• Ловушки: как наказать ошибку соперника и не попасться самому.
 • Работает офлайн, весь прогресс хранится только на устройстве.
 • Красивая доска: несколько наборов фигур и цветов, звуки, тёмная и светлая тема.
 • Языки: русский, украинский, польский, английский.
@@ -32,22 +29,19 @@ Chess Open — бесплатный тренажёр шахматных дебю
 
 ## UK
 
-**Назва:** Chess Open — тренажер дебютів
+**Назва:** Chess Open — Лондонська система
 
-**Короткий опис:** Безкоштовно вивчайте шахові дебюти: курси, повторення, практика з живими ходами
+**Короткий опис:** Вивчайте Лондонську систему за білих: 56 ліній з поясненнями та повторення
 
 **Повний опис:**
 
-Chess Open — безкоштовний тренажер шахових дебютів без реклами та реєстрації.
+Chess Open — безкоштовний тренажер Лондонської системи за білих без реклами та реєстрації: 56 ліній проти всіх популярних відповідей, у кожної гілки — пояснення.
 
-• Курси з поясненням «навіщо»: ідеї, стрілки та плани для кожної лінії. ⭐ — перевірено тренером, ⚙ — згенеровано за статистикою.
+• Курс з поясненням «навіщо»: ідеї, стрілки та плани для кожної лінії. ⭐ — перевірено тренером, ⚙ — згенеровано за статистикою.
 • Інтервальне повторення (FSRS) позицій, які ви починаєте забувати.
 • Іспит за розділами та тренування ліній напам'ять.
-• Жива практика: суперник грає як люди вашого рейтингу на Lichess.
-• Розумний аналіз: оцінка позиції та пояснення словами.
-• Пастки та задачі з вашого дебюту.
-• Дерево репертуару, карта помилок, серія днів і досвід.
-• «Мої партії»: завантажте партії з Lichess або Chess.com і дізнайтеся, де ви відійшли від репертуару.
+• Дерево варіантів: натисніть на будь-який хід суперника — побачите нашу відповідь стрілкою на дошці й пояснення.
+• Пастки: як покарати помилку суперника і не потрапити в пастку самому.
 • Працює офлайн, прогрес зберігається лише на пристрої.
 • Мови: українська, російська, польська, англійська.
 
@@ -55,22 +49,19 @@ Chess Open — безкоштовний тренажер шахових дебю
 
 ## PL
 
-**Nazwa:** Chess Open — trener debiutów
+**Nazwa:** Chess Open — System Londyński
 
-**Krótki opis:** Ucz się debiutów szachowych za darmo: kursy, powtórki, praktyka z prawdziwymi ruchami
+**Krótki opis:** Naucz się Systemu Londyńskiego białymi: 56 wariantów z wyjaśnieniami i powtórki
 
 **Pełny opis:**
 
-Chess Open to darmowy trener debiutów szachowych bez reklam i rejestracji.
+Chess Open to darmowy trener Systemu Londyńskiego białymi, bez reklam i rejestracji: 56 wariantów przeciw wszystkim popularnym odpowiedziom, każda gałąź z wyjaśnieniem.
 
-• Kursy z wyjaśnieniem „po co”: idee, strzałki i plany w każdym wariancie. ⭐ — sprawdzone przez trenera, ⚙ — wygenerowane ze statystyk.
+• Kurs z wyjaśnieniem „po co”: idee, strzałki i plany w każdym wariancie. ⭐ — sprawdzone przez trenera, ⚙ — wygenerowane ze statystyk.
 • Powtórki w odstępach (FSRS) pozycji, które zaczynasz zapominać.
 • Egzamin z rozdziałów i trening wariantów z pamięci.
-• Praktyka na żywo: przeciwnik gra jak gracze z Twojego rankingu na Lichess.
-• Inteligentna analiza: ocena pozycji i wyjaśnienie słowami.
-• Pułapki i zadania z Twojego debiutu.
-• Drzewo repertuaru, mapa błędów, seria dni i doświadczenie.
-• „Moje partie”: pobierz partie z Lichess lub Chess.com i zobacz, gdzie odszedłeś od repertuaru.
+• Drzewo wariantów: dotknij dowolnego ruchu przeciwnika — zobaczysz naszą odpowiedź strzałką na szachownicy i wyjaśnienie.
+• Pułapki: jak ukarać błąd przeciwnika i samemu się nie nabrać.
 • Działa offline, postęp jest zapisywany tylko na urządzeniu.
 • Języki: polski, ukraiński, rosyjski, angielski.
 
@@ -78,22 +69,19 @@ Wolna aplikacja na licencji GPL-3.0, kod jest otwarty.
 
 ## EN
 
-**Title:** Chess Open — Opening Trainer
+**Title:** Chess Open — London System
 
-**Short description:** Learn chess openings for free: courses, spaced repetition, practice vs real moves
+**Short description:** Learn the London System as White: 56 explained lines and spaced repetition
 
 **Full description:**
 
-Chess Open is a free chess opening trainer — no ads, no sign-up.
+Chess Open is a free London System trainer for White — no ads, no sign-up: 56 lines against every popular reply, each branch explained.
 
-• Courses that explain the "why": ideas, arrows and plans for every line. ⭐ coach-reviewed, ⚙ generated from statistics.
+• A course that explains the "why": ideas, arrows and plans for every line. ⭐ coach-reviewed, ⚙ generated from statistics.
 • Spaced repetition (FSRS) brings back the positions you start to forget.
 • Chapter exams and line drills from memory.
-• Live practice: the opponent plays like real people at your rating on Lichess.
-• Smart analysis: evaluation plus a plain-words explanation of who is better and why.
-• Traps and puzzles from your opening.
-• Repertoire tree with mastery colours, mistake map, streak and XP.
-• "My games": load your Lichess or Chess.com games and see where you left the repertoire.
+• Variation tree: tap any opponent move to see our answer as an arrow on the board, with an explanation.
+• Traps: punish the opponent’s mistakes and avoid falling for them yourself.
 • Works offline; your progress never leaves your device.
 • Languages: English, Ukrainian, Polish, Russian.
 

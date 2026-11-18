@@ -150,6 +150,8 @@ export const baseDurations = {
   screenTransition: 300,
   /** Generic small UI feedback (press, toggle). */
   ui: 150,
+  /** Course arrow grows out of its start square after the move. */
+  arrow: 320,
 } as const;
 
 export type DurationTokens = { -readonly [K in keyof typeof baseDurations]: number };
