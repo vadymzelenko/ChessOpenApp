@@ -1,6 +1,8 @@
 import {
   ChessGame,
+  courseLevels,
   ratingFromAttempt,
+  type Stars,
   type Idea,
   type LineStep,
   type Square,
@@ -18,14 +20,7 @@ import {
   type BoardMove,
 } from '@chess-open/ui';
 import { router, useLocalSearchParams } from 'expo-router';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Lightbulb,
-  RotateCcw,
-  Swords,
-  Trophy,
-} from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, Lightbulb, RotateCcw, Swords, Star } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
@@ -37,7 +32,8 @@ import { useScreenSize } from '@/hooks/useScreenWidth';
 import { usePack } from '@/hooks/usePack';
 import { PACK_IDS, getPack } from '@/packs/registry';
 import { moveFeedback, playSound, successFeedback, wrongFeedback } from '@/services/feedback';
-import { useProgress } from '@/store/progress';
+import { StarResult } from '@/components/StarResult';
+import { lineKey, lineStars, useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 
 type Mode = 'study' | 'train';
@@ -74,7 +70,12 @@ export default function LineScreen() {
   const indexed = index && lineId ? index.lines.get(lineId) : undefined;
   const steps = useMemo(() => indexed?.steps ?? [], [indexed]);
 
-  const [mode, setMode] = useState<Mode>('study');
+  const best = useProgress((s) => lineStars(s.lines[lineKey(packId ?? '', lineId ?? '')]));
+  const studiedBefore = useProgress((s) => !!s.lines[lineKey(packId ?? '', lineId ?? '')]?.studied);
+  // A level already studied opens straight in training (for the stars).
+  const [mode, setMode] = useState<Mode>(() => (studiedBefore ? 'train' : 'study'));
+  const [hints, setHints] = useState(0);
+  const [runStars, setRunStars] = useState<Stars | null>(null);
   const [ply, setPly] = useState(0);
   const [idea, setIdea] = useState<Idea | null>(null);
   // Training state
@@ -98,6 +99,8 @@ export default function LineScreen() {
     setMistakes(0);
     setStepMistakes(0);
     setHint(0);
+    setHints(0);
+    setRunStars(null);
     setWrong(false);
     stepStart.current = Date.now();
   }, []);
@@ -108,12 +111,13 @@ export default function LineScreen() {
       setPly(nextPly);
       stepStart.current = Date.now();
       if (index && indexed && nextPly >= steps.length) {
-        finishRun(index.pack.meta.id, indexed.line.id, mistakes);
-        addXp(10 + (mistakes === 0 ? 5 : 0));
+        const stars = finishRun(index.pack.meta.id, indexed.line.id, mistakes, hints);
+        setRunStars(stars);
+        addXp(5 * stars);
         successFeedback();
       }
     },
-    [index, indexed, steps.length, mistakes, finishRun, addXp],
+    [index, indexed, steps.length, mistakes, hints, finishRun, addXp],
   );
 
   // Training: the opponent's replies are played automatically.
@@ -208,6 +212,9 @@ export default function LineScreen() {
   }
 
   const accent = index.pack.meta.accentColor;
+  const levels = courseLevels(index);
+  const levelNo = levels.findIndex((l) => l.lineId === indexed.line.id);
+  const nextLevel = levelNo >= 0 ? levels[levelNo + 1] : undefined;
   const annotation = mode === 'study' ? last?.annotation : undefined;
 
   // Board drawings: course arrows in study; hints in training.
@@ -307,7 +314,7 @@ export default function LineScreen() {
             grow
             variant="primary"
             icon={Swords}
-            label={t('line.nowYou')}
+            label={t('levels.playForStars')}
             onPress={() => restart('train')}
           />
         )}
@@ -345,37 +352,19 @@ export default function LineScreen() {
   );
 
   const trainPanel = finished ? (
-    card(
-      <>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-          <Trophy color={theme.colors.verified} size={26} />
-          <ThemedText variant="heading">
-            {mistakes === 0 ? t('line.doneClean') : t('line.done')}
-          </ThemedText>
-        </View>
-        <ThemedText tone="textMuted">
-          {t('line.mistakes', { count: mistakes })} ·{' '}
-          {t('line.xp', { count: 10 + (mistakes === 0 ? 5 : 0) })}
-        </ThemedText>
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: theme.spacing.sm,
-            flexWrap: 'wrap',
-            marginTop: theme.spacing.xs,
-          }}>
-          <Button icon={RotateCcw} label={t('line.again')} onPress={() => restart('train')} />
-          <Button
-            variant="primary"
-            label={t('line.toCourse')}
-            onPress={() =>
-              router.canGoBack() ? router.back() : router.replace(`/course/${index.pack.meta.id}`)
-            }
-          />
-        </View>
-      </>,
-      'success',
-    )
+    <StarResult
+      stars={runStars ?? 1}
+      best={best}
+      mistakes={mistakes}
+      hints={hints}
+      onAgain={() => restart('train')}
+      onNext={
+        nextLevel
+          ? () => router.replace(`/line/${index.pack.meta.id}/${nextLevel.lineId}`)
+          : undefined
+      }
+      onMap={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+    />
   ) : (
     <View style={{ gap: theme.spacing.md }}>
       {card(
@@ -413,7 +402,10 @@ export default function LineScreen() {
                   ? t('line.hint3')
                   : t('line.hint')
           }
-          onPress={() => setHint((h) => Math.min(3, h + 1) as HintLevel)}
+          onPress={() => {
+            if (hint === 0) setHints((n) => n + 1);
+            setHint((h) => Math.min(3, h + 1) as HintLevel);
+          }}
           disabled={!userTurn || hint >= 3}
         />
         <Button
@@ -469,9 +461,21 @@ export default function LineScreen() {
           <ChevronLeft color={theme.colors.text} size={24} />
         </PressableScale>
         <View style={{ flex: 1 }}>
-          <ThemedText variant="caption" tone="textMuted" numberOfLines={1}>
-            {indexed.chapter.title.ru}
-          </ThemedText>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
+            <ThemedText variant="caption" tone="textMuted" numberOfLines={1}>
+              {t('levels.level', { n: levelNo + 1 })} · {indexed.chapter.title.ru}
+            </ThemedText>
+            <View style={{ flexDirection: 'row', gap: 1 }}>
+              {[1, 2, 3].map((n) => (
+                <Star
+                  key={n}
+                  size={12}
+                  color={n <= best ? theme.colors.verified : theme.colors.border}
+                  fill={n <= best ? theme.colors.verified : 'transparent'}
+                />
+              ))}
+            </View>
+          </View>
           <ThemedText variant="heading" numberOfLines={1}>
             {indexed.line.title.ru}
           </ThemedText>
@@ -489,39 +493,8 @@ export default function LineScreen() {
     </View>
   );
 
-  const atEnd = mode === 'study' ? ply === steps.length && steps.length > 0 : finished;
-  const ordered = [...index.lines.values()];
-  const nextLine = ordered[ordered.findIndex((l) => l.line.id === indexed.line.id) + 1];
   const panel = (
-    <View style={{ gap: theme.spacing.md }}>
-      {mode === 'study' ? studyPanel : trainPanel}
-      {atEnd && nextLine ? (
-        <PressableScale
-          accessibilityRole="button"
-          accessibilityLabel={t('line.nextLine')}
-          onPress={() => router.replace(`/line/${index.pack.meta.id}/${nextLine.line.id}`)}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: theme.spacing.md,
-            padding: theme.spacing.lg,
-            borderRadius: theme.radii.xl,
-            backgroundColor: theme.colors.surface,
-            borderWidth: 1,
-            borderColor: theme.colors.border,
-          }}>
-          <View style={{ flex: 1, gap: 2 }}>
-            <ThemedText variant="caption" tone="textMuted">
-              {t('line.nextLine')}
-            </ThemedText>
-            <ThemedText variant="label" style={{ fontSize: 15 }}>
-              {nextLine.line.title.ru}
-            </ThemedText>
-          </View>
-          <ChevronRight color={theme.colors.textMuted} size={22} />
-        </PressableScale>
-      ) : null}
-    </View>
+    <View style={{ gap: theme.spacing.md }}>{mode === 'study' ? studyPanel : trainPanel}</View>
   );
 
   return (

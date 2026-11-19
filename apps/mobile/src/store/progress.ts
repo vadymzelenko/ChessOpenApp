@@ -1,4 +1,13 @@
-import { dayKey, newCard, review, type Rating, type SrsCard } from '@chess-open/core';
+import {
+  bestStars,
+  dayKey,
+  newCard,
+  review,
+  starsForRun,
+  type Rating,
+  type SrsCard,
+  type Stars,
+} from '@chess-open/core';
 import { useSyncExternalStore } from 'react';
 import { Platform } from 'react-native';
 import { create } from 'zustand';
@@ -19,6 +28,8 @@ export interface LineProgress {
   /** Epoch ms of the last training run without mistakes. */
   cleanRun?: number;
   runs?: number;
+  /** Best result of the level (training run): 1–3 stars. */
+  stars?: Stars;
 }
 
 export interface Medal {
@@ -46,7 +57,14 @@ interface ProgressState {
   activeDays: string[];
   gradeCard: (packId: string, positionKey: string, rating: Rating, now?: number) => void;
   markStudied: (packId: string, lineId: string, now?: number) => void;
-  finishRun: (packId: string, lineId: string, mistakes: number, now?: number) => void;
+  /** Records a completed training run; returns the stars of this run. */
+  finishRun: (
+    packId: string,
+    lineId: string,
+    mistakes: number,
+    hints: number,
+    now?: number,
+  ) => Stars;
   addXp: (amount: number, now?: number) => void;
   saveExam: (
     packId: string,
@@ -93,7 +111,8 @@ export const useProgress = create<ProgressState>()(
             activeDays: touchDay(s.activeDays, now),
           };
         }),
-      finishRun: (packId, lineId, mistakes, now = Date.now()) =>
+      finishRun: (packId, lineId, mistakes, hints, now = Date.now()) => {
+        const stars = starsForRun(mistakes, hints);
         set((s) => {
           const k = lineKey(packId, lineId);
           const prev = s.lines[k] ?? {};
@@ -103,12 +122,15 @@ export const useProgress = create<ProgressState>()(
               [k]: {
                 ...prev,
                 runs: (prev.runs ?? 0) + 1,
+                stars: bestStars(prev.stars, stars),
                 ...(mistakes === 0 ? { cleanRun: now } : {}),
               },
             },
             activeDays: touchDay(s.activeDays, now),
           };
-        }),
+        });
+        return stars;
+      },
       addXp: (amount, now = Date.now()) =>
         set((s) => ({ xp: s.xp + amount, activeDays: touchDay(s.activeDays, now) })),
       saveExam: (packId, chapterId, score, passed, now = Date.now()) =>
@@ -197,4 +219,11 @@ export function useProgressHydrated(): boolean {
     () => useProgress.persist.hasHydrated(),
     () => false,
   );
+}
+
+/** Stars of a level; runs from before stars existed count as 3 (clean) or 1. */
+export function lineStars(lp: LineProgress | undefined): Stars {
+  if (!lp) return 0;
+  if (lp.stars) return lp.stars;
+  return lp.cleanRun ? 3 : lp.runs ? 1 : 0;
 }

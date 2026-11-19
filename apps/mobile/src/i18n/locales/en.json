@@ -157,5 +157,29 @@
     "tone_learned": "learned",
     "tone_forgotten": "forgotten",
     "trainLine": "Train this line"
+  },
+  "levels": {
+    "block": "Block · White",
+    "progress_one": "{{done}} of {{count}} level completed",
+    "progress_other": "{{done}} of {{count}} levels completed",
+    "play": "Play: level {{n}}",
+    "review_one": "Review {{count}}",
+    "review_other": "Review {{count}}",
+    "level": "Level {{n}}",
+    "locked": "First get at least one star on level {{n}}",
+    "bossLocked": "The boss opens when every level of the chapter is completed",
+    "boss": "Chapter boss",
+    "bonus": "Bonus: traps",
+    "medal": "Medal",
+    "playForStars": "Play for stars",
+    "result1": "Level complete!",
+    "result2": "Great!",
+    "result3": "Perfect! Three stars",
+    "summary": "Mistakes: {{mistakes}} · hints: {{hints}}",
+    "howTo3": "3★ — no mistakes or hints, 2★ — at most one mistake or hint",
+    "bestKept_one": "Best result kept: {{count}}★",
+    "bestKept_other": "Best result kept: {{count}}★",
+    "toMap": "To the map",
+    "next": "Next level"
   }
 }

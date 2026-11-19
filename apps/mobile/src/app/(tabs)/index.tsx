@@ -1,6 +1,6 @@
-import { CourseView } from '@/components/CourseView';
+import { LevelMap } from '@/components/LevelMap';
 
-/** Home: the London System course itself — nothing between the user and training. */
+/** Home: the London block as a game level map. */
 export default function HomeScreen() {
-  return <CourseView packId="london" />;
+  return <LevelMap packId="london" />;
 }
