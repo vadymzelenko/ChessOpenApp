@@ -18,50 +18,38 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
+  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
 
 import { usePack } from '@/hooks/usePack';
 import { lineKey, lineStars, packCards, useProgress } from '@/store/progress';
 
-const NODE = 66;
-const ROW = 118;
-const HEADER = 84;
-const TOP = 24;
+const GAP = 10;
+const MAX_WIDTH = 760;
 
-type NodeState = 'done' | 'current' | 'open' | 'locked';
+type CardState = 'done' | 'current' | 'open' | 'locked';
 
-type MapItem =
-  | { kind: 'header'; key: string; y: number; title: string; stars: number; max: number }
-  | {
-      kind: 'level';
-      key: string;
-      y: number;
-      x: number;
-      level: CourseLevel;
-      state: NodeState;
-      stars: Stars;
-    }
-  | {
-      kind: 'boss';
-      key: string;
-      y: number;
-      x: number;
-      chapterId: string;
-      state: NodeState;
-      medal: boolean;
-    }
-  | { kind: 'bonus'; key: string; y: number; x: number; state: NodeState };
+type Card =
+  | { kind: 'level'; key: string; level: CourseLevel; state: CardState; stars: Stars }
+  | { kind: 'boss'; key: string; chapterId: string; state: CardState; medal: boolean }
+  | { kind: 'bonus'; key: string; state: CardState };
 
-type NodeItem = Exclude<MapItem, { kind: 'header' }>;
+interface Section {
+  id: string;
+  title: string;
+  stars: number;
+  max: number;
+  cards: Card[];
+}
 
 /**
- * The course as a game level map (ТЗ §6): a winding path of numbered levels —
- * one per line, in learning order — each worth up to three stars. A level
- * opens once the previous one has a star; every chapter ends with a boss
- * (the chapter exam), and the traps are a bonus level at the end.
+ * The course as a game level select (ТЗ §6): the London block split into
+ * chapters, each a grid of level cards — one per line, in learning order —
+ * worth up to three stars. A level opens once the previous one has a star;
+ * every chapter ends with a boss (the chapter exam), the block with a bonus
+ * level (traps).
  */
 export function LevelMap({ packId }: { packId: string }) {
   const { t } = useTranslation();
@@ -72,7 +60,7 @@ export function LevelMap({ packId }: { packId: string }) {
   const medals = useProgress((s) => s.medals);
   const cards = useProgress((s) => s.cards);
   const [now] = useState(() => Date.now());
-  const [width, setWidth] = useState(360);
+  const [width, setWidth] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const scroll = useRef<ScrollViewInstance>(null);
   const scrolled = useRef(false);
@@ -83,15 +71,9 @@ export function LevelMap({ packId }: { packId: string }) {
   const totals = starTotals(levels, starsOf);
   const due = dueCount(packCards(cards, packId), now);
 
-  // --- layout: every item gets a y, nodes also an x on the winding path -------------
-  const center = width / 2;
-  const amp = Math.min(width * 0.27, 130);
-  const xAt = (i: number) => center + amp * Math.sin(i * 0.9);
-  const items: MapItem[] = [];
-  let y = TOP;
-  let nodeIdx = 0;
+  // --- sections: chapter → its level cards, then the boss --------------------------
   let currentSet = false;
-  const stateOf = (isOpen: boolean, isDone: boolean): NodeState => {
+  const stateOf = (isOpen: boolean, isDone: boolean): CardState => {
     if (!isOpen) return 'locked';
     if (isDone) return 'done';
     if (!currentSet) {
@@ -100,39 +82,24 @@ export function LevelMap({ packId }: { packId: string }) {
     }
     return 'open';
   };
-  const chapters = index?.pack.course.chapters ?? [];
-  for (const ch of chapters) {
+  const sections: Section[] = [];
+  for (const ch of index?.pack.course.chapters ?? []) {
     const chLevels = levels.filter((l) => l.chapterId === ch.id);
     if (!chLevels.length) continue;
-    const chStars = chLevels.reduce((a, l) => a + starsOf(l.lineId), 0);
-    items.push({
-      kind: 'header',
-      key: `h-${ch.id}`,
-      y,
-      title: ch.title.ru,
-      stars: chStars,
-      max: chLevels.length * 3,
-    });
-    y += HEADER;
-    for (const level of chLevels) {
+    const list: Card[] = chLevels.map((level) => {
       const stars = starsOf(level.lineId);
-      items.push({
+      return {
         kind: 'level',
         key: level.lineId,
-        y,
-        x: xAt(nodeIdx++),
         level,
         stars,
         state: stateOf(level.n <= open, stars > 0),
-      });
-      y += ROW;
-    }
+      };
+    });
     const medal = !!medals[lineKey(packId, ch.id)];
-    items.push({
+    list.push({
       kind: 'boss',
-      key: `b-${ch.id}`,
-      y,
-      x: xAt(nodeIdx++),
+      key: `boss-${ch.id}`,
       chapterId: ch.id,
       medal,
       state: stateOf(
@@ -140,38 +107,35 @@ export function LevelMap({ packId }: { packId: string }) {
         medal,
       ),
     });
-    y += ROW;
+    sections.push({
+      id: ch.id,
+      title: ch.title.ru,
+      stars: chLevels.reduce((a, l) => a + starsOf(l.lineId), 0),
+      max: chLevels.length * 3,
+      cards: list,
+    });
   }
   if (index?.pack.traps.length) {
-    items.push({ kind: 'bonus', key: 'bonus', y, x: xAt(nodeIdx++), state: 'open' });
-    y += ROW;
+    sections.push({
+      id: 'bonus',
+      title: t('levels.bonusSection'),
+      stars: 0,
+      max: 0,
+      cards: [{ kind: 'bonus', key: 'bonus', state: 'open' }],
+    });
   }
-  const height = y + TOP;
-  const nodes = items.filter((i): i is NodeItem => i.kind !== 'header');
-  const currentNode = nodes.find((n) => n.state === 'current');
+  const current = sections.flatMap((s) => s.cards).find((c) => c.state === 'current');
+  const currentSection = sections.find((s) => current && s.cards.includes(current))?.id;
 
-  // Path through the node centres: done part solid in the accent, the rest dashed.
-  const pathOf = (pts: NodeItem[]) =>
-    pts
-      .map((p, i) => {
-        const cy = p.y + NODE / 2;
-        if (i === 0) return `M ${p.x} ${cy}`;
-        const prev = pts[i - 1]!;
-        const py = prev.y + NODE / 2;
-        const mid = (py + cy) / 2;
-        return `C ${prev.x} ${mid} ${p.x} ${mid} ${p.x} ${cy}`;
-      })
-      .join(' ');
-  const cut = currentNode ? nodes.indexOf(currentNode) : nodes.length - 1;
-  const donePath = pathOf(nodes.slice(0, cut + 1));
-  const restPath = pathOf(nodes.slice(Math.max(0, cut)));
+  const columns = width >= 640 ? 5 : width >= 460 ? 4 : 3;
+  const cardW = width ? Math.floor((width - GAP * (columns - 1)) / columns) : 0;
 
-  // Start with the current level in view.
-  useEffect(() => {
-    if (scrolled.current || !currentNode || width === 360) return;
+  // Open the map at the chapter of the current level (not needed for the first one).
+  const onSectionLayout = (id: string, y: number) => {
+    if (scrolled.current || id !== currentSection || id === sections[0]?.id) return;
     scrolled.current = true;
-    scroll.current?.scrollTo({ y: Math.max(0, currentNode.y - 120), animated: false });
-  }, [currentNode, width]);
+    scroll.current?.scrollTo({ y: y + 140, animated: false });
+  };
   useEffect(() => {
     if (!message) return;
     const id = setTimeout(() => setMessage(null), 2200);
@@ -182,150 +146,123 @@ export function LevelMap({ packId }: { packId: string }) {
   const meta = index.pack.meta;
   const accent = meta.accentColor;
 
-  const onNode = (n: NodeItem) => {
-    if (n.state === 'locked') {
+  const onCard = (c: Card) => {
+    if (c.state === 'locked') {
       setMessage(
-        n.kind === 'boss' ? t('levels.bossLocked') : t('levels.locked', { n: Math.max(1, open) }),
+        c.kind === 'boss' ? t('levels.bossLocked') : t('levels.locked', { n: Math.max(1, open) }),
       );
       return;
     }
-    if (n.kind === 'level') router.push(`/line/${packId}/${n.level.lineId}`);
-    else if (n.kind === 'boss') router.push(`/exam/${packId}/${n.chapterId}`);
+    if (c.kind === 'level') router.push(`/line/${packId}/${c.level.lineId}`);
+    else if (c.kind === 'boss') router.push(`/exam/${packId}/${c.chapterId}`);
     else router.push(`/traps/${packId}`);
   };
 
-  const starRow = (stars: number, size: number) => (
-    <View style={{ flexDirection: 'row', gap: 1 }}>
+  const starRow = (stars: number, onColor: boolean) => (
+    <View style={{ flexDirection: 'row', gap: 2 }}>
       {[1, 2, 3].map((s) => (
         <Star
           key={s}
-          size={size}
-          color={s <= stars ? theme.colors.verified : theme.colors.border}
-          fill={s <= stars ? theme.colors.verified : theme.colors.surfaceRaised}
+          size={15}
+          color={
+            s <= stars
+              ? theme.colors.verified
+              : onColor
+                ? 'rgba(255,255,255,0.5)'
+                : theme.colors.border
+          }
+          fill={s <= stars ? theme.colors.verified : 'transparent'}
         />
       ))}
     </View>
   );
 
-  const node = (n: NodeItem) => {
-    const locked = n.state === 'locked';
-    const done = n.state === 'done';
-    const special = n.kind !== 'level';
-    const bg = locked
-      ? theme.colors.surfaceRaised
-      : n.kind === 'boss'
-        ? '#9B6BF2'
-        : n.kind === 'bonus'
-          ? '#F08A3C'
-          : done
-            ? accent
-            : theme.colors.surface;
-    const fg = locked ? theme.colors.textMuted : done || special ? '#FFFFFF' : accent;
-    const labelLeft = n.x > center;
+  const card = (c: Card) => {
+    const locked = c.state === 'locked';
+    const done = c.state === 'done';
+    const color = c.kind === 'boss' ? '#9B6BF2' : c.kind === 'bonus' ? '#F08A3C' : accent;
+    // Completed levels and the special cards are filled with their colour.
+    const filled = !locked && (done || c.kind !== 'level');
+    const fg = filled ? '#FFFFFF' : locked ? theme.colors.textMuted : theme.colors.text;
     const title =
-      n.kind === 'level'
-        ? n.level.title.ru
-        : n.kind === 'boss'
+      c.kind === 'level'
+        ? c.level.title.ru
+        : c.kind === 'boss'
           ? t('levels.boss')
           : t('levels.bonus');
-    let inner: ReactNode;
-    if (locked) inner = <Lock color={fg} size={22} />;
-    else if (n.kind === 'boss') inner = <Crown color={fg} size={28} />;
-    else if (n.kind === 'bonus') inner = <Skull color={fg} size={26} />;
+    let badge: ReactNode;
+    if (c.kind === 'boss') badge = <Crown color={fg} size={26} />;
+    else if (c.kind === 'bonus') badge = <Skull color={fg} size={26} />;
     else
-      inner = (
-        <ThemedText variant="heading" style={{ color: fg, fontSize: 22 }}>
-          {n.level.n}
+      badge = (
+        <ThemedText
+          variant="heading"
+          style={{ color: filled ? '#FFFFFF' : locked ? fg : color, fontSize: 26, lineHeight: 30 }}>
+          {c.level.n}
         </ThemedText>
       );
-    return (
-      <View
-        key={n.key}
-        style={{ position: 'absolute', top: n.y, left: n.x - NODE / 2, width: NODE }}>
-        {n.state === 'current' ? <Pulse color={accent} /> : null}
-        <PressableScale
-          accessibilityRole="button"
-          accessibilityState={{ disabled: locked }}
-          accessibilityLabel={
-            n.kind === 'level' ? t('levels.level', { n: n.level.n }) + `: ${title}` : title
-          }
-          onPress={() => onNode(n)}
-          style={{
-            width: NODE,
-            height: NODE,
-            borderRadius: NODE / 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: bg,
-            borderWidth: n.state === 'current' ? 4 : 3,
-            borderColor:
-              n.state === 'current' ? accent : locked ? theme.colors.border : shade(bg, -0.25),
-          }}>
-          {inner}
-        </PressableScale>
-        <View style={{ alignItems: 'center', marginTop: 4 }}>
-          {n.kind === 'level' && !locked ? starRow(n.stars, 15) : null}
-          {n.kind === 'boss' && n.medal ? (
-            <ThemedText variant="caption" tone="verified">
-              {t('levels.medal')}
-            </ThemedText>
-          ) : null}
-        </View>
+    const body = (
+      <PressableScale
+        accessibilityRole="button"
+        accessibilityState={{ disabled: locked }}
+        accessibilityLabel={
+          c.kind === 'level' ? `${t('levels.level', { n: c.level.n })}: ${title}` : title
+        }
+        onPress={() => onCard(c)}
+        style={{
+          width: cardW,
+          minHeight: Math.max(104, Math.round(cardW * 0.9)),
+          padding: 10,
+          gap: 6,
+          borderRadius: theme.radii.lg,
+          overflow: 'hidden',
+          backgroundColor: filled ? color : theme.colors.surface,
+          borderWidth: c.state === 'current' ? 2 : 1,
+          borderColor:
+            c.state === 'current' ? color : filled ? shade(color, -0.2) : theme.colors.border,
+          opacity: locked ? 0.65 : 1,
+        }}>
+        {filled ? (
+          <LinearGradient
+            colors={[shade(color, 0.12), shade(color, -0.28)]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+          />
+        ) : null}
         <View
-          pointerEvents="none"
-          style={{
-            position: 'absolute',
-            top: NODE / 2 - 18,
-            width: Math.min(150, center - amp * 0.2),
-            ...(labelLeft ? { right: NODE + 10 } : { left: NODE + 10 }),
-          }}>
-          <ThemedText
-            variant="caption"
-            numberOfLines={2}
-            tone={locked ? 'textMuted' : 'text'}
-            style={{ textAlign: labelLeft ? 'right' : 'left', lineHeight: 16 }}>
-            {title}
-          </ThemedText>
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          {badge}
+          {locked ? <Lock color={theme.colors.textMuted} size={16} /> : null}
         </View>
-      </View>
+        <ThemedText
+          variant="caption"
+          numberOfLines={3}
+          style={{
+            flex: 1,
+            color: fg,
+            fontFamily: theme.typography.family.semibold,
+            lineHeight: 16,
+          }}>
+          {title}
+        </ThemedText>
+        {c.kind === 'level' && !locked ? starRow(c.stars, filled) : null}
+        {c.kind === 'boss' && c.medal ? (
+          <ThemedText variant="caption" style={{ color: '#FFFFFF' }}>
+            {t('levels.medal')}
+          </ThemedText>
+        ) : null}
+      </PressableScale>
+    );
+    return c.state === 'current' ? (
+      <Breathe key={c.key}>{body}</Breathe>
+    ) : (
+      <View key={c.key}>{body}</View>
     );
   };
 
-  const header = (h: Extract<MapItem, { kind: 'header' }>) => (
-    <View
-      key={h.key}
-      style={{
-        position: 'absolute',
-        top: h.y + 8,
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: theme.spacing.sm,
-          paddingHorizontal: theme.spacing.lg,
-          paddingVertical: theme.spacing.sm,
-          borderRadius: theme.radii.pill,
-          backgroundColor: theme.colors.surface,
-          borderWidth: 1,
-          borderColor: theme.colors.border,
-        }}>
-        <ThemedText variant="label" style={{ fontSize: 15 }}>
-          {h.title}
-        </ThemedText>
-        <Star size={14} color={theme.colors.verified} fill={theme.colors.verified} />
-        <ThemedText variant="caption" tone="textMuted">
-          {h.stars}/{h.max}
-        </ThemedText>
-      </View>
-    </View>
-  );
-
   const doneLevels = levels.filter((l) => starsOf(l.lineId) > 0).length;
-  const currentLevel = currentNode?.kind === 'level' ? currentNode.level : null;
+  const currentLevel = current?.kind === 'level' ? current.level : null;
   const pct = totals.max ? totals.stars / totals.max : 0;
 
   return (
@@ -344,7 +281,12 @@ export function LevelMap({ packId }: { packId: string }) {
             paddingBottom: theme.spacing.xl,
           }}>
           <View
-            style={{ maxWidth: 560, width: '100%', alignSelf: 'center', gap: theme.spacing.md }}>
+            style={{
+              maxWidth: MAX_WIDTH,
+              width: '100%',
+              alignSelf: 'center',
+              gap: theme.spacing.md,
+            }}>
             <ThemedText variant="caption" style={{ color: 'rgba(255,255,255,0.8)' }}>
               {t('levels.block')}
             </ThemedText>
@@ -378,18 +320,18 @@ export function LevelMap({ packId }: { packId: string }) {
               />
             </View>
             <View style={{ flexDirection: 'row', gap: theme.spacing.sm, flexWrap: 'wrap' }}>
-              {currentNode ? (
+              {current ? (
                 <Button
                   variant="inverse"
                   icon={Play}
                   label={
                     currentLevel
                       ? t('levels.play', { n: currentLevel.n })
-                      : currentNode.kind === 'boss'
+                      : current.kind === 'boss'
                         ? t('levels.boss')
                         : t('levels.bonus')
                   }
-                  onPress={() => onNode(currentNode)}
+                  onPress={() => onCard(current)}
                 />
               ) : null}
               <Button
@@ -404,27 +346,47 @@ export function LevelMap({ packId }: { packId: string }) {
         </LinearGradient>
 
         <View
-          onLayout={(e) => setWidth(Math.round(e.nativeEvent.layout.width))}
-          style={{ width: '100%', maxWidth: 560, alignSelf: 'center', height }}>
-          <Svg width={width} height={height} style={{ position: 'absolute', left: 0, top: 0 }}>
-            <Path
-              d={restPath}
-              stroke={theme.colors.border}
-              strokeWidth={8}
-              strokeLinecap="round"
-              strokeDasharray="2 16"
-              fill="none"
-            />
-            <Path
-              d={donePath}
-              stroke={accent}
-              strokeWidth={8}
-              strokeLinecap="round"
-              fill="none"
-              opacity={0.85}
-            />
-          </Svg>
-          {items.map((it) => (it.kind === 'header' ? header(it) : node(it)))}
+          onLayout={(e) => setWidth(Math.round(e.nativeEvent.layout.width) - 2 * theme.spacing.lg)}
+          style={{
+            width: '100%',
+            maxWidth: MAX_WIDTH,
+            alignSelf: 'center',
+            paddingHorizontal: theme.spacing.lg,
+            paddingTop: theme.spacing.lg,
+            gap: theme.spacing.xl,
+          }}>
+          {sections.map((s, si) => (
+            <View
+              key={s.id}
+              onLayout={(e) => onSectionLayout(s.id, e.nativeEvent.layout.y)}
+              style={{ gap: theme.spacing.md }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: theme.spacing.sm }}>
+                <View style={{ flex: 1, gap: 2 }}>
+                  {s.max ? (
+                    <ThemedText variant="caption" tone="textMuted">
+                      {t('levels.chapter', { n: si + 1 })}
+                    </ThemedText>
+                  ) : null}
+                  <ThemedText variant="heading" style={{ fontSize: 19 }}>
+                    {s.title}
+                  </ThemedText>
+                </View>
+                {s.max ? (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <Star size={15} color={theme.colors.verified} fill={theme.colors.verified} />
+                    <ThemedText variant="label" tone="textMuted">
+                      {s.stars}/{s.max}
+                    </ThemedText>
+                  </View>
+                ) : null}
+              </View>
+              {cardW > 0 ? (
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GAP }}>
+                  {s.cards.map(card)}
+                </View>
+              ) : null}
+            </View>
+          ))}
         </View>
       </ScrollView>
       {message ? (
@@ -454,33 +416,22 @@ export function LevelMap({ packId }: { packId: string }) {
   );
 }
 
-/** Soft ring pulsing around the current level (transform + opacity only). */
-function Pulse({ color }: { color: string }) {
+/** The current level card gently «breathes» (transform only). */
+function Breathe({ children }: { children: ReactNode }) {
   const theme = useTheme();
-  const p = useSharedValue(0);
+  const p = useSharedValue(1);
   useEffect(() => {
     if (theme.animationsDisabled) return;
-    p.set(withRepeat(withTiming(1, { duration: 1400, easing: Easing.out(Easing.quad) }), -1));
+    p.set(
+      withRepeat(
+        withSequence(
+          withTiming(1.05, { duration: 900, easing: Easing.inOut(Easing.quad) }),
+          withTiming(1, { duration: 900, easing: Easing.inOut(Easing.quad) }),
+        ),
+        -1,
+      ),
+    );
   }, [p, theme.animationsDisabled]);
-  const style = useAnimatedStyle(() => ({
-    opacity: 0.55 * (1 - p.get()),
-    transform: [{ scale: 1 + 0.45 * p.get() }],
-  }));
-  return (
-    <Animated.View
-      pointerEvents="none"
-      style={[
-        {
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: NODE,
-          height: NODE,
-          borderRadius: NODE / 2,
-          backgroundColor: color,
-        },
-        style,
-      ]}
-    />
-  );
+  const style = useAnimatedStyle(() => ({ transform: [{ scale: p.get() }] }));
+  return <Animated.View style={style}>{children}</Animated.View>;
 }

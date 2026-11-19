@@ -2,6 +2,8 @@ import {
   ChessGame,
   childrenAt,
   moveShares,
+  courseLevels,
+  levelOfPosition,
   repertoireTree,
   type Idea,
   type MoveAnnotation,
@@ -67,6 +69,7 @@ export default function TreeScreen() {
   const cards = useProgress((s) => s.cards);
   const index = usePack(PACK);
   const roots = useMemo(() => (index ? repertoireTree(index) : []), [index]);
+  const levels = useMemo(() => (index ? courseLevels(index) : []), [index]);
   const [path, setPath] = useState<string[]>([]);
   const [idea, setIdea] = useState<Idea | null>(null);
   const pending = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -277,12 +280,30 @@ export default function TreeScreen() {
   };
 
   const lineId = (lastNode ?? kids[0])?.lineIds[0];
+  // A move-order line ends where it joins another level: point there.
+  const joined = kids.length === 0 ? levelOfPosition(index, levels, game.key) : undefined;
+  const continues = joined && !lastNode?.lineIds.includes(joined.lineId) ? joined : undefined;
   const nextPanel =
     kids.length === 0
       ? card(
           <>
             <ThemedText variant="heading">{t('tree.endTitle')}</ThemedText>
-            <ThemedText tone="textMuted">{t('tree.endText')}</ThemedText>
+            {continues ? (
+              <>
+                <ThemedText tone="textMuted">
+                  {t('levels.continuesIn', { n: continues.n, title: continues.title.ru })}
+                </ThemedText>
+                <Button
+                  variant="primary"
+                  icon={Play}
+                  label={t('levels.openLevel', { n: continues.n })}
+                  onPress={() => router.push(`/line/${meta.id}/${continues.lineId}`)}
+                  style={{ alignSelf: 'flex-start' }}
+                />
+              </>
+            ) : (
+              <ThemedText tone="textMuted">{t('tree.endText')}</ThemedText>
+            )}
           </>,
         )
       : ourTurn && ourMove

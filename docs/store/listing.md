@@ -10,11 +10,11 @@
 
 **Название (≤30):** Chess Open — Лондонская система
 
-**Краткое описание (≤80):** Учите Лондонскую систему за белых: 56 линий с объяснениями и повторение
+**Краткое описание (≤80):** Учите Лондонскую систему за белых: 53 уровня с объяснениями и повторение
 
 **Полное описание:**
 
-Chess Open — бесплатный тренажёр Лондонской системы за белых без рекламы и регистрации: 56 линий против всех популярных ответов, у каждой ветки — объяснение.
+Chess Open — бесплатный тренажёр Лондонской системы за белых без рекламы и регистрации: 53 уровня против всех популярных ответов, у каждой ветки — объяснение.
 
 • Курс с объяснением «зачем»: каждая линия — с идеями, стрелками и планами. ⭐ — проверено тренером, ⚙ — сгенерировано по статистике.
 • Интервальное повторение (FSRS): приложение само напомнит позиции, которые вы начали забывать.
@@ -31,11 +31,11 @@ Chess Open — бесплатный тренажёр Лондонской сис
 
 **Назва:** Chess Open — Лондонська система
 
-**Короткий опис:** Вивчайте Лондонську систему за білих: 56 ліній з поясненнями та повторення
+**Короткий опис:** Вивчайте Лондонську систему за білих: 53 рівні з поясненнями та повторення
 
 **Повний опис:**
 
-Chess Open — безкоштовний тренажер Лондонської системи за білих без реклами та реєстрації: 56 ліній проти всіх популярних відповідей, у кожної гілки — пояснення.
+Chess Open — безкоштовний тренажер Лондонської системи за білих без реклами та реєстрації: 53 рівні проти всіх популярних відповідей, у кожної гілки — пояснення.
 
 • Курс з поясненням «навіщо»: ідеї, стрілки та плани для кожної лінії. ⭐ — перевірено тренером, ⚙ — згенеровано за статистикою.
 • Інтервальне повторення (FSRS) позицій, які ви починаєте забувати.
@@ -51,11 +51,11 @@ Chess Open — безкоштовний тренажер Лондонської 
 
 **Nazwa:** Chess Open — System Londyński
 
-**Krótki opis:** Naucz się Systemu Londyńskiego białymi: 56 wariantów z wyjaśnieniami i powtórki
+**Krótki opis:** Naucz się Systemu Londyńskiego białymi: 53 poziomy z wyjaśnieniami i powtórki
 
 **Pełny opis:**
 
-Chess Open to darmowy trener Systemu Londyńskiego białymi, bez reklam i rejestracji: 56 wariantów przeciw wszystkim popularnym odpowiedziom, każda gałąź z wyjaśnieniem.
+Chess Open to darmowy trener Systemu Londyńskiego białymi, bez reklam i rejestracji: 53 poziomy przeciw wszystkim popularnym odpowiedziom, każda gałąź z wyjaśnieniem.
 
 • Kurs z wyjaśnieniem „po co”: idee, strzałki i plany w każdym wariancie. ⭐ — sprawdzone przez trenera, ⚙ — wygenerowane ze statystyk.
 • Powtórki w odstępach (FSRS) pozycji, które zaczynasz zapominać.
@@ -71,11 +71,11 @@ Wolna aplikacja na licencji GPL-3.0, kod jest otwarty.
 
 **Title:** Chess Open — London System
 
-**Short description:** Learn the London System as White: 56 explained lines and spaced repetition
+**Short description:** Learn the London System as White: 53 explained levels and spaced repetition
 
 **Full description:**
 
-Chess Open is a free London System trainer for White — no ads, no sign-up: 56 lines against every popular reply, each branch explained.
+Chess Open is a free London System trainer for White — no ads, no sign-up: 53 levels against every popular reply, each branch explained.
 
 • A course that explains the "why": ideas, arrows and plans for every line. ⭐ coach-reviewed, ⚙ generated from statistics.
 • Spaced repetition (FSRS) brings back the positions you start to forget.

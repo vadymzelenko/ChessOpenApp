@@ -1,8 +1,10 @@
+import { positionKey } from '../chess/position';
 import { samplePack } from '../pack/fixtures';
 import { indexPack } from '../pack/indexer';
 import { validatePack } from '../pack/validate';
 import {
   bestStars,
+  levelOfPosition,
   courseLevels,
   starTotals,
   starsForRun,
@@ -20,7 +22,8 @@ describe('courseLevels', () => {
   it('numbers every line, base lines before advanced ones inside a chapter', () => {
     const levels = courseLevels(index());
     expect(levels.map((l) => l.n)).toEqual(levels.map((_, i) => i + 1));
-    expect(levels.length).toBe(index().lines.size);
+    expect(levels.length).toBeGreaterThan(0);
+    expect(levels.length).toBeLessThanOrEqual(index().lines.size);
     for (const ch of new Set(levels.map((l) => l.chapterId))) {
       const ranks = levels
         .filter((l) => l.chapterId === ch)
@@ -54,5 +57,60 @@ describe('stars', () => {
     expect(unlockedCount(levels, of)).toBe(Math.min(2, levels.length));
     expect(unlockedCount([], of)).toBe(0);
     expect(starTotals(levels, of)).toEqual({ stars: 1, max: levels.length * 3 });
+  });
+});
+
+describe('transpositions', () => {
+  it('skips a line that only reaches another level by a different move order', () => {
+    const base = samplePack();
+    const pack = {
+      ...base,
+      course: {
+        chapters: [
+          {
+            id: 'main',
+            title: { ru: 'Главная' },
+            lines: [
+              {
+                id: 'a',
+                title: { ru: 'A' },
+                level: 'base' as const,
+                status: 'draft' as const,
+                moves: [
+                  'd4',
+                  'd5',
+                  'Bf4',
+                  'Nf6',
+                  'e3',
+                  'e6',
+                  'Nf3',
+                  'Bd6',
+                  'Bg3',
+                  'O-O',
+                  'Nbd2',
+                  'c5',
+                ],
+              },
+              {
+                id: 'b',
+                title: { ru: 'B' },
+                level: 'base' as const,
+                status: 'draft' as const,
+                // Same position after a different order: 2…e6 instead of 2…Nf6.
+                moves: ['d4', 'd5', 'Bf4', 'e6', 'e3', 'Nf6', 'Nf3', 'Bd6'],
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const v = validatePack(pack);
+    if (!v.ok) throw new Error(v.errors.join('\n'));
+    const idx = indexPack(v.pack);
+    const levels = courseLevels(idx);
+    expect(levels.map((l) => l.lineId)).toEqual(['a']);
+    const lineB = idx.lines.get('b')!;
+    const end = lineB.steps[lineB.steps.length - 1]!;
+    expect(levelOfPosition(idx, levels, positionKey(end.move.fenAfter))?.lineId).toBe('a');
   });
 });

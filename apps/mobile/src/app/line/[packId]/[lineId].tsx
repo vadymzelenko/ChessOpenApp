@@ -463,7 +463,8 @@ export default function LineScreen() {
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <ThemedText variant="caption" tone="textMuted" numberOfLines={1}>
-              {t('levels.level', { n: levelNo + 1 })} · {indexed.chapter.title.ru}
+              {levelNo >= 0 ? `${t('levels.level', { n: levelNo + 1 })} · ` : ''}
+              {indexed.chapter.title.ru}
             </ThemedText>
             <View style={{ flexDirection: 'row', gap: 1 }}>
               {[1, 2, 3].map((n) => (

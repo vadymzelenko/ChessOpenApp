@@ -180,6 +180,10 @@
     "bestKept_one": "Best result kept: {{count}}★",
     "bestKept_other": "Best result kept: {{count}}★",
     "toMap": "To the map",
-    "next": "Next level"
+    "next": "Next level",
+    "bonusSection": "Bonus",
+    "chapter": "Chapter {{n}}",
+    "continuesIn": "This position continues in level {{n}} “{{title}}”",
+    "openLevel": "Open level {{n}}"
   }
 }

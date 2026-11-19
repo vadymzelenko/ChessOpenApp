@@ -1,4 +1,5 @@
-import type { PackIndex } from '../pack/indexer';
+import { positionKey } from '../chess/position';
+import type { IndexedLine, PackIndex } from '../pack/indexer';
 import type { LineLevel, LocalizedText } from '../pack/schema';
 
 /** One level of the course map: a course line (ТЗ §6, «уровни как в игре»). */
@@ -16,32 +17,78 @@ export interface CourseLevel {
 
 export type Stars = 0 | 1 | 2 | 3;
 
+/** Own moves a line needs to be a level when it ends by transposing into another one. */
+const MIN_OWN_FOR_TRANSPOSITION = 4;
+
 const LEVEL_RANK: Record<LineLevel, number> = { base: 0, advanced: 1, deep: 2 };
 
 /**
  * Levels in learning order: chapters as in the course (most common replies
  * first), and inside a chapter the base lines before advanced and deep ones,
- * keeping the author's order otherwise.
+ * keeping the author's order otherwise. Lines without enough moves of their
+ * own (move orders that transpose into another level) are not levels.
  */
 export function courseLevels(index: PackIndex): CourseLevel[] {
-  const out: CourseLevel[] = [];
+  const ordered: IndexedLine[] = [];
   for (const chapter of index.pack.course.chapters) {
     const lines = chapter.lines
       .map((line, i) => ({ line, i }))
       .sort((a, b) => LEVEL_RANK[a.line.level] - LEVEL_RANK[b.line.level] || a.i - b.i);
     for (const { line } of lines) {
-      out.push({
-        n: out.length + 1,
-        lineId: line.id,
-        chapterId: chapter.id,
-        chapterTitle: chapter.title,
-        title: line.title,
-        level: line.level,
-        moves: Math.ceil(line.moves.length / 2),
-      });
+      const il = index.lines.get(line.id);
+      if (il) ordered.push(il);
     }
   }
+  // Every move order that reaches a position, to spot transpositions.
+  const paths = new Map<string, Set<string>>();
+  for (const il of ordered) {
+    const moves: string[] = [];
+    for (const s of il.steps) {
+      moves.push(s.move.san);
+      const k = positionKey(s.move.fenAfter);
+      if (!paths.has(k)) paths.set(k, new Set());
+      paths.get(k)!.add(moves.join(' '));
+    }
+  }
+  const out: CourseLevel[] = [];
+  const known = new Set<string>();
+  for (const il of ordered) {
+    let own = 0;
+    for (const s of il.steps) {
+      if (!s.ours) continue;
+      const k = `${s.keyBefore} ${s.move.san}`;
+      if (!known.has(k)) own++;
+      known.add(k);
+    }
+    const last = il.steps[il.steps.length - 1];
+    const transposes = !!last && (paths.get(positionKey(last.move.fenAfter))?.size ?? 0) > 1;
+    // A level must teach something of its own: a line that only reaches
+    // another level by a different move order stays in the tree, not on the map.
+    if (own < 2 || (transposes && own < MIN_OWN_FOR_TRANSPOSITION)) continue;
+    out.push({
+      n: out.length + 1,
+      lineId: il.line.id,
+      chapterId: il.chapter.id,
+      chapterTitle: il.chapter.title,
+      title: il.line.title,
+      level: il.line.level,
+      moves: Math.ceil(il.steps.length / 2),
+    });
+  }
   return out;
+}
+
+/** The first level whose line passes through the position (for «continue in level N»). */
+export function levelOfPosition(
+  index: PackIndex,
+  levels: readonly CourseLevel[],
+  key: string,
+): CourseLevel | undefined {
+  return levels.find((l) =>
+    index.lines
+      .get(l.lineId)
+      ?.steps.some((s) => s.keyBefore === key || positionKey(s.move.fenAfter) === key),
+  );
 }
 
 /**

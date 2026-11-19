@@ -192,6 +192,10 @@
     "bestKept_many": "Najlepszy wynik zapisany: {{count}}★",
     "bestKept_other": "Najlepszy wynik zapisany: {{count}}★",
     "toMap": "Do mapy",
-    "next": "Następny poziom"
+    "next": "Następny poziom",
+    "bonusSection": "Bonus",
+    "chapter": "Rozdział {{n}}",
+    "continuesIn": "Tę pozycję dalej ćwiczysz na poziomie {{n}} „{{title}}”",
+    "openLevel": "Otwórz poziom {{n}}"
   }
 }
