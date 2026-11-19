@@ -11,7 +11,7 @@
   "eco": ["D02", "A48"],
   "style": "solid",
   "difficulty": 2,
-  "accentColor": "#4C7DFF",
+  "accentColor": "#4F8A24",
   "puzzleTags": ["Queens_Pawn_Game_London_System", "Indian_Defense_London_System"],
   "sources": [
     "Черновик курса (ИИ + проверка Stockfish), статус draft — до ручной проверки",

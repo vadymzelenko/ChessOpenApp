@@ -32,7 +32,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#0F1115",
+          "backgroundColor": "#1E1D1B",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
@@ -42,6 +42,6 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "backgroundColor": "#0F1115"
+    "backgroundColor": "#1E1D1B"
   }
 }

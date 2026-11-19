@@ -27,8 +27,8 @@ const manifest = {
   start_url: `${base}/`,
   scope: `${base}/`,
   display: 'standalone',
-  background_color: '#0F1115',
-  theme_color: '#0F1115',
+  background_color: '#1E1D1B',
+  theme_color: '#1E1D1B',
   icons: [
     { src: `${base}/icons/icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
     { src: `${base}/icons/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
@@ -68,7 +68,7 @@ writeFileSync(join(dist, 'sw.js'), sw);
 
 const head =
   `<link rel="manifest" href="${base}/manifest.webmanifest">` +
-  `<meta name="theme-color" content="#0F1115">` +
+  `<meta name="theme-color" content="#1E1D1B">` +
   `<link rel="apple-touch-icon" href="${base}/icons/icon-192.png">` +
   `<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('${base}/sw.js',{scope:'${base}/'})})}</script>`;
 

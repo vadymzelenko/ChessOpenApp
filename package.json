@@ -23,7 +23,8 @@
     "pack:puzzles": "tsx tools/pipeline/build-puzzles.ts",
     "pack:check-texts": "tsx tools/pipeline/check-texts.ts",
     "pack:engine-check": "tsx tools/pipeline/engine-check.ts",
-    "i18n:check": "tsx tools/i18n-check.ts"
+    "i18n:check": "tsx tools/i18n-check.ts",
+    "pack:move-evals": "tsx tools/pipeline/build-move-evals.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",

@@ -70,7 +70,7 @@ export default function SettingsScreen() {
 
   return (
     <Screen title={t('tabs.settings')}>
-      <Group index={1} icon={Palette} color="#4C7DFF" title={t('settings.appearance')}>
+      <Group index={1} icon={Palette} color="#6FA83A" title={t('settings.appearance')}>
         {label(t('settings.theme'))}
         <SegmentedControl
           accessibilityLabel={t('settings.theme')}

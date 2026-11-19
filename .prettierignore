@@ -9,5 +9,6 @@ apps/mobile/ios
 # generated data (minified on purpose)
 packs/*/explorer.json
 packs/*/evals.json
+packs/*/moveEvals.json
 packs/*/puzzles.json
 apps/mobile/assets/packs/*.json

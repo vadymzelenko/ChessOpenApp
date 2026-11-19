@@ -46,7 +46,7 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
     const { pack, warnings: buildWarnings } = buildPackFromPgn({ meta, ideas, pgn });
     // Statistics from the explorer pipeline (npm run pack:explorer), if present.
     // Pipeline outputs (pack:explorer / pack:evals / pack:puzzles), if present.
-    for (const part of ['explorer', 'evals', 'puzzles'] as const) {
+    for (const part of ['explorer', 'evals', 'puzzles', 'moveEvals'] as const) {
       const file = join(dir, `${part}.json`);
       if (existsSync(file)) (pack as Record<string, unknown>)[part] = readJson(file);
     }
@@ -63,7 +63,7 @@ function build(id: string, opts: { check: boolean; out?: string }): boolean {
       `  ✓ ${p.course.chapters.length} chapters, ${lines.length} lines ` +
         `(base ${byLevel('base')} / advanced ${byLevel('advanced')} / deep ${byLevel('deep')}), ` +
         `${reviewed} reviewed ⭐, ${p.ideas.length} ideas, ${p.traps.length} traps, ${p.modelGames.length} model games, ` +
-        `${Object.keys(p.explorer).length} explorer positions, ${Object.keys(p.evals).length} evals, ${p.puzzles.length} puzzles`,
+        `${Object.keys(p.explorer).length} explorer positions, ${Object.keys(p.evals).length} evals, ${Object.keys(p.moveEvals).length} move-eval positions, ${p.puzzles.length} puzzles`,
     );
 
     if (!opts.check) {

@@ -64,7 +64,7 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#0F1115' }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#1E1D1B' }}>
       <Animated.View style={{ flex: 1, opacity: revealed }}>
         <ThemeProvider preference={theme} animationSpeed={animationSpeed}>
           <ThemedNavigation />

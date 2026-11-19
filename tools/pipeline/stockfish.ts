@@ -79,6 +79,27 @@ export class Stockfish {
     };
   }
 
+  /** Score every legal move (MultiPV over all moves); White's view, keyed by UCI. */
+  async scoreAllMoves(fen: string, depth: number): Promise<Map<string, UciInfo>> {
+    const best = new Map<string, UciInfo>();
+    this.send('setoption name MultiPV value 256');
+    this.send(`position fen ${fen}`);
+    this.send(`go depth ${depth}`);
+    await this.waitFor(
+      (l) => l.startsWith('bestmove'),
+      (l) => {
+        const info = parseUciInfo(l);
+        if (info && info.pv[0] && info.depth === depth) best.set(info.pv[0], info);
+      },
+    );
+    this.send('setoption name MultiPV value 1');
+    const side = fen.split(' ')[1] === 'b' ? 'b' : 'w';
+    const out = new Map<string, UciInfo>();
+    for (const [uci, info] of best)
+      out.set(uci, { ...info, ...toWhitePov({ cp: info.cp, mate: info.mate }, side) });
+    return out;
+  }
+
   evaluator(depth: number): Evaluator {
     return (fen) => this.evaluate(fen, depth);
   }

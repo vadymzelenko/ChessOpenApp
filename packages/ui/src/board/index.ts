@@ -23,3 +23,4 @@ export {
 } from './pieceSets';
 export { diffPieces, keyPieces, type KeyedPiece } from './pieceDiff';
 export { EvalBar, type EvalBarProps } from './EvalBar';
+export { BoardBadges, badgeStyles, type BadgeKind, type BoardBadge } from './BoardBadges';

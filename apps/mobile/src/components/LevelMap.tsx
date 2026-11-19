@@ -27,6 +27,13 @@ import { usePack } from '@/hooks/usePack';
 import { lineKey, lineStars, packCards, useProgress } from '@/store/progress';
 
 const GAP = 10;
+
+/** Opening blocks shown on the home screen; only shipped packs are playable. */
+const BLOCKS: { id: string; side: 'w' | 'b' }[] = [
+  { id: 'london', side: 'w' },
+  { id: 'caro-kann', side: 'b' },
+  { id: 'slav', side: 'b' },
+];
 const MAX_WIDTH = 760;
 
 type CardState = 'done' | 'current' | 'open' | 'locked';
@@ -355,6 +362,61 @@ export function LevelMap({ packId }: { packId: string }) {
             paddingTop: theme.spacing.lg,
             gap: theme.spacing.xl,
           }}>
+          <View style={{ gap: theme.spacing.sm }}>
+            <ThemedText variant="label" tone="textMuted">
+              {t('levels.blocks')}
+            </ThemedText>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ flexDirection: 'row', gap: GAP }}>
+                {BLOCKS.map((b) => {
+                  const active = b.id === packId;
+                  return (
+                    <PressableScale
+                      key={b.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={t(`levels.block_${b.id}`)}
+                      onPress={() => (active ? null : setMessage(t('levels.soonText')))}
+                      style={{
+                        width: 168,
+                        padding: theme.spacing.md,
+                        gap: 4,
+                        borderRadius: theme.radii.lg,
+                        backgroundColor: active ? `${accent}26` : theme.colors.surface,
+                        borderWidth: active ? 2 : 1,
+                        borderColor: active ? accent : theme.colors.border,
+                        opacity: active ? 1 : 0.75,
+                      }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <ThemedText variant="caption" tone="textMuted" style={{ flex: 1 }}>
+                          {t(b.side === 'w' ? 'levels.forWhite' : 'levels.forBlack')}
+                        </ThemedText>
+                        {active ? null : <Lock color={theme.colors.textMuted} size={14} />}
+                      </View>
+                      <ThemedText variant="label" style={{ fontSize: 15 }} numberOfLines={1}>
+                        {t(`levels.block_${b.id}`)}
+                      </ThemedText>
+                      {active ? (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                          <Star
+                            size={13}
+                            color={theme.colors.verified}
+                            fill={theme.colors.verified}
+                          />
+                          <ThemedText variant="caption" tone="textMuted">
+                            {totals.stars}/{totals.max}
+                          </ThemedText>
+                        </View>
+                      ) : (
+                        <ThemedText variant="caption" tone="generated">
+                          {t('levels.soon')}
+                        </ThemedText>
+                      )}
+                    </PressableScale>
+                  );
+                })}
+              </View>
+            </ScrollView>
+          </View>
           {sections.map((s, si) => (
             <View
               key={s.id}

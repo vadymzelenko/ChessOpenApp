@@ -192,6 +192,12 @@ export const OpeningPackSchema = z.object({
   explorer: z.record(z.string(), ExplorerNodeSchema).default({}),
   autoLines: z.array(AutoLineSchema).default([]),
   evals: z.record(z.string(), EvalSchema).default({}),
+  /**
+   * Engine score of every legal move in the positions where the course side
+   * moves: positionKey → UCI → centipawns from White's view (mates as
+   * ±(MATE_SCORE − moves)). Lets the app judge any move the user tries.
+   */
+  moveEvals: z.record(z.string(), z.record(z.string(), z.number().int())).default({}),
   puzzles: z.array(PuzzleSchema).default([]),
   modelGames: z.array(ModelGameSchema).default([]),
 });

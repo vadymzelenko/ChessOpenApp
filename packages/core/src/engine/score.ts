@@ -49,3 +49,12 @@ export function formatScore(score: Score): string {
   if (Math.abs(v) < 0.05) return '0.0';
   return v > 0 ? `+${v.toFixed(1)}` : `−${(-v).toFixed(1)}`;
 }
+
+/** Mates in `moveEvals` are stored as ±(MATE_SCORE − moves). */
+export const MATE_SCORE = 30000;
+
+/** Decode a stored move score into a Score (White's view). */
+export function decodeMoveScore(v: number): Score {
+  if (Math.abs(v) > MATE_SCORE - 1000) return { mate: Math.sign(v) * (MATE_SCORE - Math.abs(v)) };
+  return { cp: v };
+}

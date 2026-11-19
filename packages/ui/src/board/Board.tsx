@@ -13,6 +13,7 @@ import { scheduleOnRN } from 'react-native-worklets';
 import { useTheme } from '../theme/ThemeProvider';
 import { DRAG_SCALE } from '../theme/tokens';
 import { AnimatedPiece, CapturedPiece, type DropHint } from './AnimatedPiece';
+import { BoardBadges, type BoardBadge } from './BoardBadges';
 import {
   BoardArrows,
   BoardHints,
@@ -50,6 +51,8 @@ export interface BoardProps {
    */
   onMove?: (move: BoardMove) => boolean | void;
   arrows?: readonly BoardArrow[];
+  /** Move marks in the corner of squares (course move ✓, ?!, ?, ??…). */
+  badges?: readonly BoardBadge[];
   highlights?: readonly BoardHighlight[];
   showCoordinates?: boolean;
   showLegalMoves?: boolean;
@@ -104,6 +107,7 @@ export function Board({
   isPromotion,
   onMove,
   arrows = EMPTY,
+  badges = EMPTY,
   highlights = EMPTY,
   showCoordinates = true,
   showLegalMoves = true,
@@ -411,6 +415,15 @@ export function Board({
                   orientation={orientation}
                   arrows={arrows}
                   duration={durations.arrow}
+                  delay={durations.move}
+                />
+              )}
+              {badges.length > 0 && (
+                <BoardBadges
+                  badges={badges}
+                  size={size}
+                  orientation={orientation}
+                  duration={durations.stamp}
                   delay={durations.move}
                 />
               )}
