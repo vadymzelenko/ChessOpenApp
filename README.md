@@ -30,14 +30,14 @@ The pipelines run in GitHub Actions (`data-pipeline.yml`).
 
 ## Repository structure
 
-| Path | Contents |
-|---|---|
-| `apps/mobile` | Expo app (Android and web), routes in `src/app` (Expo Router) |
-| `packages/core` | Pure TypeScript logic without UI: chess model, opening tree, spaced repetition, move selection. Unit-tested |
-| `packages/ui` | Design tokens, themes, board and shared components |
-| `packs/` | Opening sources (PGN and metadata) and the pack JSON schema |
-| `tools/pipeline/` | Pack generation from Lichess data |
-| `docs/` | Roadmap and store materials |
+| Path              | Contents                                                                                                    |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| `apps/mobile`     | Expo app (Android and web), routes in `src/app` (Expo Router)                                               |
+| `packages/core`   | Pure TypeScript logic without UI: chess model, opening tree, spaced repetition, move selection. Unit-tested |
+| `packages/ui`     | Design tokens, themes, board and shared components                                                          |
+| `packs/`          | Opening sources (PGN and metadata) and the pack JSON schema                                                 |
+| `tools/pipeline/` | Pack generation from Lichess data                                                                           |
+| `docs/`           | Roadmap and store materials                                                                                 |
 
 ## Development
 
